@@ -4,7 +4,7 @@ AddDefaultCharset UTF-8
 	RewriteEngine On
 	RewriteBase /
 	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteRule . /boot/init.php [NE,L]
+	RewriteRule .* /boot/init.php [NE,L]
 </IfModule>
 
 # Nginx config version
