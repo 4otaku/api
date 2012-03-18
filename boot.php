@@ -1,13 +1,8 @@
 <?php
 
-include_once 'constants.php';
-include_once 'autoloader.php';
-include_once 'error_handler.php';
+include 'framework/init.php';
 
-mb_internal_encoding('UTF-8');
-date_default_timezone_set('Europe/Moscow');
-
-Autoload::init(LIBS);
+Autoload::init(array(LIBS, FRAMEWORK), CACHE);
 
 $url = explode('/', preg_replace('/\?[^\/]+$/', '', $_SERVER['REQUEST_URI']));
 array_shift($url);
