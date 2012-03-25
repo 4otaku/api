@@ -3,3 +3,5 @@ files/*
 
 images/*
 !images/.gitignore
+
+define.ini

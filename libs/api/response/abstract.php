@@ -1,7 +1,7 @@
 <?php
 
-abstract class Api_Response_Abstract {
-
+abstract class Api_Response_Abstract
+{
 	protected $headers = array();
 
 	protected $success = false;
