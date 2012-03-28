@@ -5,6 +5,11 @@ AddDefaultCharset UTF-8
 
 	RewriteRule .*\.ini$ /boot.php [NE,L]
 
+# For using api as submodule
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_URI} ^/api/ [NC]
+	RewriteRule .* /api/boot.php [NE,L]
+
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteRule .* /boot.php [NE,L]
 </IfModule>

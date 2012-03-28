@@ -8,6 +8,10 @@ Config::parse('define.ini', true);
 
 $url = explode('/', preg_replace('/\?[^\/]+$/', '', $_SERVER['REQUEST_URI']));
 array_shift($url);
+// Нас используют как субмодуль, съедаем еще одну секцию запроса
+if ($_SERVER['DOCUMENT_ROOT'] != ROOT_DIR) {
+	array_shift($url);
+}
 
 $class = 'Api_' . implode('_', array_map('ucfirst', $url));
 
