@@ -14,32 +14,32 @@ class Api_Create_Post extends Api_Create_Abstract
 		'gb' => 2,
 		'kilobyte' => 0,
 		'megabyte' => 1,
-		'gigabyte' => 2,						
+		'gigabyte' => 2,
 	);
-	
+
 	public function process() {
 		$title = $this->get('title');
 
 		if (empty($title)) {
 			throw new Error_Api('Пропущено обязательное поле: title', Error_Api::MISSING_INPUT);
 		}
-		
+
 		if ($id = Database::get_field('post', 'id', 'title = ? and area != "deleted"', $title)) {
 			$this->add_answer('id', $id);
 			throw new Error_Api('Запись с таким title уже есть', Error_Api::INCORRECT_INPUT);
-		}		
+		}
 
 		$links = $this->get('link');
 		$torrents = $this->get('torrent');
 
 		if (empty($links) && empty($torrent)) {
-			throw new Error_Api('Пропущены оба поля: link и torrent. Заполните хотя бы одно.', 
+			throw new Error_Api('Пропущены оба поля: link и torrent. Заполните хотя бы одно.',
 				Error_Api::MISSING_INPUT);
-		}		
-		
+		}
+
 		$files = $this->get('file');
 		$images = $this->get('image');
-		
+
 		$links = (array) $links;
 		foreach ($links as $index => &$link) {
 			if (strpos($link['size'], ' ')) {
@@ -51,7 +51,7 @@ class Api_Create_Post extends Api_Create_Abstract
 				 $link['sizetype'] = $this->link_size_types[$link['sizetype']];
 			}
 		}
-		
+
 		$torrents = (array) $torrents;
 		foreach ($torrents as $index => &$torrent) {
 			try {
@@ -66,30 +66,30 @@ class Api_Create_Post extends Api_Create_Abstract
 			} catch (Error $e) {
 				$number = $index + 1;
 				$message = 'Не удалось добавить торрент №' . $number . '; Содержимое: ' . substr($torrent['file'], 0, 2000);
-				
+
 				if (strlen($torrent['file']) > 2000) {
 					$message .= ' ...';
 				}
-				
+
 				$this->add_error($e->getCode(), $message);
 				unset($torrents[$index]);
 			}
 		}
-		
+
 		$files = (array) $files;
 		foreach ($files as $index => &$file) {
 			try {
 				if (empty($file['name'])) {
 					if (preg_match(Transform_Text::URL_REGEX, substr($file['file'], 0, 1000))) {
 						$file['name'] = basename($file['file']);
-					} 
-					
+					}
+
 					if (empty($file['name'])) {
 						$file['name'] = 'file';
 					}
-				}				
+				}
 				$file['file'] = $this->get_file($file['file']);
-				
+
 				if (!strpos($file['name'], '.')) {
 					$extension = $this->get_extension($file['file']);
 					$file['name'] = $file['name'] . '.' . $extension;
@@ -101,21 +101,21 @@ class Api_Create_Post extends Api_Create_Abstract
 			} catch (Error $e) {
 				$number = $index + 1;
 				$message = 'Не удалось добавить файл №' . $number . '; Содержимое: ' . substr($file['file'], 0, 2000);
-				
+
 				if (strlen($file['file']) > 2000) {
 					$message .= ' ...';
 				}
-				
+
 				$this->add_error($e->getCode(), $message);
 				unset($files[$index]);
 			}
-		}	
+		}
 
 		$images = (array) $images;
 		foreach ($images as $index => &$image) {
 			try {
 				$image = $this->get_file($image);
-				
+
 				$extension = $this->get_extension($image);
 				$filename = 'image.' . $extension;
 
@@ -126,11 +126,11 @@ class Api_Create_Post extends Api_Create_Abstract
 			} catch (Error $e) {
 				$number = $index + 1;
 				$message = 'Не удалось добавить изображение №' . $number . '; Содержимое: ' . substr($image, 0, 2000);
-				
+
 				if (strlen($image) > 2000) {
 					$message .= ' ...';
 				}
-				
+
 				$this->add_error($e->getCode(), $message);
 				unset($images[$index]);
 			}
@@ -169,6 +169,6 @@ class Api_Create_Post extends Api_Create_Abstract
 		$this->set_success($success);
 		if ($success) {
 			$this->add_answer('id', $result->get_data('id'));
-		}		
+		}
 	}
 }

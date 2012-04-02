@@ -3,7 +3,7 @@
 abstract class Api_Request_Http extends Api_Request_Abstract
 {
 	protected function convert($input) {
-		$input = $this->clean_globals($input);
+		return $this->clean_globals($input);
 	}
 
 	protected function clean_globals($data, $input = array(), $iteration = 0) {
