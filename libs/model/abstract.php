@@ -8,7 +8,7 @@ abstract class Model_Abstract implements ArrayAccess
 	);
 
 	// Поля таблицы представляющие из себя первичный ключ
-	protected $primary = array(
+	protected static $primary = array(
 		'id'
 	);
 
@@ -168,6 +168,10 @@ abstract class Model_Abstract implements ArrayAccess
 
 	public static function get_table() {
 		return static::$table;
+	}
+
+	public static function get_primary() {
+		return static::$primary;
 	}
 
 	public function set_array(array $data) {

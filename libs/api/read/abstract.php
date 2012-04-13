@@ -37,6 +37,7 @@ abstract class Api_Read_Abstract extends Api_Abstract
 		$model_class = str_replace('Api_Read', 'Model', get_called_class());
 
 		$fields = $model_class::get_fields();
+		$primary = $model_class::get_primary();
 		$this->table = $model_class::get_table();
 
 		$order = isset($params['order_by']) && in_array($params['order_by'], $fields) ?
@@ -52,7 +53,7 @@ abstract class Api_Read_Abstract extends Api_Abstract
 		$sql->limit($per_page, ($page - 1) * $per_page);
 
 		$fetch_fields = isset($params['fields']) ?
-			array('id') + array_intersect($params['fields'], $fields) : array('*');
+			array_merge($primary, array_intersect($params['fields'], $fields)) : array('*');
 
 
 		unset($params['mode'], $params['order_by'], $params['order'],
@@ -78,6 +79,8 @@ abstract class Api_Read_Abstract extends Api_Abstract
 
 			if ($this->mode != self::MODE_NO_COUNT) {
 				$count = $sql->get_counter();
+			} else {
+				$count = false;
 			}
 		}
 
