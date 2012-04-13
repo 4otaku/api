@@ -51,8 +51,12 @@ abstract class Api_Read_Abstract extends Api_Abstract
 		$page = isset($params['page']) ? (int) $params['page'] : $this->page;
 		$sql->limit($per_page, ($page - 1) * $per_page);
 
+		$fetch_fields = isset($params['fields']) ?
+			array('id') + array_intersect($params['fields'], $fields) : array('*');
+
+
 		unset($params['mode'], $params['order_by'], $params['order'],
-			$params['per_page'], $params['page']);
+			$params['per_page'], $params['page'], $params['fields']);
 
 		foreach ($params as $key => $param) {
 			if (!in_array($key, $fields)) {
@@ -69,7 +73,8 @@ abstract class Api_Read_Abstract extends Api_Abstract
 			$count = $sql->get_count($this->table, $where, $this->values);
 			$data = false;
 		} elseif ($this->mode != self::MODE_COUNT) {
-			$data = $sql->get_full_vector($this->table, $where, $this->values);
+			$data = $sql->get_vector($this->table, $fetch_fields,
+				$where, $this->values);
 
 			if ($this->mode != self::MODE_NO_COUNT) {
 				$count = $sql->get_counter();
