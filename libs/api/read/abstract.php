@@ -7,6 +7,8 @@ abstract class Api_Read_Abstract extends Api_Abstract
 		MODE_NO_COUNT = 2,
 		MODE_COUNT = 3;
 
+	protected $allowed_actions = array('=', '!=', '>', '<', '>=', '<=');
+
 	protected $mode = self::MODE_NORMAL;
 	protected $db = 'main';
 	protected $table;
@@ -55,7 +57,6 @@ abstract class Api_Read_Abstract extends Api_Abstract
 		$fetch_fields = isset($params['fields']) ?
 			array_merge($primary, array_intersect($params['fields'], $fields)) : array('*');
 
-
 		unset($params['mode'], $params['order_by'], $params['order'],
 			$params['per_page'], $params['page'], $params['fields']);
 
@@ -64,7 +65,17 @@ abstract class Api_Read_Abstract extends Api_Abstract
 				continue;
 			}
 
-			$this->where[] = $key . ' = ?';
+			if (!is_array($param)) {
+				$action = '=';
+			} else {
+				$action = array_shift($param);
+				$param = array_shift($param);
+				if (!in_array($action, $this->allowed_actions)) {
+					continue;
+				}
+			}
+
+			$this->where[] = $key . ' ' . $action . ' ?';
 			$this->values[] = $param;
 		}
 
