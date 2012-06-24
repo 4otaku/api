@@ -4,7 +4,7 @@ class Api_Read_Multi extends Api_Read_Abstract
 {
 	public function process() {
 		foreach ($this->get() as $key => $request) {
-			if (empty($request['api'])) {
+			if (!is_array($request) || !isset($request['api'])) {
 				continue;
 			}
 
