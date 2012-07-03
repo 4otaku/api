@@ -15,7 +15,7 @@ Cache::$base_prefix = Config::get('cache', 'prefix');
 Config::add(array('db' => array('migrate_db' => $argv[1])));
 
 $db_read = Database::db('migrate');
-$db_write = Database::db();
+$db_write = Database::db('api');
 $db_write->sql('truncate table art_tag');
 $db_write->sql('truncate table art_tag_variant');
 $db_write->sql('truncate table user');
@@ -26,11 +26,27 @@ $db_write->insert('user', array(
 ));
 $db_write->sql('truncate table meta');
 $db_write->sql('truncate table art');
+$db_write->sql('truncate table art_pack');
+$db_write->sql('truncate table art_pack_item');
+$db_write->sql('truncate table art_group');
+$db_write->sql('truncate table art_manga');
+$db_write->sql('truncate table art_manga_item');
 $db_write->sql('truncate table art_rating');
 $db_write->sql('truncate table art_similar');
+$db_write->sql('truncate table art_translation');
 $db_write->sql('truncate table comment');
 
-$limit = 100;
+$limit = 0;
+function log_progress($type, $count) {
+	global $log_type, $log_count;
+	if (empty($log_type) || $log_type != $type) {
+		$log_count = 0;
+	}
+	$log_type = $type;
+
+	echo $type . ': ' . ++$log_count . '/' . $count . "\n";
+	flush();
+}
 
 $old_tags = $db_read->limit($limit)->get_vector('tag', array('id', 'alias', 'name', 'variants', 'color', 'have_description'));
 
@@ -53,13 +69,13 @@ foreach ($old_tags as $tag) {
 			'id_tag' => $id
 		));
 	}
+	log_progress('tag', count($old_tags));
 }
 unset($old_tags);
 
 $old_categories = $db_read->limit($limit)->get_vector('category', array('id', 'alias', 'name'));
 
 $category_alias = array();
-$i = 0;
 foreach ($old_categories as $tag) {
 
 	$db_write->insert('art_tag', array(
@@ -68,6 +84,7 @@ foreach ($old_categories as $tag) {
 
 	$id = $db_write->last_id();
 	$category_alias[$tag['alias']] = $id;
+	log_progress('category', count($old_categories));
 }
 unset($old_categories);
 
@@ -76,6 +93,7 @@ $tmp_users = array();
 foreach ($users as $user) {
 	$db_write->insert('user', $user);
 	$tmp_users[$user['login']] = $db_write->last_id();
+	log_progress('user', count($users));
 }
 unset($users);
 
@@ -93,6 +111,7 @@ foreach ($authors as $author) {
 		));
 		$author_alias[$author['alias']] = $db_write->last_id();
 	}
+	log_progress('author', count($authors));
 }
 unset($authors);
 unset($tmp_users);
@@ -107,20 +126,38 @@ foreach ($old_arts as $old_art) {
 	$authors = array_filter(explode('|', $old_art['author']));
 	$similars = array_filter(explode('|', $old_art['similar']));
 
-	$url = $argv[2] . $old_art['md5'] . '.' . $old_art['extension'];
-	$file = CACHE.SL.'migrate_'.$old_art['id'];
-	file_put_contents($file, file_get_contents($url));
-	$object = Transform_Image::get_worker($file);
+	if (!file_exists(IMAGES . SL . 'art' . SL . $old_art['md5'] . '.' . $old_art['extension'])) {
+		$url = $argv[2] . $old_art['md5'] . '.' . $old_art['extension'];
+		$file = CACHE.SL.'migrate_'.$old_art['id'];
+		file_put_contents($file, file_get_contents($url));
+
+		try {
+			$upload = new Transform_Upload_Art($file, $old_art['md5'] . '.' . $old_art['extension']);
+			$answer = $upload->process_file();
+		} catch (Exception $e) {
+			echo(serialize($e)); die;
+		}
+	} else {
+		$object = Transform_Image::get_worker(IMAGES . SL . 'art' . SL . $old_art['md5'] . '.' . $old_art['extension']);
+
+		$answer = array(
+			'resized' => (int) !empty($old_art['resized']),
+			'animated' => (int) $old_art['animated'],
+			'width' => $object->get_image_width(),
+			'height' => $object->get_image_height(),
+			'weight' => filesize(IMAGES . SL . 'art' . SL . $old_art['md5'] . '.' . $old_art['extension']),
+		);
+	}
 
 	$db_write->insert('art', array(
 		'id_user' => empty($author_alias[current($authors)]) ? 1 : $author_alias[current($authors)],
 		'md5' => $old_art['md5'],
 		'ext' => $old_art['extension'],
-		'width' => $object->get_image_width(),
-		'height' => $object->get_image_height(),
-		'weight' => filesize($file),
-		'resized' => (int) !empty($old_art['resized']),
-		'animated' => $old_art['animated'],
+		'width' => $answer['width'],
+		'height' => $answer['height'],
+		'weight' => $answer['weight'],
+		'resized' => $answer['resized'],
+		'animated' => $answer['animated'],
 		'vector' => $old_art['vector'],
 		'similar_tested' => (int) $old_art['checked'],
 		'source' => $old_art['source'],
@@ -148,7 +185,7 @@ foreach ($old_arts as $old_art) {
 		case 'workshop': $state = 1; break;
 		case 'flea_market': $state = 3; break;
 		case 'deleted': $state = 4; break;
-		default: $state = 4; break;
+		default: $state = 3; break;
 	}
 	$db_write->insert('meta', array(
 		'item_type' => 1,
@@ -162,9 +199,60 @@ foreach ($old_arts as $old_art) {
 		'meta_type' => 2,
 		'id_meta' => $count > 4 ? 6 : 5,
 	));
+
+	if (isset($file)) {
+		unlink($file);
+		unset($file);
+	}
+	log_progress('art', count($old_arts));
 }
 $db_write->sql('update art set id_parent = id where id_parent is null');
 unset($old_arts);
+
+$variations = $db_read->limit($limit)->get_full_table('art_variation');
+foreach ($variations as $variation) {
+
+	if (!file_exists(IMAGES . SL . 'art' . SL . $variation['md5'] . '.' . $variation['extension'])) {
+		$url = $argv[2] . $variation['md5'] . '.' . $variation['extension'];
+		$file = CACHE.SL.'variation_'.$variation['id'];
+		file_put_contents($file, file_get_contents($url));
+
+		try {
+			$upload = new Transform_Upload_Art($file, $variation['md5'] . '.' . $variation['extension']);
+			$answer = $upload->process_file();
+		} catch (Exception $e) {
+			echo(serialize($e)); die;
+		}
+	} else {
+		$object = Transform_Image::get_worker(IMAGES . SL . 'art' . SL . $variation['md5'] . '.' . $variation['extension']);
+
+		$answer = array(
+			'resized' => (int) !empty($variation['resized']),
+			'animated' => (int) $variation['animated'],
+			'width' => $object->get_image_width(),
+			'height' => $object->get_image_height(),
+			'weight' => filesize(IMAGES . SL . 'art' . SL . $variation['md5'] . '.' . $variation['extension']),
+		);
+	}
+
+	$db_write->insert('art', array(
+		'id_user' => 1,
+		'id_parent' => $art_ids[$variation['art_id']],
+		'id_parent_order' => $variation['order'] + 1,
+		'md5' => $variation['md5'],
+		'ext' => $variation['extension'],
+		'width' => $answer['width'],
+		'height' => $answer['height'],
+		'weight' => $answer['weight'],
+		'resized' => $answer['resized'],
+		'animated' => $answer['animated'],
+	));
+	if (isset($file)) {
+		unlink($file);
+		unset($file);
+	}
+	log_progress('variation', count($variations));
+}
 
 foreach ($similar_ids as $id_art => $similars) {
 	foreach ($similars as $similar) {
@@ -175,8 +263,14 @@ foreach ($similar_ids as $id_art => $similars) {
 	}
 }
 unset($similar_ids);
+
 $ratings = $db_read->limit($limit)->get_table('art_rating', array('`art_id` as id_art', 'cookie', 'ip', 'rating'));
-$db_write->bulk_insert('art_rating', $ratings, true);
+foreach ($ratings as $rating) {
+	$rating['id_art'] = $art_ids[$rating['id_art']];
+	$db_write->insert('art_rating', $rating);
+	log_progress('rating', count($ratings));
+}
+unset($ratings);
 
 $comments = $db_read->limit($limit)->order('sortdate', 'asc')->get_full_table('comment', 'place = ?', 'art');
 $comment_ids = array();
@@ -186,7 +280,7 @@ $rumonth = array(
 	'Сентябрь','Октябрь','Ноябрь','Декабрь');
 foreach ($comments as $comment) {
 	$insert = array(
-		'id_item' => $comment['post_id'],
+		'id_item' => $art_ids[$comment['post_id']],
 		'area' => 1,
 		'username' => $comment['username'],
 		'email' => $comment['email'],
@@ -200,11 +294,11 @@ foreach ($comments as $comment) {
 		$edit_date[0] = explode(' ', $edit_date[0]);
 		$edit_date[0][0] = array_search($edit_date[0][0], $rumonth);
 		$edit_date = $edit_date[0][2] . '-' . $edit_date[0][0] . '-' . $edit_date[0][1] . ' ' . $edit_date[1];
-		var_dump($edit_date);
 		$insert['editdate'] = $db_write->unix_to_date(strtotime($edit_date));
 	}
 	$db_write->insert('comment', $insert);
 	$comment_ids[$comment['id']] = $db_write->last_id();
+	log_progress('comment', count($comments));
 }
 
 foreach ($comments as $comment) {
@@ -216,3 +310,89 @@ foreach ($comments as $comment) {
 }
 unset($comments);
 unset($comment_ids);
+
+$translations = $db_read->limit($limit)->order('sortdate', 'asc')->get_full_table('art_translation', 'active > 0');
+foreach ($translations as $translation) {
+	$data = unserialize(base64_decode($translation['data']));
+	foreach ((array) $data as $key => $item) {
+		$db_write->insert('art_translation', array(
+			'id_translation' => $key + 1,
+			'id_art' => $art_ids[$translation['art_id']],
+			'id_user' => empty($author_alias[$translation['author']]) ? 1 : $author_alias[$translation['author']],
+			'x1' => $item['x1'],
+			'x2' => $item['x2'],
+			'y1' => $item['y1'],
+			'y2' => $item['y2'],
+			'text' => $item['pretty_text'],
+			'sortdate' => $db_write->unix_to_date($translation['sortdate'] / 1000),
+		));
+	}
+	log_progress('translation', count($translations));
+}
+unset($translations);
+
+$packs = $db_read->limit($limit)->order('date', 'asc')->get_full_table('art_pack');
+$pack_ids = array();
+foreach ($packs as $pack) {
+	$db_write->insert('art_pack', array(
+		'filename' => $pack['filename'],
+		'cover' => $art_ids[$db_read->get_field('art', 'id', 'thumb = ?', $pack['cover'])],
+		'title' => $pack['title'],
+		'text' => $pack['pretty_text'],
+		'sortdate' => $pack['date'],
+	));
+	$pack_ids[$pack['id']] = $db_write->last_id();
+	log_progress('pack', count($packs));
+}
+unset($packs);
+
+$packs_arts = $db_read->limit($limit)->get_full_table('art_in_pack', 'art_id > 0');
+foreach ($packs_arts as $art) {
+	$db_write->insert('art_pack_item', array(
+		'id_pack' => $pack_ids[$art['pack_id']],
+		'id_art' => $art_ids[$art['art_id']],
+		'order' => $art['order'],
+		'filename' => $art['filename'],
+	));
+	$db_write->insert('meta', array(
+		'item_type' => 1,
+		'id_item' => $art_ids[$art['art_id']],
+		'meta_type' => 3,
+		'id_meta' => $pack_ids[$art['pack_id']],
+	));
+	log_progress('packs_art', count($packs_arts));
+}
+unset($packs_arts);
+unset($pack_ids);
+
+$groups = $db_read->limit($limit)->order('sortdate', 'asc')->get_full_table('art_pool');
+$groups_ids = array();
+foreach ($groups as $group) {
+	$db_write->insert('art_manga', array(
+		'filename' => preg_replace('/[^а-яa-z\[\]\(\)\-\d]/ui', '_', $group['name']) . '.zip',
+		'title' => $group['name'],
+		'text' => $group['pretty_text'],
+		'sortdate' => $db_write->unix_to_date($group['sortdate'] / 1000),
+	));
+	$groups_ids[$group['id']] = $db_write->last_id();
+	log_progress('group', count($groups));
+}
+unset($groups);
+
+$groups_arts = $db_read->limit($limit)->get_full_table('art_in_pool');
+foreach ($groups_arts as $art) {
+	$db_write->insert('art_manga_item', array(
+		'id_manga' => $groups_ids[$art['pool_id']],
+		'id_art' => $art_ids[$art['art_id']],
+		'order' => $art['order'],
+	));
+	$db_write->insert('meta', array(
+		'item_type' => 1,
+		'id_item' => $art_ids[$art['art_id']],
+		'meta_type' => 5,
+		'id_meta' => $groups_ids[$art['pool_id']],
+	));
+	log_progress('groups_art', count($groups_arts));
+}
+unset($groups_arts);
+unset($groups_ids);

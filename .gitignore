@@ -1,8 +1,9 @@
 files/*
 !files/.gitignore
 
-images/*
 !images/.gitignore
+images/art/*
+!images/art/.gitignore
 
 cache/*
 !cache/.gitignore

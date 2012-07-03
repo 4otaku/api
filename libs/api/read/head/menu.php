@@ -4,7 +4,7 @@ class Api_Read_Head_Menu extends Api_Read_Abstract
 {
 	public function process() {
 
-		$menu = Database::order('order', 'asc')
+		$menu = $this->db->order('order', 'asc')
 			->get_full_vector('head_menu');
 		$return = array();
 		if (!empty($menu)) {

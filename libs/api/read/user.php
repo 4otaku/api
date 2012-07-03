@@ -16,7 +16,7 @@ class Api_Read_User extends Api_Read_Abstract
 			throw new Error_Api('Пропущено обязательное поле: password.', Error_Api::MISSING_INPUT);
 		}
 
-		$user = Database::get_full_row('user', 'login = ?', $login);
+		$user = $this->db->get_full_row('user', 'login = ?', $login);
 
 		if (empty($user)) {
 			throw new Error_Api('Пользователь "' . $login . '" не найден.', Error_Api::INCORRECT_INPUT);

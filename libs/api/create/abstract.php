@@ -57,8 +57,8 @@ abstract class Api_Create_Abstract extends Api_Abstract
 			return array('none');
 		}
 
-		$result = (array) Database::get_vector('category', array('alias', 'name'),
-			Database::array_in('name', $data), $data);
+		$result = (array) $this->db->get_vector('category', array('alias', 'name'),
+			$this->db->array_in('name', $data), $data);
 
 		foreach ($data as &$one) {
 			if (in_array($one, $result)) {
@@ -76,8 +76,8 @@ abstract class Api_Create_Abstract extends Api_Abstract
 			return array('none');
 		}
 
-		$result = (array) Database::get_vector('language', array('alias', 'name'),
-			Database::array_in('name', $data), $data);
+		$result = (array) $this->db->get_vector('language', array('alias', 'name'),
+			$this->db->array_in('name', $data), $data);
 
 		foreach ($data as &$one) {
 			if (in_array($one, $result)) {

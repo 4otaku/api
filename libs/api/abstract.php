@@ -5,12 +5,16 @@ abstract class Api_Abstract
 	protected $request;
 	protected $response;
 
+	protected $db;
+	protected $db_type = 'api';
+
 	protected $success = false;
 
 	protected $errors = array();
 	protected $answer = array();
 
 	public function __construct(Api_Request $request) {
+		$this->db = Database::db($this->db_type);
 		$this->request = $request;
 	}
 

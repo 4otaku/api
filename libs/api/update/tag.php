@@ -28,14 +28,14 @@ class Api_Update_Tag extends Api_Update_Abstract
 
 		$tag = trim(undo_safety($tag));
 		$args = array($tag, '|' . $tag . '|', $tag);
-		$exists = Database::get_field('tag', 'alias',
+		$exists = $this->db->get_field('tag', 'alias',
 			'name = ? or locate(?, variants) or alias = ?', $args);
 
 		if ($exists) {
 			$alias = $exists;
 		} else {
 			$alias = Transform_Meta::make_alias($tag);
-			Database::insert('tag', array(
+			$this->db->insert('tag', array(
 				'alias' => $alias,
 				'name'	=> $tag,
 				'variants' => '|'
@@ -43,7 +43,7 @@ class Api_Update_Tag extends Api_Update_Abstract
 			$this->add_error(Error_Api::UNKNOWN_TAG);
 		}
 
-		Database::update('tag', array('color' => $color), 'alias = ?', $alias);
+		$this->db->update('tag', array('color' => $color), 'alias = ?', $alias);
 
 		$this->set_success(true);
 		$this->add_answer('tag', $alias);

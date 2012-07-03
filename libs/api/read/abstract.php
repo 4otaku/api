@@ -10,7 +10,6 @@ abstract class Api_Read_Abstract extends Api_Abstract
 	protected $allowed_actions = array('=', '!=', '>', '<', '>=', '<=');
 
 	protected $mode = self::MODE_NORMAL;
-	protected $db = 'main';
 	protected $table;
 	protected $order = false;
 	protected $limit = 10;
@@ -30,7 +29,7 @@ abstract class Api_Read_Abstract extends Api_Abstract
 			}
 		}
 
-		$sql = Database::db($this->db);
+		$sql = $this->db;
 
 		if ($this->mode != self::MODE_NO_COUNT) {
 			$sql->set_counter();

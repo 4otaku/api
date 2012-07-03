@@ -12,7 +12,7 @@ class Api_Create_User extends Api_Create_Abstract
 		if (strlen($login) < 6) {
 			throw new Error_Api('Логин должен быть не короче 6 символов.', Error_Api::INCORRECT_INPUT);
 		}
-		if (Database::get_count('user', 'login = ?', $login)) {
+		if ($this->db->get_count('user', 'login = ?', $login)) {
 			throw new Error_Api('Пользователь с таким именем уже существует.', Error_Api::INCORRECT_INPUT);
 		}
 
@@ -26,7 +26,7 @@ class Api_Create_User extends Api_Create_Abstract
 		}
 
 		$email = $this->get('email');
-		if (!empty($email) && Database::get_count('user', 'email = ?', $email)) {
+		if (!empty($email) && $this->db->get_count('user', 'email = ?', $email)) {
 			$this->add_error(Error_Api::INCORRECT_INPUT, 'Пользователь с таким емейлом уже существует.');
 		}
 
@@ -40,7 +40,7 @@ class Api_Create_User extends Api_Create_Abstract
 			$cookie = md5(microtime(true));
 		}
 
-		Database::insert('user', array(
+		$this->db->insert('user', array(
 			'cookie' => $cookie,
 			'login' => $login,
 			'pass' => md5($password),

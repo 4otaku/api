@@ -24,7 +24,7 @@ class Api_Create_Post extends Api_Create_Abstract
 			throw new Error_Api('Пропущено обязательное поле: title', Error_Api::MISSING_INPUT);
 		}
 
-		if ($id = Database::get_field('post', 'id', 'title = ? and area != "deleted"', $title)) {
+		if ($id = $this->db->get_field('post', 'id', 'title = ? and area != "deleted"', $title)) {
 			$this->add_answer('id', $id);
 			throw new Error_Api('Запись с таким title уже есть', Error_Api::INCORRECT_INPUT);
 		}
