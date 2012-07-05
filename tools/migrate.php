@@ -173,7 +173,7 @@ foreach ($old_arts as $old_art) {
 				'item_type' => 1,
 				'id_item' => $art_ids[$old_art['id']],
 				'meta_type' => 1,
-				'id_meta' => $tag_alias[$tag],
+				'meta' => $tag_alias[$tag],
 			));
 			$count++;
 		}
@@ -191,13 +191,43 @@ foreach ($old_arts as $old_art) {
 		'item_type' => 1,
 		'id_item' => $art_ids[$old_art['id']],
 		'meta_type' => 2,
-		'id_meta' => $state,
+		'meta' => $state,
 	));
 	$db_write->insert('meta', array(
 		'item_type' => 1,
 		'id_item' => $art_ids[$old_art['id']],
 		'meta_type' => 2,
-		'id_meta' => $count > 4 ? 6 : 5,
+		'meta' => $count > 4 ? 6 : 5,
+	));
+	$db_write->insert('meta', array(
+		'item_type' => 1,
+		'id_item' => $art_ids[$old_art['id']],
+		'meta_type' => 7,
+		'meta' => 0,
+	));
+	$db_write->insert('meta', array(
+		'item_type' => 1,
+		'id_item' => $art_ids[$old_art['id']],
+		'meta_type' => 8,
+		'meta' => round($old_art['sortdate'] / 1000),
+	));
+	$db_write->insert('meta', array(
+		'item_type' => 1,
+		'id_item' => $art_ids[$old_art['id']],
+		'meta_type' => 9,
+		'meta' => 0,
+	));
+	$db_write->insert('meta', array(
+		'item_type' => 1,
+		'id_item' => $art_ids[$old_art['id']],
+		'meta_type' => 11,
+		'meta' => $count,
+	));
+	$db_write->insert('meta', array(
+		'item_type' => 1,
+		'id_item' => $art_ids[$old_art['id']],
+		'meta_type' => 12,
+		'meta' => empty($author_alias[current($authors)]) ? 1 : $author_alias[current($authors)],
 	));
 
 	if (isset($file)) {
@@ -247,6 +277,52 @@ foreach ($variations as $variation) {
 		'resized' => $answer['resized'],
 		'animated' => $answer['animated'],
 	));
+	$id = $db_write->last_id();
+
+	$db_write->insert('meta', array(
+		'item_type' => 1,
+		'id_item' => $id,
+		'meta_type' => 2,
+		'meta' => $db_write->get_field('meta', 'meta',
+			'item_type = 1 and meta_type = 2 and id_item = ?', $art_ids[$variation['art_id']])
+	));
+	$db_write->insert('meta', array(
+		'item_type' => 1,
+		'id_item' => $id,
+		'meta_type' => 2,
+		'meta' => 5,
+	));
+	$db_write->insert('meta', array(
+		'item_type' => 1,
+		'id_item' => $id,
+		'meta_type' => 7,
+		'meta' => 0,
+	));
+	$db_write->insert('meta', array(
+		'item_type' => 1,
+		'id_item' => $id,
+		'meta_type' => 8,
+		'meta' => time(),
+	));
+	$db_write->insert('meta', array(
+		'item_type' => 1,
+		'id_item' => $id,
+		'meta_type' => 9,
+		'meta' => 0,
+	));
+	$db_write->insert('meta', array(
+		'item_type' => 1,
+		'id_item' => $id,
+		'meta_type' => 11,
+		'meta' => 0,
+	));
+	$db_write->insert('meta', array(
+		'item_type' => 1,
+		'id_item' => $id,
+		'meta_type' => 12,
+		'meta' => 1,
+	));
+
 	if (isset($file)) {
 		unlink($file);
 		unset($file);
@@ -268,6 +344,9 @@ $ratings = $db_read->limit($limit)->get_table('art_rating', array('`art_id` as i
 foreach ($ratings as $rating) {
 	$rating['id_art'] = $art_ids[$rating['id_art']];
 	$db_write->insert('art_rating', $rating);
+	$db_write->update('meta', array(
+		'meta' => $rating['rating'] > 0 ? '++' : '--',
+	), 'item_type = 1 and meta_type = 7 and id_item = ?', $rating['id_art']);
 	log_progress('rating', count($ratings));
 }
 unset($ratings);
@@ -298,6 +377,23 @@ foreach ($comments as $comment) {
 	}
 	$db_write->insert('comment', $insert);
 	$comment_ids[$comment['id']] = $db_write->last_id();
+	$db_write->update('meta', array(
+		'meta' => '++',
+	), 'item_type = 1 and meta_type = 9 and id_item = ?', $art_ids[$comment['post_id']]);
+	$max_date = $db_write->get_field('meta', 'item_type = 1 and meta_type = 10 and id_item = ?',
+		$art_ids[$comment['post_id']]);
+	if (!$max_date) {
+		$db_write->insert('meta', array(
+			'item_type' => 1,
+			'id_item' => $art_ids[$comment['post_id']],
+			'meta_type' => 10,
+			'meta' => round($comment['sortdate'] / 1000),
+		));
+	} else {
+		$db_write->update('meta', array(
+			'meta' => max($max_date, $comment['sortdate'] / 1000),
+		), 'item_type = 1 and meta_type = 10 and id_item = ?', $art_ids[$comment['post_id']]);
+	}
 	log_progress('comment', count($comments));
 }
 
@@ -358,7 +454,7 @@ foreach ($packs_arts as $art) {
 		'item_type' => 1,
 		'id_item' => $art_ids[$art['art_id']],
 		'meta_type' => 3,
-		'id_meta' => $pack_ids[$art['pack_id']],
+		'meta' => $pack_ids[$art['pack_id']],
 	));
 	log_progress('packs_art', count($packs_arts));
 }
@@ -390,7 +486,7 @@ foreach ($groups_arts as $art) {
 		'item_type' => 1,
 		'id_item' => $art_ids[$art['art_id']],
 		'meta_type' => 5,
-		'id_meta' => $groups_ids[$art['pool_id']],
+		'meta' => $groups_ids[$art['pool_id']],
 	));
 	log_progress('groups_art', count($groups_arts));
 }

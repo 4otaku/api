@@ -22,5 +22,5 @@ $id = Database::db('api')->last_id();
 Database::db('api')->delete('art_manga', $argv[1]);
 Database::db('api')->delete('art_manga_item', 'id_manga = ?', $argv[1]);
 
-Database::db('api')->update('meta', array('meta_type' => 4, 'id_meta' => $id),
-	'meta_type = 5 and item_type = 1 and id_meta = ?', $argv[1]);
+Database::db('api')->update('meta', array('meta_type' => 4, 'meta' => $id),
+	'meta_type = 5 and item_type = 1 and meta = ?', $argv[1]);

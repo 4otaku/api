@@ -37,6 +37,8 @@ class Transform_Upload_Art extends Transform_Upload_Abstract_Image
 
 		$this->worker = Transform_Image::get_worker($newfile);
 		$this->animated = $this->is_animated($newfile);
+		$width = $this->worker->get_image_width();
+		$height = $this->worker->get_image_height();
 
 		$resized = $this->check_resize($newresized);
 
@@ -49,8 +51,8 @@ class Transform_Upload_Art extends Transform_Upload_Abstract_Image
 			'extension' => $extension,
 			'resized' => (int) $resized,
 			'animated' => (int) $this->animated,
-			'width' => (int) $this->worker->get_image_width(),
-			'height' => (int) $this->worker->get_image_height(),
+			'width' => (int) $width,
+			'height' => (int) $height,
 			'weight' => (int) $this->size,
 			'meta' => $this->get_file_meta($pathinfo['filename'])
 		));
