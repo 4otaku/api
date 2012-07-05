@@ -47,13 +47,19 @@ abstract class Api_Read_Art_List_Abstract extends Api_Abstract
 		}
 		$sql->group($this->group_field);
 		$sorter->apply_to($sql);
+
+
+		$this->process_query($sql);
+	}
+
+	protected function process_query($sql) {
 		$data = $sql->get_table($this->table, $this->fields);
 		$count = $sql->get_counter();
 
-		$this->process_result($data, $count);
+		$this->send_answer($data, $count);
 	}
 
-	protected function process_result($data, $count) {
+	protected function send_answer($data, $count) {
 		$this->add_answer('data', $data);
 		$this->add_answer('count', $count);
 

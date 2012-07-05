@@ -10,11 +10,9 @@ class Meta
 		ART_MANGA = 5,
 		ART_ARTIST = 6,
 		ART_RATING = 7,
-		DATE = 8,
 		COMMENT_COUNT = 9,
 		COMMENT_DATE = 10,
-		TAG_COUNT = 11,
-		USER = 12;
+		TAG_COUNT = 11;
 
 	const
 		EQUAL = '=',

@@ -35,6 +35,28 @@ class Api_Read_Art_Sorter
 		$sql->order('sortdate', $this->direction);
 	}
 
+	protected function width($sql) {
+		$sql->order('width', $this->direction);
+	}
+
+	protected function height($sql) {
+		$sql->order('height', $this->direction);
+	}
+
+	protected function weight($sql) {
+		$sql->order('weight', $this->direction);
+	}
+
+	protected function size($sql) {
+		$sorter = new Database_Sorter('width', $this->direction);
+		$sorter->add_operation('multiply', 'height');
+		$sql->order($sorter);
+	}
+
+	protected function parent_order($sql) {
+		$sql->order('id_parent_order', $this->direction);
+	}
+
 	protected function rating($sql) {
 		$sql->join('meta', 'm.id_item = id and m.item_type = ' .
 			$this->item . ' and meta_type = ' . Meta::ART_RATING)

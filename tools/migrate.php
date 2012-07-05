@@ -208,12 +208,6 @@ foreach ($old_arts as $old_art) {
 	$db_write->insert('meta', array(
 		'item_type' => 1,
 		'id_item' => $art_ids[$old_art['id']],
-		'meta_type' => 8,
-		'meta' => round($old_art['sortdate'] / 1000),
-	));
-	$db_write->insert('meta', array(
-		'item_type' => 1,
-		'id_item' => $art_ids[$old_art['id']],
 		'meta_type' => 9,
 		'meta' => 0,
 	));
@@ -222,12 +216,6 @@ foreach ($old_arts as $old_art) {
 		'id_item' => $art_ids[$old_art['id']],
 		'meta_type' => 11,
 		'meta' => $count,
-	));
-	$db_write->insert('meta', array(
-		'item_type' => 1,
-		'id_item' => $art_ids[$old_art['id']],
-		'meta_type' => 12,
-		'meta' => empty($author_alias[current($authors)]) ? 1 : $author_alias[current($authors)],
 	));
 
 	if (isset($file)) {
@@ -301,12 +289,6 @@ foreach ($variations as $variation) {
 	$db_write->insert('meta', array(
 		'item_type' => 1,
 		'id_item' => $id,
-		'meta_type' => 8,
-		'meta' => time(),
-	));
-	$db_write->insert('meta', array(
-		'item_type' => 1,
-		'id_item' => $id,
 		'meta_type' => 9,
 		'meta' => 0,
 	));
@@ -315,12 +297,6 @@ foreach ($variations as $variation) {
 		'id_item' => $id,
 		'meta_type' => 11,
 		'meta' => 0,
-	));
-	$db_write->insert('meta', array(
-		'item_type' => 1,
-		'id_item' => $id,
-		'meta_type' => 12,
-		'meta' => 1,
 	));
 
 	if (isset($file)) {
