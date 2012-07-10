@@ -23,6 +23,7 @@ class Api_Read_Art_List_Comment extends Api_Read_Art_List
 				if ($item['id'] == $comment['id_item']) {
 					$comment['avatar'] = md5($comment['email']);
 					unset($comment['email']);
+					unset($comment['id_item']);
 					$item['comment'] = $comment;
 					continue 2;
 				}
