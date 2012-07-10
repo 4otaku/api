@@ -48,7 +48,6 @@ abstract class Api_Read_Art_List_Abstract extends Api_Abstract
 		$sql->group($this->group_field);
 		$sorter->apply_to($sql);
 
-
 		$this->process_query($sql);
 	}
 

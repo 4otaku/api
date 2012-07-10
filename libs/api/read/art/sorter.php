@@ -71,7 +71,7 @@ class Api_Read_Art_Sorter
 
 	protected function comment_date($sql) {
 		$sql->join('meta', 'm.id_item = id and m.item_type = ' .
-			$this->item . ' and meta_type = ' . Meta::COMMENT_SOTDATE)
+			$this->item . ' and meta_type = ' . Meta::COMMENT_DATE)
 			->order('m.meta', $this->direction);
 	}
 
