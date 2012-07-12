@@ -15,6 +15,7 @@ class Meta
 		TAG_COUNT = 11;
 
 	const
+		IS = '=',
 		EQUAL = '=',
 		NOT = '!=',
 		LESS = '<',
