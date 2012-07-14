@@ -29,6 +29,48 @@ class Api_Read_Art_List extends Api_Read_Art_List_Abstract
 		}
 		$count = $sql->get_counter();
 
+		$ids = array();
+		$users = array();
+		foreach ($data as $item) {
+			$ids[] = $item['id'];
+			$users[] = $item['id_user'];
+		}
+		$users = array_unique($users);
+
+		$tags = $sql->join('art_tag', 'at.id = m.meta')->
+			get_table('meta', array('m.id_item', 'm.meta', 'at.*'),
+				'm.item_type = 1 and m.meta_type = ' . Meta::ART_TAG .
+				' and ' . $sql->array_in('m.id_item', $ids), $ids);
+		$ratings = $sql->get_table('meta', array('id_item', 'meta'),
+				'm.item_type = 1 and m.meta_type = ' . Meta::ART_RATING .
+				' and ' . $sql->array_in('m.id_item', $ids), $ids);
+		$users = $sql->get_table('user', array('id', 'login'),
+			$sql->array_in('id', $users), $users);
+
+		foreach ($data as &$item) {
+			$item['tag'] = array();
+			foreach ($tags as $tag) {
+				if ($item['id'] == $tag['id_item']) {
+					unset($tag['id_item']);
+					unset($tag['meta']);
+					$item['tag'][] = $tag;
+				}
+			}
+			foreach ($ratings as $rating) {
+				if ($item['id'] == $rating['id_item']) {
+					$item['rating'] = $rating['meta'];
+					break;
+				}
+			}
+			foreach ($users as $user) {
+				if ($item['id_user'] == $user['id']) {
+					$item['user'] = $user['login'];
+					break;
+				}
+			}
+		}
+		unset($item);
+
 		$this->send_answer($data, $count);
 	}
 
