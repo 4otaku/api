@@ -27,7 +27,6 @@ class Api_Read_Art_List extends Api_Read_Art_List_Abstract
 			$data = $sql->get_table($this->table, $this->fields,
 				implode(' and ', $this->local_filters), $this->local_filter_vars);
 		}
-		$sql->debug(); die;
 		$count = $sql->get_counter();
 
 		$this->send_answer($data, $count);
