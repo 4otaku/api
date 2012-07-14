@@ -30,4 +30,8 @@ class Meta
 
 		return constant('self::' . $const);
 	}
+
+	public static function value_needed() {
+		return array(self::STATE, self::ART_TAG);
+	}
 }

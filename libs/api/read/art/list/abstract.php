@@ -43,7 +43,7 @@ abstract class Api_Read_Art_List_Abstract extends Api_Abstract
 				'id_item = id',
 				'meta_type = ' . $filter['meta_type'],
 				'meta ' . $filter['operator'] . ' ' . $filter['value'],
-			));
+			), empty($filter['reverse']) ? false : 'meta');
 		}
 		$sql->group($this->group_field);
 		$sorter->apply_to($sql);
@@ -69,7 +69,6 @@ abstract class Api_Read_Art_List_Abstract extends Api_Abstract
 		if (empty($params['filter'])) {
 			return $this->default_filter;
 		}
-
 		$params['filter'] = (array) $params['filter'];
 		foreach ($params['filter'] as &$filter) {
 			if (!isset($filter['name']) || !isset($filter['type']) || !isset($filter['value'])) {
@@ -79,6 +78,10 @@ abstract class Api_Read_Art_List_Abstract extends Api_Abstract
 
 			$filter['meta_type'] = Meta::parse($filter['name']);
 			$filter['operator'] = Meta::parse($filter['type']);
+			$filter['reverse'] = ($filter['operator'] == Meta::NOT);
+			if ($filter['reverse']) {
+				$filter['operator'] = Meta::IS;
+			}
 
 			if (!is_int($filter['meta_type']) || !is_string($filter['operator'])) {
 				$filter = null;
@@ -90,6 +93,7 @@ abstract class Api_Read_Art_List_Abstract extends Api_Abstract
 				continue;
 			}
 		}
+		unset($filter);
 		return array_merge($this->default_filter, array_filter($params['filter']));
 	}
 
@@ -130,8 +134,9 @@ abstract class Api_Read_Art_List_Abstract extends Api_Abstract
 
 	protected function get_filter_values(&$filters) {
 		$fetch = array();
+		$value_needed = Meta::value_needed();
 		foreach ($filters as $filter) {
-			if (is_int($filter['value'])) {
+			if (!in_array($filter['meta_type'], $value_needed)) {
 				continue;
 			}
 			if (!isset($fetch[$filter['name']])) {
@@ -144,7 +149,7 @@ abstract class Api_Read_Art_List_Abstract extends Api_Abstract
 				$this->db->array_in('name', $names), $names);
 		}
 		foreach ($filters as &$filter) {
-			if (is_int($filter['value'])) {
+			if (!in_array($filter['meta_type'], $value_needed)) {
 				continue;
 			}
 
@@ -157,7 +162,7 @@ abstract class Api_Read_Art_List_Abstract extends Api_Abstract
 
 			$filter['value'] = $fetch[$filter['name']][$filter['value']];
 		}
-
+		unset($filter);
 		$filters = array_filter($filters);
 	}
 }
