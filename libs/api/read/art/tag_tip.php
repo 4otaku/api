@@ -15,7 +15,7 @@ class Api_Read_Art_Tag_Tip extends Api_Abstract
 		$per_page = $this->get('per_page') ? $this->get('per_page') : 10;
 		$per_page = min($per_page, 100);
 
-		$tags = $this->db->order('count')->limit($per_page, $per_page * ($page - 1))
+		$tags = $this->db->order('count')->limit($per_page * 2, $per_page * ($page - 1))
 			->get_full_table('art_tag_count', 'LEFT(name, ' . $length . ') = ?', $left);
 
 		$return = array();
@@ -25,6 +25,9 @@ class Api_Read_Art_Tag_Tip extends Api_Abstract
 					'name' => $tag['name'],
 					'count' => $tag['count'],
 				);
+			}
+			if (count($return) >= $per_page) {
+				break;
 			}
 		}
 
