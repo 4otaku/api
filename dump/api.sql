@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `art` (
   `sortdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `selector` (`id_parent`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS `art_manga` (
   `text` text NOT NULL,
   `sortdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS `art_pack` (
   `text` text NOT NULL,
   `sortdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -142,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `art_rating` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_cookie` (`id_art`,`cookie`),
   UNIQUE KEY `unique_ip` (`id_art`,`ip`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -174,6 +174,19 @@ CREATE TABLE IF NOT EXISTS `art_tag` (
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `art_tag_count`
+--
+
+CREATE TABLE IF NOT EXISTS `art_tag_count` (
+  `id_tag` int(10) unsigned NOT NULL,
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `count` int(10) unsigned NOT NULL DEFAULT '0',
+  `original` tinyint(3) unsigned NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `art_tag_variant`
 --
 
@@ -183,15 +196,6 @@ CREATE TABLE IF NOT EXISTS `art_tag_variant` (
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `art_tag_count`
---
-create table art_tag_count (select `art_tag`.`name` AS `name`,count(0) AS `count` from (`meta` join `art_tag` on((`art_tag`.`id` = `meta`.`meta`))) where (`meta`.`item_type` = 1) group by `art_tag`.`id`) union (select `art_tag_variant`.`name` AS `name`,count(0) AS `count` from ((`meta` join `art_tag` on((`art_tag`.`id` = `meta`.`meta`))) join `art_tag_variant` on((`art_tag`.`id` = `art_tag_variant`.`id_tag`))) where (`meta`.`item_type` = 1));
-ALTER TABLE  `art_tag_count` ADD PRIMARY KEY (  `name`  ,  `count`);
-
 
 -- --------------------------------------------------------
 
@@ -213,7 +217,7 @@ CREATE TABLE IF NOT EXISTS `art_translation` (
   `state` tinyint(3) unsigned NOT NULL DEFAULT '1' COMMENT '1 - active, 2 - old, 3 - deleted',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_translation` (`id_translation`,`id_art`,`sortdate`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -235,7 +239,7 @@ CREATE TABLE IF NOT EXISTS `comment` (
   `editdate` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `sortdate` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
 -- Триггеры `comment`
@@ -250,6 +254,56 @@ CREATE TRIGGER `comment_sortdate` BEFORE INSERT ON `comment`
     END
 //
 DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `cron`
+--
+
+CREATE TABLE IF NOT EXISTS `cron` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `class` varchar(64) CHARACTER SET utf8 NOT NULL,
+  `function` varchar(64) CHARACTER SET utf8 NOT NULL,
+  `period` varchar(10) CHARACTER SET utf8 NOT NULL,
+  `last_time` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `last_time` (`last_time`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+
+INSERT INTO `cron` (`id`, `class`, `function`, `period`, `last_time`) VALUES
+(1, 'Tag', 'do_count', '1d', '0000-00-00 00:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `cron_log`
+--
+
+CREATE TABLE IF NOT EXISTS `cron_log` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id_task` int(10) unsigned NOT NULL,
+  `exec_time` float unsigned NOT NULL,
+  `exec_memory` bigint(20) unsigned NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `head_menu`
+--
+
+CREATE TABLE IF NOT EXISTS `head_menu` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `url` varchar(255) NOT NULL,
+  `parent` int(10) unsigned NOT NULL,
+  `order` smallint(5) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `order` (`order`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -303,14 +357,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `cookie` char(32) CHARACTER SET utf8 NOT NULL,
   `rights` tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
-
---
--- Дамп данных таблицы `user`
---
-
-INSERT INTO `user` (`id`, `login`, `pass`, `email`, `cookie`, `rights`) VALUES
-(1, 'Анонимус', '', 'default@avatar.mail', '', 0);
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
