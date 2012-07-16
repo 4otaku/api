@@ -174,13 +174,6 @@ CREATE TABLE IF NOT EXISTS `art_tag` (
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `art_tag_count`
---
--- используется(#1356 - View 'api.art_tag_count' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them)
-
--- --------------------------------------------------------
-
---
 -- Структура таблицы `art_tag_variant`
 --
 
@@ -190,6 +183,15 @@ CREATE TABLE IF NOT EXISTS `art_tag_variant` (
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `art_tag_count`
+--
+create table art_tag_count (select `art_tag`.`name` AS `name`,count(0) AS `count` from (`meta` join `art_tag` on((`art_tag`.`id` = `meta`.`meta`))) where (`meta`.`item_type` = 1) group by `art_tag`.`id`) union (select `art_tag_variant`.`name` AS `name`,count(0) AS `count` from ((`meta` join `art_tag` on((`art_tag`.`id` = `meta`.`meta`))) join `art_tag_variant` on((`art_tag`.`id` = `art_tag_variant`.`id_tag`))) where (`meta`.`item_type` = 1));
+ALTER TABLE  `art_tag_count` ADD PRIMARY KEY (  `name`  ,  `count`);
+
 
 -- --------------------------------------------------------
 

@@ -53,6 +53,7 @@ class Api_Read_Art_List extends Api_Read_Art_List_Abstract
 				if ($item['id'] == $tag['id_item']) {
 					unset($tag['id_item']);
 					unset($tag['meta']);
+					unset($tag['id']);
 					$item['tag'][] = $tag;
 				}
 			}
