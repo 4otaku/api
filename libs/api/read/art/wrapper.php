@@ -23,16 +23,32 @@ class Api_Read_Art extends Api_Abstract
 			'meta = ' . $deleted
 		), 'meta');
 
-		$data = $sql->get_vector('art', $this->fields,
-			$this->db->array_in('id', $ids), $ids);
+		$data = $sql->get_vector('art',
+			$this->fields, $this->db->array_in('id', $ids), $ids);
 
 		$this->add_answer('count', $this->db->get_counter());
 
 		$ids = array_keys($data);
 		$parents = array();
+		$users = array();
 		foreach ($data as $key => &$item) {
 			$item['id'] = $key;
 			$parents[] = $item['id_parent'];
+			$users[] = $item['id_user'];
+		}
+		unset($item);
+
+		$users = $this->db->get_vector('user', array('id', 'login'),
+			$sql->array_in('id', $users), $users);
+		foreach ($data as &$item) {
+			$item['user'] = $users[$item['id_user']];
+		}
+		unset($item);
+		$rating = $this->db->get_vector('meta', array('id_item', 'meta'),
+			'm.item_type = 1 and m.meta_type = ' . Meta::ART_RATING .
+			' and ' . $sql->array_in('id_item', $ids), $ids);
+		foreach ($data as &$item) {
+			$item['rating'] = $rating[$item['id']];
 		}
 		unset($item);
 

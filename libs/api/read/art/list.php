@@ -9,7 +9,7 @@ class Api_Read_Art_List extends Api_Read_Art_List_Abstract
 	protected $local_filters = array();
 	protected $local_filter_vars = array();
 	protected $local_filtered_variables = array('date', 'md5', 'width',
-		'height', 'weight', 'id_parent', 'id_user');
+		'height', 'weight', 'id_parent', 'id_user', 'user');
 
 	public function process() {
 
@@ -88,6 +88,12 @@ class Api_Read_Art_List extends Api_Read_Art_List_Abstract
 					if ($filter['name'] == 'date') {
 						$filter['name'] = 'sortdate';
 						$filter['value'] = $this->db->unix_to_date($filter['value']);
+					}
+
+					if ($filter['name'] == 'user') {
+						$filter['name'] = 'id_user';
+						$filter['value'] = $this->db->get_field('user',
+							'id', 'login = ?', $filter['value']);
 					}
 
 					$this->local_filters[] = $filter['name'] . ' ' . Meta::parse($filter['type']) . ' ?';
