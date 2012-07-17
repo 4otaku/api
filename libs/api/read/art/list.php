@@ -8,7 +8,8 @@ class Api_Read_Art_List extends Api_Read_Art_List_Abstract
 	protected $group_field = 'id_parent';
 	protected $local_filters = array();
 	protected $local_filter_vars = array();
-	protected $local_filtered_variables = array('date', 'md5', 'width', 'height', 'weight', 'id_parent', 'id_user');
+	protected $local_filtered_variables = array('date', 'md5', 'width',
+		'height', 'weight', 'id_parent', 'id_user');
 
 	public function process() {
 
@@ -37,14 +38,14 @@ class Api_Read_Art_List extends Api_Read_Art_List_Abstract
 		}
 		$users = array_unique($users);
 
-		$tags = $sql->join('art_tag', 'at.id = m.meta')->
-			get_table('meta', array('m.id_item', 'm.meta', 'at.*'),
+		$tags = $this->db->join('art_tag', 'at.id = m.meta')->
+			get_table('meta', array('m.id_item', 'at.*'),
 				'm.item_type = 1 and m.meta_type = ' . Meta::ART_TAG .
 				' and ' . $sql->array_in('m.id_item', $ids), $ids);
-		$ratings = $sql->get_table('meta', array('id_item', 'meta'),
+		$ratings = $this->db->get_table('meta', array('id_item', 'meta'),
 				'm.item_type = 1 and m.meta_type = ' . Meta::ART_RATING .
 				' and ' . $sql->array_in('m.id_item', $ids), $ids);
-		$users = $sql->get_table('user', array('id', 'login'),
+		$users = $this->db->get_table('user', array('id', 'login'),
 			$sql->array_in('id', $users), $users);
 
 		foreach ($data as &$item) {
@@ -52,7 +53,6 @@ class Api_Read_Art_List extends Api_Read_Art_List_Abstract
 			foreach ($tags as $tag) {
 				if ($item['id'] == $tag['id_item']) {
 					unset($tag['id_item']);
-					unset($tag['meta']);
 					unset($tag['id']);
 					$item['tag'][] = $tag;
 				}
