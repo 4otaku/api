@@ -31,6 +31,7 @@ class Cron_Tag extends Cron_Abstract
 			));
 		}
 
+		$this->db->sql('alter table art_tag_count_temp add index `selector` (`id_tag`, `original`)');
 		$this->db->sql('drop table art_tag_count');
 		$this->db->sql('rename table art_tag_count_temp to art_tag_count');
 

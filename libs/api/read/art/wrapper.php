@@ -54,7 +54,8 @@ class Api_Read_Art extends Api_Abstract
 
 		if ($this->get('add_tags')) {
 			$tags = $this->db->join('art_tag', 'at.id = m.meta')->
-				get_table('meta', array('m.id_item', 'at.*'),
+				join('art_tag_count', 'at.id = atc.id_tag and atc.original = 1')->
+				get_table('meta', array('m.id_item', 'at.*, atc.count'),
 					'm.item_type = 1 and m.meta_type = ' . Meta::ART_TAG .
 					' and ' . $sql->array_in('m.id_item', $ids), $ids);
 			foreach ($data as &$item) {
@@ -90,8 +91,8 @@ class Api_Read_Art extends Api_Abstract
 			foreach ($data as &$item) {
 				$item['similar'] = array();
 				foreach ($similar as $art) {
-					if ($art['id_parent'] == $item['id_parent']) {
-						$item['similar'][] = $item['id'];
+					if ($item['id_parent'] == $art['id_parent']) {
+						$item['similar'][] = $art['id'];
 					}
 				}
 			}

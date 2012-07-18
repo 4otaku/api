@@ -39,9 +39,11 @@ class Api_Read_Art_List extends Api_Read_Art_List_Abstract
 		$users = array_unique($users);
 
 		$tags = $this->db->join('art_tag', 'at.id = m.meta')->
-			get_table('meta', array('m.id_item', 'at.*'),
+			join('art_tag_count', 'at.id = atc.id_tag and atc.original = 1')->
+			get_table('meta', array('m.id_item', 'at.*', 'atc.count'),
 				'm.item_type = 1 and m.meta_type = ' . Meta::ART_TAG .
 				' and ' . $sql->array_in('m.id_item', $ids), $ids);
+
 		$ratings = $this->db->get_table('meta', array('id_item', 'meta'),
 				'm.item_type = 1 and m.meta_type = ' . Meta::ART_RATING .
 				' and ' . $sql->array_in('m.id_item', $ids), $ids);

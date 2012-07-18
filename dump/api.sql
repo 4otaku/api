@@ -146,17 +146,6 @@ CREATE TABLE IF NOT EXISTS `art_rating` (
 
 -- --------------------------------------------------------
 
---
--- Структура таблицы `art_similar`
---
-
-CREATE TABLE IF NOT EXISTS `art_similar` (
-  `id_art` int(10) unsigned NOT NULL,
-  `id_similar` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id_art`,`id_similar`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
 
 --
 -- Структура таблицы `art_tag`
