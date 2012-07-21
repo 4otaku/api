@@ -119,12 +119,19 @@ abstract class Api_Read_Art_List_Abstract extends Api_Abstract
 	}
 
 	protected function get_sorter($params) {
-		$sorter = empty($params['sort_by']) ? $this->default_sorter :
-			(string) $params['sort_by'];
+		$value = false;
+		if (empty($params['sort_by'])) {
+			$sorter = $this->default_sorter;
+		} elseif (is_array($params['sort_by'])) {
+			$value = reset($params['sort_by']);
+			$sorter = key($params['sort_by']);
+		} else {
+			$sorter = (string) $params['sort_by'];
+		}
 		$sorter_order = empty($params['sort_order']) ? $this->default_sorter_order :
 			(string) $params['sort_order'];
 
-		return new Api_Read_Art_Sorter($this->item_type, $sorter, $sorter_order);
+		return new Api_Read_Art_Sorter($this->item_type, $sorter, $sorter_order, $value);
 	}
 
 	protected function get_filter_values(&$filters) {

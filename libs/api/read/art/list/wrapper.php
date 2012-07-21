@@ -30,5 +30,21 @@ class Api_Read_Art_List extends Api_Read_Art_List_Art
 
 		$users = $this->db->get_table('user', array('id', 'login'),
 			$this->db->array_in('id', $users), $users);
+
+		foreach ($data as &$item) {
+			foreach ($ratings as $rating) {
+				if ($item['id'] == $rating['id_item']) {
+					$item['rating'] = $rating['meta'];
+					break;
+				}
+			}
+			foreach ($users as $user) {
+				if ($item['id_user'] == $user['id']) {
+					$item['user'] = $user['login'];
+					break;
+				}
+			}
+		}
+		unset($item);
 	}
 }
