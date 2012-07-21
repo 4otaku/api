@@ -2,14 +2,7 @@
 
 abstract class Api_Read_Art_List_Abstract extends Api_Abstract
 {
-	protected $default_filter = array(
-		array(
-			'name' => 'state',
-			'meta_type' => Meta::STATE,
-			'operator' => Meta::NOT,
-			'value' => 'deleted',
-		)
-	);
+	protected $default_filter = array();
 	protected $default_sorter = 'date';
 	protected $default_sorter_order = 'desc';
 	protected $default_page = 1;
@@ -54,6 +47,8 @@ abstract class Api_Read_Art_List_Abstract extends Api_Abstract
 	protected function process_query($sql) {
 		$data = $sql->get_table($this->table, $this->fields);
 		$count = $sql->get_counter();
+
+		$this->add_meta_data($data);
 
 		$this->send_answer($data, $count);
 	}
@@ -164,5 +159,30 @@ abstract class Api_Read_Art_List_Abstract extends Api_Abstract
 		}
 		unset($filter);
 		$filters = array_filter($filters);
+	}
+
+	protected function add_meta_data(&$data) {
+		$ids = array();
+		foreach ($data as $item) {
+			$ids[] = $item['id'];
+		}
+
+		$tags = $this->db->join('art_tag', 'at.id = m.meta')->
+			join('art_tag_count', 'at.id = atc.id_tag and atc.original = 1')->
+			get_table('meta', array('m.id_item', 'at.*', 'atc.count'),
+				'm.item_type = ' . $this->item_type . ' and m.meta_type = ' . Meta::ART_TAG .
+				' and ' . $this->db->array_in('m.id_item', $ids), $ids);
+
+		foreach ($data as &$item) {
+			$item['tag'] = array();
+			foreach ($tags as $tag) {
+				if ($item['id'] == $tag['id_item']) {
+					unset($tag['id_item']);
+					unset($tag['id']);
+					$item['tag'][] = $tag;
+				}
+			}
+		}
+		unset($item);
 	}
 }

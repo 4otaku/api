@@ -254,7 +254,7 @@ foreach ($variations as $variation) {
 	}
 
 	$db_write->insert('art', array(
-		'id_user' => 1,
+		'id_user' => $db_write->get_field('art', 'id_user', $art_ids[$variation['art_id']]),
 		'id_parent' => $art_ids[$variation['art_id']],
 		'id_parent_order' => $variation['order'] + 1,
 		'md5' => $variation['md5'],
@@ -264,6 +264,7 @@ foreach ($variations as $variation) {
 		'weight' => $answer['weight'],
 		'resized' => $answer['resized'],
 		'animated' => $answer['animated'],
+		'sortdate' => $db_write->get_field('art', 'sortdate', $art_ids[$variation['art_id']]),
 	));
 	$id = $db_write->last_id();
 

@@ -2,6 +2,15 @@
 
 class Api_Read_Art_List extends Api_Read_Art_List_Abstract
 {
+	protected $default_filter = array(
+		array(
+			'name' => 'state',
+			'meta_type' => Meta::STATE,
+			'operator' => Meta::IS,
+			'value' => 'deleted',
+			'reverse' => 'meta'
+		)
+	);
 	protected $item_type = 1;
 	protected $table = 'art';
 	protected $fields = array('id', 'id_parent', 'id_user', 'md5', 'animated', 'sortdate');
@@ -30,35 +39,40 @@ class Api_Read_Art_List extends Api_Read_Art_List_Abstract
 		}
 		$count = $sql->get_counter();
 
+		$this->add_meta_data($data);
+
+		$this->send_answer($data, $count);
+	}
+
+	protected function add_meta_data(&$data) {
+		parent::add_meta_data($data);
+
 		$ids = array();
 		$users = array();
+		$similar_fields = array();
 		foreach ($data as $item) {
 			$ids[] = $item['id'];
 			$users[] = $item['id_user'];
+			$similar_fields[] = $item[$this->group_field];
 		}
 		$users = array_unique($users);
 
-		$tags = $this->db->join('art_tag', 'at.id = m.meta')->
-			join('art_tag_count', 'at.id = atc.id_tag and atc.original = 1')->
-			get_table('meta', array('m.id_item', 'at.*', 'atc.count'),
-				'm.item_type = 1 and m.meta_type = ' . Meta::ART_TAG .
-				' and ' . $sql->array_in('m.id_item', $ids), $ids);
-
 		$ratings = $this->db->get_table('meta', array('id_item', 'meta'),
-				'm.item_type = 1 and m.meta_type = ' . Meta::ART_RATING .
-				' and ' . $sql->array_in('m.id_item', $ids), $ids);
+			'm.item_type = 1 and m.meta_type = ' . Meta::ART_RATING .
+			' and ' . $this->db->array_in('m.id_item', $ids), $ids);
+
 		$users = $this->db->get_table('user', array('id', 'login'),
-			$sql->array_in('id', $users), $users);
+			$this->db->array_in('id', $users), $users);
+
+		if ($this->group_field != 'id') {
+			$similar_counts = $this->db->group($this->group_field)
+				->get_vector('art', array($this->group_field, 'count(*)'),
+					$this->db->array_in($this->group_field, $similar_fields), $similar_fields);
+		} else {
+			$similar_counts = array();
+		}
 
 		foreach ($data as &$item) {
-			$item['tag'] = array();
-			foreach ($tags as $tag) {
-				if ($item['id'] == $tag['id_item']) {
-					unset($tag['id_item']);
-					unset($tag['id']);
-					$item['tag'][] = $tag;
-				}
-			}
 			foreach ($ratings as $rating) {
 				if ($item['id'] == $rating['id_item']) {
 					$item['rating'] = $rating['meta'];
@@ -71,10 +85,15 @@ class Api_Read_Art_List extends Api_Read_Art_List_Abstract
 					break;
 				}
 			}
+			$item['similar_count'] = 1;
+			foreach ($similar_counts as $id_similar => $similar_count) {
+				if ($item[$this->group_field] == $id_similar) {
+					$item['similar_count'] = $similar_count;
+					break;
+				}
+			}
 		}
 		unset($item);
-
-		$this->send_answer($data, $count);
 	}
 
 	protected function get_filters($params) {
