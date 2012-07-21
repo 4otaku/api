@@ -21,7 +21,7 @@ class Api_Read_Art_List_Pack extends Api_Read_Art_List_Abstract
 		}
 
 		if (!empty($nocover)) {
-			$links = $this->db->order('order', 'desc')->group('id_pack')
+			$links = $this->db->order('order', 'asc')->group('id_pack')
 				->get_table('art_pack_item', array('id_pack', 'id_art'),
 					$this->db->array_in('id_pack', $nocover), $nocover);
 
