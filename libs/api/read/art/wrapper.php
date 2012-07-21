@@ -3,7 +3,7 @@
 class Api_Read_Art extends Api_Abstract
 {
 	protected $fields = array('id', 'id_parent', 'id_user', 'md5', 'ext',
-		'width', 'height', 'weight', 'resized', 'animated', 'source', 'sortdate');
+		'width', 'height', 'weight', 'resized', 'animated', 'source', 'sortdate', 'created');
 
 	public function process() {
 
@@ -55,7 +55,7 @@ class Api_Read_Art extends Api_Abstract
 		if ($this->get('add_tags')) {
 			$tags = $this->db->join('art_tag', 'at.id = m.meta')->
 				join('art_tag_count', 'at.id = atc.id_tag and atc.original = 1')->
-				get_table('meta', array('m.id_item', 'at.*, atc.count'),
+				get_table('meta', array('m.id_item', 'at.*', 'atc.count'),
 					'm.item_type = 1 and m.meta_type = ' . Meta::ART_TAG .
 					' and ' . $sql->array_in('m.id_item', $ids), $ids);
 			foreach ($data as &$item) {
@@ -67,6 +67,21 @@ class Api_Read_Art extends Api_Abstract
 				unset($tag['id_item']);
 				unset($tag['id']);
 				$link[] = $tag;
+			}
+		}
+
+		if ($this->get('add_state')) {
+			$states = $this->db->join('state', 's.id = m.meta')->
+				get_table('meta', array('m.id_item', 's.*'),
+					'm.item_type = 1 and m.meta_type = ' . Meta::STATE .
+					' and ' . $sql->array_in('m.id_item', $ids), $ids);
+			foreach ($data as &$item) {
+				$item['state'] = array();
+			}
+			unset($item);
+			foreach ($states as $state) {
+				$link = &$data[$state['id_item']]['state'];
+				$link[] = $state['name'];
 			}
 		}
 

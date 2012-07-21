@@ -149,6 +149,10 @@ foreach ($old_arts as $old_art) {
 		);
 	}
 
+	$created = $db_read->order('time', 'asc')->get_field('versions',
+		'time', 'type = "art" and item_id = ? and time > 0', $old_art['id']);
+	$created = $created ? min($created, $old_art['sortdate']) : $old_art['sortdate'];
+
 	$db_write->insert('art', array(
 		'id_user' => empty($author_alias[current($authors)]) ? 1 : $author_alias[current($authors)],
 		'md5' => $old_art['md5'],
@@ -162,6 +166,7 @@ foreach ($old_arts as $old_art) {
 		'similar_tested' => (int) $old_art['checked'],
 		'source' => $old_art['source'],
 		'sortdate' => $db_write->unix_to_date($old_art['sortdate'] / 1000),
+		'created' => $db_write->unix_to_date($created / 1000),
 	));
 
 	$art_ids[$old_art['id']] = $db_write->last_id();
@@ -265,6 +270,7 @@ foreach ($variations as $variation) {
 		'resized' => $answer['resized'],
 		'animated' => $answer['animated'],
 		'sortdate' => $db_write->get_field('art', 'sortdate', $art_ids[$variation['art_id']]),
+		'created' => $db_write->get_field('art', 'created', $art_ids[$variation['art_id']]),
 	));
 	$id = $db_write->last_id();
 
