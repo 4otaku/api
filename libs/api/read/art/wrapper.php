@@ -148,7 +148,7 @@ class Api_Read_Art extends Api_Abstract
 			}
 		}
 
-		if ($this->get('add_pack')) {
+		if ($this->get('add_packs')) {
 			$packs = $this->db->join('art_pack', 'ap.id = m.meta')
 				->order('ap.sortdate')->get_table('meta',
 					array('m.id_item', 'ap.id', 'ap.title'),
