@@ -16,7 +16,7 @@ class Api_Read_Art_Tag_Tip extends Api_Abstract
 		$per_page = min($per_page, 100);
 
 		$tags = $this->db->order('count')->limit($per_page * 2, $per_page * ($page - 1))
-			->get_full_table('art_tag_count', 'LEFT(name, ' . $length . ') = ?', $left);
+			->set_counter()->get_full_table('art_tag_count', 'LEFT(name, ' . $length . ') = ?', $left);
 
 		$return = array();
 		foreach ($tags as $tag) {
@@ -32,6 +32,7 @@ class Api_Read_Art_Tag_Tip extends Api_Abstract
 		}
 
 		$this->add_answer('data', array_values($return));
+		$this->add_answer('count', $this->db->get_counter());
 		$this->set_success(true);
 	}
 }
