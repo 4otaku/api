@@ -21,13 +21,13 @@ class Api_Response_Xml extends Api_Response_Abstract
 
 		foreach($data as $key => $value){
 
+			if (is_numeric($key)) {
+				$key = 'item';
+			}
+
 			if (is_array($value)) {
 
-				if (is_numeric($key)) {
-					$xml->startElement('item');
-				} else {
-					$xml->startElement($key);
-				}
+				$xml->startElement($key);
 				$this->write($xml, $value);
 				$xml->endElement();
 				continue;
