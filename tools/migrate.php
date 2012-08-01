@@ -334,7 +334,8 @@ foreach ($ratings as $rating) {
 }
 unset($ratings);
 
-$comments = $db_read->limit($limit)->order('sortdate', 'asc')->get_full_table('comment', 'place = ?', 'art');
+$comments = $db_read->limit($limit)->order('sortdate', 'asc')
+	->get_full_table('comment', 'place = ? and area != ?', 'art');
 $comment_ids = array();
 $rumonth = array(
 	'','Январь','Февраль','Март','Апрель',
@@ -350,6 +351,7 @@ foreach ($comments as $comment) {
 		'cookie' => $comment['cookie'],
 		'text' => $comment['pretty_text'],
 		'sortdate' => $db_write->unix_to_date($comment['sortdate'] / 1000),
+		'deleted' => (int) ($comment['area'] == 'deleted')
 	);
 	if (!empty($comment['edit_date'])) {
 		$edit_date = explode(';', $comment['edit_date']);
@@ -475,3 +477,5 @@ foreach ($groups_arts as $art) {
 }
 unset($groups_arts);
 unset($groups_ids);
+
+Cron::process_db('api');

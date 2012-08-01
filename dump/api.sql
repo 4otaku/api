@@ -229,6 +229,7 @@ CREATE TABLE IF NOT EXISTS `comment` (
   `sortdate` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+ALTER TABLE  `comment` ADD  `deleted` TINYINT NOT NULL DEFAULT  '0';
 
 --
 -- Триггеры `comment`
@@ -258,10 +259,12 @@ CREATE TABLE IF NOT EXISTS `cron` (
   `last_time` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `last_time` (`last_time`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
 
 INSERT INTO `cron` (`id`, `class`, `function`, `period`, `last_time`) VALUES
-(1, 'Tag', 'do_count', '1d', '0000-00-00 00:00:00');
+(1, 'Tag', 'do_count', '1d', '2012-08-30 12:38:42'),
+(2, 'Meta', 'comment_count', '1d', '2012-08-02 21:13:05'),
+(3, 'Meta', 'comment_date', '1d', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
