@@ -1,6 +1,6 @@
 <?php
 
-abstract class Api_Read_Art_List_Abstract extends Api_Abstract
+abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
 {
 	protected $default_filter = array();
 	protected $default_sorter = 'date';
@@ -147,22 +147,50 @@ abstract class Api_Read_Art_List_Abstract extends Api_Abstract
 			$fetch[$filter['name']][] = $filter['value'];
 		}
 		foreach ($fetch as $table => $names) {
-			$fetch[$table] = $this->db->get_vector($table, array('name', 'id'),
-				$this->db->array_in('name', $names), $names);
+			$fetched = (array) $this->db->get_vector($table,
+				array('name', 'id'), $this->db->array_in('name', $names), $names);
+			if ($table == 'art_tag' && count($fetched) != count($fetch[$table])) {
+				$variants = (array) $this->db->get_vector('art_tag_variant',
+					array('name', 'id_tag'), $this->db->array_in('name', $names), $names);
+				$fetched = $fetched + $variants;
+			}
+			$fetch[$table] = array();
+			foreach ($fetched as $key => $item) {
+				$key = new Text($key);
+				$fetch[$table][(string) $key->lower()] = $item;
+			}
 		}
 		foreach ($filters as &$filter) {
 			if (!in_array($filter['meta_type'], $value_needed)) {
 				continue;
 			}
 
+			$compare_value = new Text($filter['value']);
+			$compare_value = (string) $compare_value->lower();
+
 			if (empty($fetch[$filter['name']]) ||
-				empty($fetch[$filter['name']][$filter['value']])) {
+				empty($fetch[$filter['name']][$compare_value])) {
+
+				if ($filter['operator'] == Meta::IS) {
+					switch ($filter['meta_type']) {
+						case Meta::ART_TAG:
+							$text = 'Тега "' . $filter['value'] . '" не существует.';
+							break;
+						case Meta::STATE:
+							$text = 'Состояния "' . $filter['value'] . '" не существует.';
+							break;
+						default:
+							$text = $filter['name'] . ' "' . $filter['value'] . '" не существует.';
+							break;
+					}
+					throw new Error_Api($text, Error_Api::INCORRECT_INPUT);
+				}
 
 				$filter = null;
 				continue;
 			}
 
-			$filter['value'] = $fetch[$filter['name']][$filter['value']];
+			$filter['value'] = $fetch[$filter['name']][$compare_value];
 		}
 		unset($filter);
 		$filters = array_filter($filters);

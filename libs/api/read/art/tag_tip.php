@@ -1,6 +1,6 @@
 <?php
 
-class Api_Read_Art_Tag_Tip extends Api_Abstract
+class Api_Read_Art_Tag_Tip extends Api_Read_Abstract
 {
 	public function process() {
 
@@ -10,7 +10,7 @@ class Api_Read_Art_Tag_Tip extends Api_Abstract
 		}
 
 		$left = $this->get('left');
-		$length = strlen($left);
+		$length = mb_strlen($left);
 		$page = max(1, (int) $this->get('page'));
 		$per_page = $this->get('per_page') ? $this->get('per_page') : 10;
 		$per_page = min($per_page, 100);

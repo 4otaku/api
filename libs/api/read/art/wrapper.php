@@ -1,6 +1,6 @@
 <?php
 
-class Api_Read_Art extends Api_Abstract
+class Api_Read_Art extends Api_Read_Abstract
 {
 	protected $fields = array('id', 'id_parent', 'id_user', 'md5', 'ext',
 		'width', 'height', 'weight', 'resized', 'animated', 'source', 'sortdate', 'created');

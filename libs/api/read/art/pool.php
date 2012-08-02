@@ -1,6 +1,6 @@
 <?php
 
-abstract class Api_Read_Art_Pool extends Api_Abstract
+abstract class Api_Read_Art_Pool extends Api_Read_Abstract
 {
 	protected $table = null;
 	protected $fields = array('id', 'title', 'text');

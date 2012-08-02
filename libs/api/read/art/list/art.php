@@ -79,8 +79,16 @@ abstract class Api_Read_Art_List_Art extends Api_Read_Art_List_Abstract
 
 					if ($filter['name'] == 'user') {
 						$filter['name'] = 'id_user';
-						$filter['value'] = $this->db->get_field('user',
+						$value = $this->db->get_field('user',
 							'id', 'login = ?', $filter['value']);
+
+						if (empty($value) && Meta::parse($filter['type']) == Meta::IS) {
+							throw new Error_Api('Пользователя с логином ' .
+								$filter['value'] . ' не существует.',
+								Error_Api::INCORRECT_INPUT);
+						}
+
+						$filter['value'] = $value;
 					}
 
 					$this->local_filters[] = $filter['name'] . ' ' . Meta::parse($filter['type']) . ' ?';
