@@ -1,4 +1,4 @@
 <?php
 
-class Error_Create extends Error
+class Error_Create extends Error_Api
 {}
