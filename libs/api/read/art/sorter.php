@@ -83,6 +83,12 @@ class Api_Read_Art_Sorter
 			->order('m.meta', $this->direction);
 	}
 
+	protected function translation_date($sql) {
+		$sql->join('meta', 'm.id_item = id and m.item_type = ' .
+			$this->item . ' and meta_type = ' . Meta::TRANSLATION_DATE)
+			->order('m.meta', $this->direction);
+	}
+
 	protected function manga($sql) {
 		$sql->join('art_manga_item', 'ami.id_art = id and ami.id_manga = ' .
 			(int) $this->value)->order('ami.order', $this->direction);

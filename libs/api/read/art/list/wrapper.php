@@ -2,15 +2,6 @@
 
 class Api_Read_Art_List extends Api_Read_Art_List_Art
 {
-	protected $default_filter = array(
-		array(
-			'name' => 'state',
-			'meta_type' => Meta::STATE,
-			'operator' => Meta::IS,
-			'value' => 'deleted',
-			'reverse' => true
-		)
-	);
 	protected $fields = array('id', 'id_parent', 'id_user', 'md5', 'animated', 'sortdate');
 
 	protected function add_meta_data(&$data) {

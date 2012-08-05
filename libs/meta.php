@@ -12,7 +12,8 @@ class Meta
 		ART_RATING = 7,
 		COMMENT_COUNT = 9,
 		COMMENT_DATE = 10,
-		TAG_COUNT = 11;
+		TAG_COUNT = 11,
+		TRANSLATION_DATE = 12;
 
 	const
 		IS = '=',

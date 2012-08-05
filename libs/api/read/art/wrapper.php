@@ -184,19 +184,33 @@ class Api_Read_Art extends Api_Read_Abstract
 		}
 
 		if ($this->get('add_translations')) {
-			$translations = $this->db->get_table('art_translation',
-				array('id_art', 'x1', 'x2', 'y1', 'y2', 'text'),
-				'state = 1 and ' . $sql->array_in('id_art', $ids), $ids);
-
 			foreach ($data as &$item) {
 				$item['translation'] = array();
+				$item['translator'] = array();
 			}
 			unset($item);
+
+			$translations = $this->db->get_table('art_translation',
+				array('id', 'id_art', 'x1', 'x2', 'y1', 'y2', 'text'),
+				'state = 1 and ' . $sql->array_in('id_art', $ids), $ids);
 			foreach ($translations as $translation) {
 				$link = &$data[$translation['id_art']]['translation'];
 				unset($translation['id_art']);
 				$link[] = $translation;
 			}
+
+			$translators = $this->db->order('at.sortdate', 'asc')
+				->join('user', 'u.id = at.id_user')
+				->get_table('art_translation', array('at.id_art', 'u.login'),
+				$this->db->array_in('at.id_art', $ids), $ids);
+			foreach ($translators as $translator) {
+				$link = &$data[$translator['id_art']]['translator'];
+				$link[] = $translator['login'];
+			}
+			foreach ($data as &$item) {
+				$item['translator'] = array_unique($item['translator']);
+			}
+			unset($item);
 		}
 
 		$this->add_answer('data', array_values($data));

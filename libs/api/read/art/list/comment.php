@@ -2,24 +2,14 @@
 
 class Api_Read_Art_List_Comment extends Api_Read_Art_List_Art
 {
-	protected $default_filter = array(
-		array(
-			'name' => 'state',
-			'meta_type' => Meta::STATE,
-			'operator' => Meta::IS,
-			'value' => 'deleted',
-			'reverse' => true
-		),
-		array(
-			'name' => 'state',
-			'meta_type' => Meta::COMMENT_DATE,
-			'operator' => Meta::MORE,
-			'value' => 0,
-			'reverse' => false
-		),
-	);
 	protected $fields = array('id', 'id_parent', 'md5', 'animated');
 	protected $default_sorter = 'comment_date';
+
+	protected function get_default_filter() {
+		$return = parent::get_default_filter();
+		$return[] = Api_Read_Art_Filter::$commented;
+		return $return;
+	}
 
 	protected function add_meta_data(&$data) {
 		parent::add_meta_data($data);

@@ -1,7 +1,20 @@
 <?php
 
-class Api_Read_Art_Nextprev extends Api_Read_Art_List
+class Api_Read_Art_Nextprev extends Api_Read_Art_List_Art
 {
+	public function process() {
+		$mode = $this->get('mode');
+		if ($mode == 'translation') {
+			$this->default_filter[] = Api_Read_Art_Filter::$translated;
+			$this->default_sorter = 'translation_date';
+		} elseif($mode == 'comment') {
+			$this->default_filter[] = Api_Read_Art_Filter::$commented;
+			$this->default_sorter = 'comment_date';
+		}
+
+		parent::process();
+	}
+
 	protected function process_query($sql) {
 		$id = $this->get('id');
 

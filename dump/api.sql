@@ -264,7 +264,8 @@ CREATE TABLE IF NOT EXISTS `cron` (
 INSERT INTO `cron` (`id`, `class`, `function`, `period`, `last_time`) VALUES
 (1, 'Tag', 'do_count', '1d', '2012-08-30 12:38:42'),
 (2, 'Meta', 'comment_count', '1d', '2012-08-02 21:13:05'),
-(3, 'Meta', 'comment_date', '1d', '0000-00-00 00:00:00');
+(3, 'Meta', 'comment_date', '1d', '0000-00-00 00:00:00'),
+(4, 'Meta', 'translation_date', '1d', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 

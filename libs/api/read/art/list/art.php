@@ -11,8 +11,8 @@ abstract class Api_Read_Art_List_Art extends Api_Read_Art_List_Abstract
 		'height', 'weight', 'id_parent', 'id_user', 'user');
 
 	public function process() {
-
 		$params = $this->get();
+
 		if (!empty($params['no_group'])) {
 			$this->group_field = 'id';
 		}
@@ -62,6 +62,12 @@ abstract class Api_Read_Art_List_Art extends Api_Read_Art_List_Abstract
 		unset($item);
 	}
 
+	protected function get_default_filter() {
+		$return = parent::get_default_filter();
+		$return[] = Api_Read_Art_Filter::$not_deleted;
+		return $return;
+	}
+
 	protected function get_filters($params) {
 		if (!empty($params['filter']) && is_array($params['filter'])) {
 			foreach ($params['filter'] as &$filter) {
@@ -100,5 +106,37 @@ abstract class Api_Read_Art_List_Art extends Api_Read_Art_List_Abstract
 		}
 
 		return parent::get_filters($params);
+	}
+
+	protected function process_nextprev($sql) {
+		$id = $this->get('id');
+
+		if (empty($id) || !is_numeric($id)) {
+			$this->add_error(Error_Api::INCORRECT_INPUT);
+			return;
+		}
+
+		if (empty($this->local_filters)) {
+			$data = $sql->get_table($this->table, 'id');
+		} else {
+			$data = $sql->get_table($this->table, 'id',
+				implode(' and ', $this->local_filters), $this->local_filter_vars);
+		}
+
+		$pos = array_search(array('id' => $id), $data);
+
+		if ($pos === false) {
+			$this->set_success(false);
+			return;
+		}
+
+		if (isset($data[$pos + 1])) {
+			$this->add_answer('next', $data[$pos + 1]['id']);
+		}
+		if (isset($data[$pos - 1])) {
+			$this->add_answer('prev', $data[$pos - 1]['id']);
+		}
+
+		$this->set_success(true);
 	}
 }

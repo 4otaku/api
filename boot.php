@@ -15,7 +15,7 @@ if ($_SERVER['DOCUMENT_ROOT'] != ROOT_DIR) {
 
 $class = 'Api_' . implode('_', array_map('ucfirst', $url));
 
-if (!class_exists($class)) {
+if (!class_exists($class) || !($class instanceOf Api_Abstract)) {
 	$class = 'Api_Error';
 	$request = new Api_Request('dummy');
 } else {

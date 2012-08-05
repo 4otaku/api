@@ -60,9 +60,13 @@ abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
 		$this->set_success(true);
 	}
 
+	protected function get_default_filter() {
+		return $this->default_filter;
+	}
+
 	protected function get_filters($params) {
 		if (empty($params['filter'])) {
-			return $this->default_filter;
+			return $this->get_default_filter();
 		}
 		$params['filter'] = (array) $params['filter'];
 		foreach ($params['filter'] as &$filter) {
@@ -89,7 +93,7 @@ abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
 			}
 		}
 		unset($filter);
-		return array_merge($this->default_filter, array_filter($params['filter']));
+		return array_merge($this->get_default_filter(), array_filter($params['filter']));
 	}
 
 	protected function get_per_page($params) {
