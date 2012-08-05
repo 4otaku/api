@@ -47,6 +47,11 @@ function log_progress($type, $count) {
 	echo $type . ': ' . ++$log_count . '/' . $count . "\n";
 	flush();
 }
+function lower($text) {
+	$alfavitlover = array('ё','й','ц','у','к','е','н','г', 'ш','щ','з','х','ъ','ф','ы','в', 'а','п','р','о','л','д','ж','э', 'я','ч','с','м','и','т','ь','б','ю');
+	$alfavitupper = array('Ё','Й','Ц','У','К','Е','Н','Г', 'Ш','Щ','З','Х','Ъ','Ф','Ы','В', 'А','П','Р','О','Л','Д','Ж','Э', 'Я','Ч','С','М','И','Т','Ь','Б','Ю');
+	return str_replace($alfavitupper,$alfavitlover,strtolower($text));
+}
 
 $old_tags = $db_read->limit($limit)->get_vector('tag', array('id', 'alias', 'name', 'variants', 'color', 'have_description'));
 
@@ -92,7 +97,7 @@ $users = $db_read->limit($limit)->get_full_vector('user');
 $tmp_users = array();
 foreach ($users as $user) {
 	$db_write->insert('user', $user);
-	$tmp_users[$user['login']] = $db_write->last_id();
+	$tmp_users[lower($user['login'])] = $db_write->last_id();
 	log_progress('user', count($users));
 }
 unset($users);
@@ -101,15 +106,15 @@ $authors = $db_read->limit($limit)->get_full_vector('author');
 $author_alias = array();
 foreach ($authors as $author) {
 
-	if (isset($tmp_users[$author['name']])) {
-		$author_alias[$author['alias']] = $tmp_users[$author['name']];
+	if (isset($tmp_users[lower($author['name'])])) {
+		$author_alias[lower($author['alias'])] = $tmp_users[lower($author['name'])];
 	} else {
 		$db_write->insert('user', array(
 			'login' => $author['name'],
 			'pass' => md5(microtime(true)),
 			'email' => $author['alias'] . '@dummy.mail'
 		));
-		$author_alias[$author['alias']] = $db_write->last_id();
+		$author_alias[lower($author['alias'])] = $db_write->last_id();
 	}
 	log_progress('author', count($authors));
 }
@@ -154,7 +159,7 @@ foreach ($old_arts as $old_art) {
 	$created = $created ? min($created, $old_art['sortdate']) : $old_art['sortdate'];
 
 	$db_write->insert('art', array(
-		'id_user' => empty($author_alias[current($authors)]) ? 1 : $author_alias[current($authors)],
+		'id_user' => empty($author_alias[lower(current($authors))]) ? 1 : $author_alias[lower(current($authors))],
 		'md5' => $old_art['md5'],
 		'ext' => $old_art['extension'],
 		'width' => $answer['width'],
@@ -335,7 +340,7 @@ foreach ($ratings as $rating) {
 unset($ratings);
 
 $comments = $db_read->limit($limit)->order('sortdate', 'asc')
-	->get_full_table('comment', 'place = ? and area != ?', 'art');
+	->get_full_table('comment', 'place = ?', 'art');
 $comment_ids = array();
 $rumonth = array(
 	'','Январь','Февраль','Март','Апрель',
@@ -399,7 +404,7 @@ foreach ($translations as $translation) {
 		$db_write->insert('art_translation', array(
 			'id_translation' => $key + 1,
 			'id_art' => $art_ids[$translation['art_id']],
-			'id_user' => empty($author_alias[$translation['author']]) ? 1 : $author_alias[$translation['author']],
+			'id_user' => empty($author_alias[lower($translation['author'])]) ? 1 : $author_alias[lower($translation['author'])],
 			'x1' => $item['x1'],
 			'x2' => $item['x2'],
 			'y1' => $item['y1'],
@@ -410,18 +415,18 @@ foreach ($translations as $translation) {
 	}
 
 	$max_date = $db_write->get_field('meta', 'item_type = 1 and meta_type = 13 and id_item = ?',
-		$art_ids[$translation['post_id']]);
+		$art_ids[$translation['art_id']]);
 	if (!$max_date) {
 		$db_write->insert('meta', array(
 			'item_type' => 1,
-			'id_item' => $art_ids[$translation['post_id']],
+			'id_item' => $art_ids[$translation['art_id']],
 			'meta_type' => 13,
 			'meta' => round($translation['sortdate'] / 1000),
 		));
 	} else {
 		$db_write->update('meta', array(
 			'meta' => max($max_date, $translation['sortdate'] / 1000),
-		), 'item_type = 1 and meta_type = 13 and id_item = ?', $art_ids[$translation['post_id']]);
+		), 'item_type = 1 and meta_type = 13 and id_item = ?', $art_ids[$translation['art_id']]);
 	}
 	log_progress('translation', count($translations));
 }

@@ -69,6 +69,9 @@ abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
 			return $this->get_default_filter();
 		}
 		$params['filter'] = (array) $params['filter'];
+
+		$this->parse_date_filters($params['filter'], array('comment_date', 'translation_date'));
+
 		foreach ($params['filter'] as &$filter) {
 			if (!isset($filter['name']) || !isset($filter['type']) || !isset($filter['value'])) {
 				$filter = null;
@@ -94,6 +97,58 @@ abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
 		}
 		unset($filter);
 		return array_merge($this->get_default_filter(), array_filter($params['filter']));
+	}
+
+	protected function parse_date_filters(&$filters, $date_keys) {
+		$add = array();
+		foreach ($filters as $key => &$filter) {
+			if (!in_array($filter['name'], $date_keys)) {
+				continue;
+			}
+			try {
+				$date = new DateTime($filter['value']);
+			} catch (Exception $e) {
+				$filter = null;
+				continue;
+			}
+			switch (Meta::parse($filter['type'])) {
+				case Meta::IS:
+					$add[] = array(
+						'name' => $filter['name'],
+						'type' => 'more',
+						'value' => $date->getTimestamp() - 1
+					);
+					$add[] = array(
+						'name' => $filter['name'],
+						'type' => 'less',
+						'value' => $date->add(new DateInterval('P1D'))->getTimestamp()
+					);
+					break;
+				case Meta::NOT:
+					// @TODO: придумать что-нибудь. Текщая система фильтров не позволяет оператор OR
+					break;
+				case Meta::MORE:
+					$add[] = array(
+						'name' => $filter['name'],
+						'type' => 'more',
+						'value' => $date->add(new DateInterval('P1D'))->getTimestamp() - 1
+					);
+					break;
+				case Meta::LESS:
+					$add[] = array(
+						'name' => $filter['name'],
+						'type' => 'less',
+						'value' => $date->getTimestamp()
+					);
+					break;
+				default:
+					break;
+			}
+			$filter = null;
+		}
+		foreach ($add as $item) {
+			$filters[] = $item;
+		}
 	}
 
 	protected function get_per_page($params) {

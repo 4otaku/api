@@ -216,8 +216,8 @@ CREATE TABLE IF NOT EXISTS `art_translation` (
 
 CREATE TABLE IF NOT EXISTS `comment` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `rootparent` int(10) unsigned NOT NULL,
-  `parent` int(10) unsigned NOT NULL,
+  `rootparent` int(10) unsigned NOT NULL DEFAULT '0',
+  `parent` int(10) unsigned NOT NULL DEFAULT '0',
   `id_item` int(10) unsigned NOT NULL,
   `area` tinyint(3) unsigned NOT NULL COMMENT '1 - art, 2 - post',
   `username` varchar(255) CHARACTER SET utf8 NOT NULL,
@@ -227,9 +227,9 @@ CREATE TABLE IF NOT EXISTS `comment` (
   `text` text CHARACTER SET utf8 NOT NULL,
   `editdate` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `sortdate` timestamp NULL DEFAULT '0000-00-00 00:00:00',
+  `deleted` tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-ALTER TABLE  `comment` ADD  `deleted` TINYINT NOT NULL DEFAULT  '0';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
 -- Триггеры `comment`
