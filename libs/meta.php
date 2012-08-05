@@ -13,7 +13,8 @@ class Meta
 		COMMENT_COUNT = 9,
 		COMMENT_DATE = 10,
 		TAG_COUNT = 11,
-		TRANSLATION_DATE = 12;
+		TRANSLATOR = 12,
+		TRANSLATION_DATE = 13;
 
 	const
 		IS = '=',
@@ -33,6 +34,6 @@ class Meta
 	}
 
 	public static function value_needed() {
-		return array(self::STATE, self::ART_TAG);
+		return array(self::STATE, self::ART_TAG, self::TRANSLATOR);
 	}
 }

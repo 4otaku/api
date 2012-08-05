@@ -89,7 +89,7 @@ abstract class Api_Read_Art_List_Art extends Api_Read_Art_List_Abstract
 							'id', 'login = ?', $filter['value']);
 
 						if (empty($value) && Meta::parse($filter['type']) == Meta::IS) {
-							throw new Error_Api('Пользователя с логином ' .
+							throw new Error_Api('Пользователя ' .
 								$filter['value'] . ' не существует.',
 								Error_Api::INCORRECT_INPUT);
 						}

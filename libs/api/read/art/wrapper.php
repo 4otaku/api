@@ -202,7 +202,7 @@ class Api_Read_Art extends Api_Read_Abstract
 			$translators = $this->db->order('at.sortdate', 'asc')
 				->join('user', 'u.id = at.id_user')
 				->get_table('art_translation', array('at.id_art', 'u.login'),
-				$this->db->array_in('at.id_art', $ids), $ids);
+				'state != 3 and ' . $this->db->array_in('at.id_art', $ids), $ids);
 			foreach ($translators as $translator) {
 				$link = &$data[$translator['id_art']]['translator'];
 				$link[] = $translator['login'];

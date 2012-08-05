@@ -409,19 +409,19 @@ foreach ($translations as $translation) {
 		));
 	}
 
-	$max_date = $db_write->get_field('meta', 'item_type = 1 and meta_type = 12 and id_item = ?',
+	$max_date = $db_write->get_field('meta', 'item_type = 1 and meta_type = 13 and id_item = ?',
 		$art_ids[$translation['post_id']]);
 	if (!$max_date) {
 		$db_write->insert('meta', array(
 			'item_type' => 1,
 			'id_item' => $art_ids[$translation['post_id']],
-			'meta_type' => 12,
+			'meta_type' => 13,
 			'meta' => round($translation['sortdate'] / 1000),
 		));
 	} else {
 		$db_write->update('meta', array(
 			'meta' => max($max_date, $translation['sortdate'] / 1000),
-		), 'item_type = 1 and meta_type = 12 and id_item = ?', $art_ids[$translation['post_id']]);
+		), 'item_type = 1 and meta_type = 13 and id_item = ?', $art_ids[$translation['post_id']]);
 	}
 	log_progress('translation', count($translations));
 }

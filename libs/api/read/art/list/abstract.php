@@ -150,18 +150,23 @@ abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
 			}
 			$fetch[$filter['name']][] = $filter['value'];
 		}
-		foreach ($fetch as $table => $names) {
+		foreach ($fetch as $type => $names) {
+			$table = ($type == 'translator') ? 'user' : $type;
+			$field = ($type == 'translator') ? 'login' : 'name';
+
 			$fetched = (array) $this->db->get_vector($table,
-				array('name', 'id'), $this->db->array_in('name', $names), $names);
+				array($field, 'id'), $this->db->array_in($field, $names), $names);
+
 			if ($table == 'art_tag' && count($fetched) != count($fetch[$table])) {
 				$variants = (array) $this->db->get_vector('art_tag_variant',
 					array('name', 'id_tag'), $this->db->array_in('name', $names), $names);
 				$fetched = $fetched + $variants;
 			}
-			$fetch[$table] = array();
+
+			$fetch[$type] = array();
 			foreach ($fetched as $key => $item) {
 				$key = new Text($key);
-				$fetch[$table][(string) $key->lower()] = $item;
+				$fetch[$type][(string) $key->lower()] = $item;
 			}
 		}
 		foreach ($filters as &$filter) {
@@ -182,6 +187,9 @@ abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
 							break;
 						case Meta::STATE:
 							$text = 'Состояния "' . $filter['value'] . '" не существует.';
+							break;
+						case Meta::TRANSLATOR:
+							$text = 'Пользователя "' . $filter['value'] . '" не существует.';
 							break;
 						default:
 							$text = $filter['name'] . ' "' . $filter['value'] . '" не существует.';

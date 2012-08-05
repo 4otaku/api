@@ -265,7 +265,8 @@ INSERT INTO `cron` (`id`, `class`, `function`, `period`, `last_time`) VALUES
 (1, 'Tag', 'do_count', '1d', '2012-08-30 12:38:42'),
 (2, 'Meta', 'comment_count', '1d', '2012-08-02 21:13:05'),
 (3, 'Meta', 'comment_date', '1d', '0000-00-00 00:00:00'),
-(4, 'Meta', 'translation_date', '1d', '0000-00-00 00:00:00');
+(4, 'Meta', 'translation_date', '1d', '0000-00-00 00:00:00'),
+(5, 'Meta', 'translator', '1d', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -307,7 +308,7 @@ CREATE TABLE IF NOT EXISTS `head_menu` (
 CREATE TABLE IF NOT EXISTS `meta` (
   `item_type` tinyint(3) unsigned NOT NULL COMMENT '1 - art, 2 - post, 3 - art_pack, 4 - art_group, 5 - art_manga, 6 - art_artist',
   `id_item` int(10) unsigned NOT NULL,
-  `meta_type` tinyint(3) unsigned NOT NULL COMMENT '1 - art_tag, 2 - state, 3 - art_pack, 4 - art_group, 5 - art_manga, 6 - art_artist, 7 - art_rating, 		8 - date, 9 - comment_count, 10 - comment_date, 11 - tag_count, 12 - user',
+  `meta_type` tinyint(3) unsigned NOT NULL COMMENT '1 - art_tag, 2 - state, 3 - art_pack, 4 - art_group, 5 - art_manga, 6 - art_artist, 7 - art_rating, 8 - date, 9 - comment_count, 10 - comment_date, 11 - tag_count, 12 - translator, 13 - translation_date',
   `meta` int(11) NOT NULL,
   PRIMARY KEY (`item_type`,`id_item`,`meta_type`,`meta`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -351,6 +352,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `rights` tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+ALTER TABLE  `api`.`user` ADD UNIQUE  `unique` (  `login` );
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

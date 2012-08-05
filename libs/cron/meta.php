@@ -116,6 +116,67 @@ class Cron_Meta extends Cron_Abstract
 		return memory_get_usage();
 	}
 
+	protected function translator()
+	{
+		$meta_type = Meta::parse('translator');
+
+		$translators = $this->db->get_table('art_translation',
+			array('id_art', 'id_user'), 'state != 3');
+
+		$art = array();
+		foreach ($translators as $translator) {
+			if (!isset($art[$translator['id_art']])) {
+				$art[$translator['id_art']] = array('translated' => array(),
+					'written' => array());
+			}
+			$art[$translator['id_art']]['translated'][] = $translator['id_user'];
+		}
+		unset($translators);
+
+		foreach ($art as &$item) {
+			$item['translated'] = array_unique($item['translated']);
+		}
+		unset($item);
+
+		$written = $this->db->get_table('meta', array('id_item', 'meta'),
+			'item_type = 1 and meta_type = ?', $meta_type);
+
+		foreach ($written as $item) {
+			if (!isset($art[$item['id_item']])) {
+				$art[$item['id_item']] = array('translated' => array(),
+					'written' => array());
+			}
+			$art[$item['id_item']]['written'][] = $item['meta'];
+		}
+		unset($written);
+
+		foreach ($art as &$item) {
+			$item['written'] = array_unique($item['written']);
+		}
+		unset($item);
+
+		foreach ($art as $id => $item) {
+			$insert = (array) array_diff($item['translated'], $item['written']);
+			$delete = (array) array_diff($item['written'], $item['translated']);
+
+			foreach ($insert as $meta) {
+				$this->db->insert('meta', array(
+					'item_type' => 1,
+					'meta_type' => $meta_type,
+					'id_item' => $id,
+					'meta' => $meta
+				));
+			}
+			foreach ($delete as $meta) {
+				$this->db->delete('meta', 'item_type = 1 and ' .
+					'meta_type = ? and id_item = ? and meta = ?',
+					array($meta_type, $id, $meta));
+			}
+		}
+
+		return memory_get_usage();
+	}
+
 	protected function translation_date()
 	{
 		$meta_type = Meta::parse('translation_date');

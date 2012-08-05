@@ -29,7 +29,7 @@ class Api_Read_Art_List_Translation extends Api_Read_Art_List_Art
 		$translators = $this->db->order('at.sortdate', 'asc')
 			->join('user', 'u.id = at.id_user')
 			->get_table('art_translation', array('at.id_art', 'u.login'),
-			$this->db->array_in('at.id_art', $ids), $ids);
+			'state != 3 and ' . $this->db->array_in('at.id_art', $ids), $ids);
 
 		foreach ($translation_count as $id_art => $count) {
 			foreach ($data as &$item) {
