@@ -2,7 +2,7 @@
 
 class Api_Read_Art_List extends Api_Read_Art_List_Art
 {
-	protected $fields = array('id', 'id_parent', 'id_user', 'md5', 'animated', 'sortdate');
+	protected $fields = array('id', 'id_parent', 'id_user', 'md5', 'animated', 'a.sortdate');
 
 	protected function add_meta_data(&$data) {
 		parent::add_meta_data($data);

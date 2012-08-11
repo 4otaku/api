@@ -4,8 +4,6 @@ abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
 {
 	protected $default_filter = array();
 	protected $default_sorter = 'date';
-	protected $default_sorter_order = 'desc';
-	protected $default_page = 1;
 	protected $default_per_page = 30;
 	protected $max_per_page = 100;
 	protected $item_type = null;
@@ -24,8 +22,8 @@ abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
 
 		$filters = $this->get_filters($params);
 		$this->get_filter_values($filters);
-		$per_page = $this->get_per_page($params);
-		$page = $this->get_page($params);
+		$per_page = $this->get_per_page();
+		$page = $this->get_page();
 		$sorter = $this->get_sorter($params);
 
 		$sql = $this->db->limit($per_page, ($page - 1) * $per_page)
@@ -151,46 +149,17 @@ abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
 		}
 	}
 
-	protected function get_per_page($params) {
-		if (empty($params['per_page'])) {
-			return $this->default_per_page;
-		}
-
-		$per_page = (int) $params['per_page'];
-		if ($per_page <= 0 || $per_page > $this->max_per_page) {
-			return $this->default_per_page;
-		}
-
-		return $per_page;
-	}
-
-	protected function get_page($params) {
-		if (empty($params['page'])) {
-			return $this->default_page;
-		}
-
-		$page = (int) $params['page'];
-		if ($page <= 0) {
-			return $this->default_page;
-		}
-
-		return $page;
-	}
-
 	protected function get_sorter($params) {
-		$value = false;
-		if (empty($params['sort_by'])) {
-			$sorter = $this->default_sorter;
-		} elseif (is_array($params['sort_by'])) {
-			$value = reset($params['sort_by']);
-			$sorter = key($params['sort_by']);
-		} else {
-			$sorter = (string) $params['sort_by'];
-		}
-		$sorter_order = empty($params['sort_order']) ? $this->default_sorter_order :
+		$value = empty($params['sort_value']) ? false :
+			$params['sort_value'];
+		$sorter = empty($params['sort_by']) ? $this->default_sorter :
+			(string) $params['sort_by'];
+		$sorter_order = empty($params['sort_order']) ?
+			$this->default_sorter_order :
 			(string) $params['sort_order'];
 
-		return new Api_Read_Art_Sorter($this->item_type, $sorter, $sorter_order, $value);
+		return new Api_Read_Art_Sorter($this->item_type,
+			$sorter, $sorter_order, $value);
 	}
 
 	protected function get_filter_values(&$filters) {

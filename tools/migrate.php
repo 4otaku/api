@@ -499,3 +499,4 @@ unset($groups_arts);
 unset($groups_ids);
 
 Cron::process_db('api');
+// php tools/manga_to_group.php 27 50 40 39 34 31 25 21 20 18 6

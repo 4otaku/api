@@ -47,11 +47,11 @@ class Api_Read_Art_Nextprev extends Api_Read_Art_List_Art
 		$this->set_success(true);
 	}
 
-	protected function get_per_page($params) {
+	protected function get_per_page() {
 		return 0;
 	}
 
-	protected function get_page($params) {
+	protected function get_page() {
 		return 0;
 	}
 }

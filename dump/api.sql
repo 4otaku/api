@@ -67,6 +67,15 @@ CREATE TABLE IF NOT EXISTS `art_group` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+
+
+CREATE TABLE IF NOT EXISTS `art_group_item` (
+  `id_group` int(10) unsigned NOT NULL,
+  `id_art` int(10) unsigned NOT NULL,
+  `sortdate` timestamp NOT NULL,
+  PRIMARY KEY (`id_group`,`id_art`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- --------------------------------------------------------
 
 --
@@ -259,14 +268,19 @@ CREATE TABLE IF NOT EXISTS `cron` (
   `last_time` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `last_time` (`last_time`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=7 ;
+
+--
+-- Дамп данных таблицы `cron`
+--
 
 INSERT INTO `cron` (`id`, `class`, `function`, `period`, `last_time`) VALUES
-(1, 'Tag', 'do_count', '1d', '2012-08-30 12:38:42'),
-(2, 'Meta', 'comment_count', '1d', '2012-08-02 21:13:05'),
-(3, 'Meta', 'comment_date', '1d', '0000-00-00 00:00:00'),
-(4, 'Meta', 'translation_date', '1d', '0000-00-00 00:00:00'),
-(5, 'Meta', 'translator', '1d', '0000-00-00 00:00:00');
+(1, 'Tag', 'do_count', '1d', '2012-08-06 21:45:56'),
+(2, 'Meta', 'comment_count', '1d', '2012-08-06 21:46:12'),
+(3, 'Meta', 'comment_date', '1d', '2012-08-06 21:46:30'),
+(4, 'Meta', 'translation_date', '1d', '2012-08-06 21:46:32'),
+(5, 'Meta', 'translator', '1d', '2012-08-06 21:46:33'),
+(6, 'Pool', 'delete_empty', '1h', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 

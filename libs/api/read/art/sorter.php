@@ -89,6 +89,11 @@ class Api_Read_Art_Sorter
 			->order('m.meta', $this->direction);
 	}
 
+	protected function group($sql) {
+		$sql->join('art_group_item', 'agi.id_art = id and agi.id_group = ' .
+			(int) $this->value)->order('agi.sortdate', $this->direction);
+	}
+
 	protected function manga($sql) {
 		$sql->join('art_manga_item', 'ami.id_art = id and ami.id_manga = ' .
 			(int) $this->value)->order('ami.order', $this->direction);
