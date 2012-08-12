@@ -107,6 +107,16 @@ class Api_Read_Comment extends Api_Read_Abstract
 			if (!in_array($key, $this->legal_filter)) {
 				$filter = null;
 			}
+
+			if ($key == 'area') {
+				foreach ($filter as &$item) {
+					if (!is_numeric($item)) {
+						$item = Meta::parse($item);
+					}
+				}
+				unset($item);
+				$filter = array_filter($filter);
+			}
 		}
 		unset($filter);
 

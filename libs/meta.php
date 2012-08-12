@@ -23,6 +23,10 @@ class Meta
 		LESS = '<',
 		MORE = '>';
 
+	const
+		ART = 1,
+		POST = 2;
+
 	public static function parse($string) {
 		$const = strtoupper($string);
 

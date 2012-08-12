@@ -85,21 +85,6 @@ class Api_Read_Art extends Api_Read_Abstract
 			}
 		}
 
-		if ($this->get('add_comments')) {
-			$comments = $this->db->order('sortdate')->get_table('comment', array('id', 'rootparent',
-				'parent', 'id_item', 'username', 'email', 'text', 'editdate', 'sortdate'),
-					'area = 1 and ' . $sql->array_in('id_item', $ids), $ids);
-			foreach ($data as &$item) {
-				$item['comment'] = array();
-			}
-			unset($item);
-			foreach ($comments as $comment) {
-				$link = &$data[$comment['id_item']]['comment'];
-				unset($comment['id_item']);
-				$link[] = $comment;
-			}
-		}
-
 		if ($this->get('add_similar')) {
 			$similar = $sql->order('id_parent_order', 'asc')->get_table('art',
 				array('id', 'id_parent'), $this->db->array_in('id_parent', $parents), $parents);
