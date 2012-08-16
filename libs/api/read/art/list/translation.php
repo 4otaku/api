@@ -2,7 +2,7 @@
 
 class Api_Read_Art_List_Translation extends Api_Read_Art_List_Art
 {
-	protected $fields = array('id', 'id_parent', 'md5', 'animated');
+	protected $fields = array('id', 'id_parent', 'md5', 'ext', 'animated');
 	protected $default_sorter = 'translation_date';
 
 	protected function get_default_filter() {

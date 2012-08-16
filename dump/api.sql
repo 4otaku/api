@@ -275,12 +275,14 @@ CREATE TABLE IF NOT EXISTS `cron` (
 --
 
 INSERT INTO `cron` (`id`, `class`, `function`, `period`, `last_time`) VALUES
-(1, 'Tag', 'do_count', '1d', '2012-08-06 21:45:56'),
-(2, 'Meta', 'comment_count', '1d', '2012-08-06 21:46:12'),
-(3, 'Meta', 'comment_date', '1d', '2012-08-06 21:46:30'),
-(4, 'Meta', 'translation_date', '1d', '2012-08-06 21:46:32'),
-(5, 'Meta', 'translator', '1d', '2012-08-06 21:46:33'),
-(6, 'Pool', 'delete_empty', '1h', '0000-00-00 00:00:00');
+(1, 'Tag', 'do_count', '1d', '2012-09-16 21:45:56'),
+(2, 'Meta', 'comment_count', '1d', '2012-08-18 00:21:53'),
+(3, 'Meta', 'comment_date', '1d', '2012-08-18 00:22:10'),
+(4, 'Meta', 'translation_date', '1d', '2012-08-18 00:22:10'),
+(5, 'Meta', 'translator', '1d', '2012-08-18 00:22:10'),
+(6, 'Pool', 'delete_empty', '1h', '2012-08-17 01:22:54'),
+(7, 'Pool', 'create_pack_archive', '5m', '2012-08-17 00:48:48'),
+(8, 'Pool', 'create_manga_archive', '5m', '2012-08-17 00:48:48');
 
 -- --------------------------------------------------------
 

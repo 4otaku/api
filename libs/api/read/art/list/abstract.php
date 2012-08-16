@@ -9,7 +9,7 @@ abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
 	protected $item_type = null;
 	protected $table = null;
 	protected $group_field = 'id';
-	protected $fields = '*';
+	protected $fields = array('*');
 
 	public function process() {
 
@@ -152,14 +152,21 @@ abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
 	protected function get_sorter($params) {
 		$value = empty($params['sort_value']) ? false :
 			$params['sort_value'];
-		$sorter = empty($params['sort_by']) ? $this->default_sorter :
+		$sort = empty($params['sort_by']) ? $this->default_sorter :
 			(string) $params['sort_by'];
-		$sorter_order = empty($params['sort_order']) ?
+		$sort_order = empty($params['sort_order']) ?
 			$this->default_sorter_order :
 			(string) $params['sort_order'];
 
-		return new Api_Read_Art_Sorter($this->item_type,
-			$sorter, $sorter_order, $value);
+		$sorter = new Api_Read_Art_Sorter($this->item_type,
+			$sort, $sort_order, $value);
+
+		if ($sorter->get_additional_fields()) {
+			$this->fields = array_merge($this->fields,
+				$sorter->get_additional_fields());
+		}
+
+		return $sorter;
 	}
 
 	protected function get_filter_values(&$filters) {

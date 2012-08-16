@@ -1,5 +1,8 @@
-files/*
 !files/.gitignore
+files/pack/*
+!files/pack/.gitignore
+files/manga/*
+!files/manga/.gitignore
 
 !images/.gitignore
 images/art/*

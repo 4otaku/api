@@ -25,6 +25,18 @@ class Api_Read_Art_Sorter
 		$this->$method($sql);
 	}
 
+	public function get_additional_fields() {
+		if ($this->type == 'pack') {
+			return array('api.filename');
+		}
+
+		if ($this->type == 'manga') {
+			return array('ami.order');
+		}
+
+		return false;
+	}
+
 	protected function none($sql) {}
 
 	protected function random($sql) {

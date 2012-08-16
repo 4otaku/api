@@ -7,8 +7,8 @@ abstract class Api_Read_Art_List_Art extends Api_Read_Art_List_Abstract
 	protected $group_field = 'id_parent';
 	protected $local_filters = array();
 	protected $local_filter_vars = array();
-	protected $local_filtered_variables = array('date', 'md5', 'width',
-		'height', 'weight', 'id_parent', 'id_user', 'user');
+	protected $local_filtered_variables = array('id', 'date', 'md5',
+		'width', 'height', 'weight', 'id_parent', 'id_user', 'user');
 
 	public function process() {
 		$params = $this->get();

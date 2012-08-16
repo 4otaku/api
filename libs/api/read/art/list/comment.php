@@ -2,7 +2,7 @@
 
 class Api_Read_Art_List_Comment extends Api_Read_Art_List_Art
 {
-	protected $fields = array('id', 'id_parent', 'md5', 'animated');
+	protected $fields = array('id', 'id_parent', 'md5', 'ext', 'animated');
 	protected $default_sorter = 'comment_date';
 
 	protected function get_default_filter() {
@@ -19,9 +19,10 @@ class Api_Read_Art_List_Comment extends Api_Read_Art_List_Art
 			$ids[] = $item['id'];
 		}
 
-		$comments = $this->db->order('sortdate')->group('id_item')->get_table('comment',
+		$comments = $this->db->order('sortdate')->make_temp('comment',
 			array('id', 'id_item', 'username', 'email', 'text', 'sortdate'),
-			'area = 1 and ' . $this->db->array_in('id_item', $ids), $ids);
+			'area = 1 and ' . $this->db->array_in('id_item', $ids), $ids)
+			->group('id_item')->get_full_table('tmp');
 
 		foreach ($comments as $comment) {
 			foreach ($data as &$item) {
