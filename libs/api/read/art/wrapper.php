@@ -118,8 +118,9 @@ class Api_Read_Art extends Api_Read_Abstract
 
 		if ($this->get('add_manga')) {
 			$mangas = $this->db->join('art_manga', 'am.id = m.meta')
+				->join('art_manga_item', 'm.id_item = ami.id_art and am.id = ami.id_manga')
 				->order('am.sortdate')->get_table('meta',
-					array('m.id_item', 'am.id', 'am.title'),
+					array('m.id_item', 'am.id', 'am.title', 'ami.order'),
 					'm.item_type = 1 and m.meta_type = ' . Meta::ART_MANGA .
 					' and ' . $sql->array_in('m.id_item', $ids), $ids);
 			foreach ($data as &$item) {
@@ -135,8 +136,9 @@ class Api_Read_Art extends Api_Read_Abstract
 
 		if ($this->get('add_packs')) {
 			$packs = $this->db->join('art_pack', 'ap.id = m.meta')
+				->join('art_pack_item', 'm.id_item = api.id_art and ap.id = api.id_pack')
 				->order('ap.sortdate')->get_table('meta',
-					array('m.id_item', 'ap.id', 'ap.title'),
+					array('m.id_item', 'ap.id', 'ap.title', 'api.order', 'api.filename'),
 					'm.item_type = 1 and m.meta_type = ' . Meta::ART_PACK .
 					' and ' . $sql->array_in('m.id_item', $ids), $ids);
 			foreach ($data as &$item) {
