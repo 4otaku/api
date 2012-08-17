@@ -158,15 +158,8 @@ abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
 			$this->default_sorter_order :
 			(string) $params['sort_order'];
 
-		$sorter = new Api_Read_Art_Sorter($this->item_type,
+		return new Api_Read_Art_Sorter($this->item_type,
 			$sort, $sort_order, $value);
-
-		if ($sorter->get_additional_fields()) {
-			$this->fields = array_merge($this->fields,
-				$sorter->get_additional_fields());
-		}
-
-		return $sorter;
 	}
 
 	protected function get_filter_values(&$filters) {
