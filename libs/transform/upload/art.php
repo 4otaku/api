@@ -21,33 +21,35 @@ class Transform_Upload_Art extends Transform_Upload_Abstract_Image
 
 	protected function process() {
 		$pathinfo = pathinfo($this->name);
-
 		$extension = strtolower($pathinfo['extension']);
+		$base = $this->get_base_path();
 
-		$newfile = IMAGES.SL.'art'.SL.$this->md5.'.'.$extension;
-		$newresized = IMAGES.SL.'art'.SL.$this->md5.'_resize.jpg';
-		$newthumb = IMAGES.SL.'art'.SL.$this->md5.'_thumb.jpg';
-		$newlargethumb = IMAGES.SL.'art'.SL.$this->md5.'_largethumb.jpg';
+		$file = $base.SL.'art'.SL.$this->md5.'.'.$extension;
+		$resized = $base.SL.'art'.SL.$this->md5.'_resize.jpg';
+		$thumb = $base.SL.'art'.SL.$this->md5.'_thumb.jpg';
+		$largethumb = $base.SL.'art'.SL.$this->md5.'_largethumb.jpg';
 
 		chmod($this->file, 0755);
 
-		if (!move_uploaded_file($this->file, $newfile)) {
-			file_put_contents($newfile, file_get_contents($this->file));
+		if (!move_uploaded_file($this->file, $file)) {
+			file_put_contents($file, file_get_contents($this->file));
 		}
 
-		$this->worker = Transform_Image::get_worker($newfile);
-		$this->animated = $this->is_animated($newfile);
+		$this->worker = Transform_Image::get_worker($file);
+		$this->animated = $this->is_animated($file);
 		$width = $this->worker->get_image_width();
 		$height = $this->worker->get_image_height();
 
-		$resized = $this->check_resize($newresized);
+		$resized = $this->check_resize($resized);
 
-		$this->scale(Config::get('art', 'largethumbsize'), $newlargethumb);
-		$this->scale(Config::get('art', 'thumbsize'), $newthumb);
+		$this->scale(Config::get('art', 'largethumbsize'), $largethumb);
+		$this->scale(Config::get('art', 'thumbsize'), $thumb);
 
 		$this->set(array(
-			'image' => '/images/art/'.$this->md5.'_thumb.jpg',
+			'image' => 'art/' . $this->md5 . '.' . $extension,
+			'thumbnail' => 'art/' . $this->md5 . '_thumb.jpg',
 			'md5' => $this->md5,
+			'name' => $this->name,
 			'extension' => $extension,
 			'resized' => (int) $resized,
 			'animated' => (int) $this->animated,
@@ -60,12 +62,12 @@ class Transform_Upload_Art extends Transform_Upload_Abstract_Image
 
 	public function resize() {
 		$md5 = md5_file($this->file);
-		$newresized = IMAGES.SL.'booru'.SL.'resized'.SL.$md5.'.jpg';
+		$resized = IMAGES.SL.'booru'.SL.'resized'.SL.$md5.'.jpg';
 
 		$this->worker = Transform_Image::get_worker($this->file);
 		$this->animated = $this->is_animated($this->file);
 
-		$resized = $this->check_resize($newresized);
+		$resized = $this->check_resize($resized);
 
 		return $resized;
 	}
