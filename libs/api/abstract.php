@@ -5,6 +5,9 @@ abstract class Api_Abstract
 	protected $request;
 	protected $response;
 
+	/**
+	 * @var Database_Instance
+	 */
 	protected $db;
 	protected $db_type = 'api';
 

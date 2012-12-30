@@ -6,8 +6,9 @@ class Cron_Tag extends Cron_Abstract
 	{
 		$this->db->sql('create table art_tag_count_temp select * from art_tag_count limit 0');
 		$tags = $this->db->get_vector('art_tag', array('id', 'name'));
-
+file_put_contents('/tmp/tst', $this->db->debug() . "\n");
 		foreach ($tags as $id => &$tag) {
+			file_put_contents('/tmp/tst', "$id) $tag \n", FILE_APPEND);
 			$tag = array(
 				'name' => $tag,
 				'count' => $this->db->get_count('meta',
@@ -19,6 +20,7 @@ class Cron_Tag extends Cron_Abstract
 				'count' => $tag['count'],
 				'original' => 1,
 			));
+			file_put_contents('/tmp/tst', $this->db->debug() . "\n", FILE_APPEND);
 		}
 		unset($tag);
 
