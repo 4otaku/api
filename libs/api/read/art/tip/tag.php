@@ -11,21 +11,21 @@ class Api_Read_Art_Tip_Tag extends Api_Read_Abstract
 
 		$left = $this->get('left');
 		$length = mb_strlen($left);
+
 		$page = max(1, (int) $this->get('page'));
 		$per_page = $this->get('per_page') ? $this->get('per_page') : 10;
 		$per_page = min($per_page, 100);
 
-		$tags = $this->db->order('count')->limit($per_page * 2, $per_page * ($page - 1))
-			->join('art_tag', 'at.id = atc.id_tag')->set_counter()
-			->get_table('art_tag_count', array('atc.*', 'at.color'),
-				'LEFT(at.name, ' . $length . ') = ?', $left);
+		$this->db->set_counter()->limit($per_page * 2, $per_page * ($page - 1));
+
+		$tags = $this->db->order('count')->get_full_table('art_tag_count',
+			'LEFT(name, ' . $length . ') = ?', $left);
 
 		$return = array();
 		foreach ($tags as $tag) {
 			if (!isset($return[$tag['id_tag']]) || $tag['original']) {
 				$return[$tag['id_tag']] = array(
 					'name' => $tag['name'],
-					'color' => $tag['color'],
 					'count' => $tag['count'],
 				);
 			}
