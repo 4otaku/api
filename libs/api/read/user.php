@@ -2,31 +2,25 @@
 
 class Api_Read_User extends Api_Read_Abstract
 {
-	public function process() {
+	public function process()
+	{
+		$cookie = $this->get('cookie');
 
-		$login = $this->get('login');
-
-		if (empty($login)) {
-			throw new Error_Api('Пропущено обязательное поле: login.', Error_Api::MISSING_INPUT);
+		if (empty($cookie)) {
+			throw new Error_Api(Error_Api::MISSING_INPUT);
 		}
 
-		$password = $this->get('password');
-
-		if (empty($password)) {
-			throw new Error_Api('Пропущено обязательное поле: password.', Error_Api::MISSING_INPUT);
-		}
-
-		$user = $this->db->get_full_row('user', 'login = ?', $login);
+		$user = $this->db->join('art_artist', 'u.id = aa.id_user')
+			->get_row('user', array('login', 'rights', 'id_user'),
+			'cookie = ?', $cookie);
 
 		if (empty($user)) {
-			throw new Error_Api('Пользователь "' . $login . '" не найден.', Error_Api::INCORRECT_INPUT);
+			return;
 		}
 
-		if ($user['pass'] != md5($password)) {
-			throw new Error_Api('Неправильный старый пароль.', Error_Api::INCORRECT_INPUT);
-		}
-
+		$this->add_answer('login', $user['login']);
+		$this->add_answer('moderator', $user['rights'] > 0);
+		$this->add_answer('gallery', $user['id_user']);
 		$this->set_success(true);
-		$this->add_answer('cookie', $user['cookie']);
 	}
 }
