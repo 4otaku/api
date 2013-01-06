@@ -217,6 +217,24 @@ CREATE TABLE IF NOT EXISTS `art_translation` (
   UNIQUE KEY `id_translation` (`id_translation`,`id_art`,`sortdate`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+--
+-- Структура таблицы `art_upload`
+--
+
+CREATE TABLE IF NOT EXISTS `art_upload` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `md5` char(32) NOT NULL,
+  `extension` varchar(4) NOT NULL,
+  `name` text NOT NULL,
+  `resized` tinyint(3) unsigned NOT NULL,
+  `animated` tinyint(3) unsigned NOT NULL,
+  `width` mediumint(8) unsigned NOT NULL,
+  `height` mediumint(8) unsigned NOT NULL,
+  `weight` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
 -- --------------------------------------------------------
 
 --

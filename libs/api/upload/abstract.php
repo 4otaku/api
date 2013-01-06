@@ -7,13 +7,14 @@ abstract class Api_Upload_Abstract extends Api_Abstract
 	protected $answers = array();
 	protected $base_path = IMAGES;
 
-	public function set_base_path($path) {
+	public function set_base_path($path)
+	{
 		$this->base_path = $path;
 		return $this;
 	}
 
-	public function process() {
-		$files = array();
+	public function process()
+	{
 		foreach ($_FILES as $file) {
 			if (is_array($file['tmp_name'])) {
 				foreach ($file['tmp_name'] as $key => $tmp_name) {
@@ -31,15 +32,19 @@ abstract class Api_Upload_Abstract extends Api_Abstract
 		$this->add_answer('files', $this->answers);
 	}
 
-	protected function get_base_path() {
+	protected function get_base_path()
+	{
 		return $this->base_path;
 	}
 
-	protected function process_file($file, $name) {
+	protected function process_file($file, $name)
+	{
 		$class = $this->worker_name;
 		try {
 			$upload = new $class($file, $name, $this->get_base_path());
-			$this->answers[] = $upload->process_file();
+			$data = $upload->process_file();
+			$this->process_data($data);
+			$this->answers[] = $data;
 			$this->have_succesful = true;
 		} catch (Error_Upload $e) {
 			$this->answers[] = array(
@@ -49,4 +54,7 @@ abstract class Api_Upload_Abstract extends Api_Abstract
 			);
 		}
 	}
+
+	protected function process_data(&$data)
+	{}
 }
