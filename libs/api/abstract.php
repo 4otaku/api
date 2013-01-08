@@ -112,6 +112,7 @@ abstract class Api_Abstract
 		$this->rights = 0;
 
 		$name = Config::get('cookie', 'name', false);
+
 		if (!$name) {
 			return;
 		}
