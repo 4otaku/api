@@ -1,8 +1,8 @@
 <?php
 
-class Api_Update_Art_Pack extends Api_Update_Art_Pool
+class Api_Update_Art_Group extends Api_Update_Art_Pool
 {
-	protected $table = 'art_pack';
+	protected $table = 'art_group';
 
 	protected function add_item($id, $data)
 	{

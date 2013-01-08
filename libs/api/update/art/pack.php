@@ -7,7 +7,7 @@ class Api_Update_Art_Pack extends Api_Update_Art_Pool
 	protected function add_item($id, $data)
 	{
 		$order = $this->db->order('order')->get_field('art_pack_item',
-			'id', 'id_pack = ?', $data['id']);
+			'order', 'id_pack = ?', $data['id']);
 
 		$this->db->insert('art_pack_item', array(
 			'id_pack' => $data['id'],

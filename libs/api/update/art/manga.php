@@ -1,13 +1,13 @@
 <?php
 
-class Api_Update_Art_Pack extends Api_Update_Art_Pool
+class Api_Update_Art_Manga extends Api_Update_Art_Pool
 {
 	protected $table = 'art_manga';
 
 	protected function add_item($id, $data)
 	{
 		$order = $this->db->order('order')->get_field('art_manga_item',
-			'id', 'id_manga = ?', $data['id']);
+			'order', 'id_manga = ?', $data['id']);
 
 		$this->db->insert('art_manga_item', array(
 			'id_manga' => $data['id'],

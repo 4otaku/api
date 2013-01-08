@@ -17,7 +17,7 @@ abstract class Api_Update_Tag extends Api_Update_Abstract
 		}
 
 		$type = $this->get_item_type();
-		$meta = $this->get_item_type();
+		$meta = $this->get_meta_type();
 
 		$ids = $this->get_ids(array_merge($add, $remove));
 
@@ -34,6 +34,11 @@ abstract class Api_Update_Tag extends Api_Update_Abstract
 				$this->remove_meta($type, $item_id, $meta, $ids[$tag]);
 			}
 		}
+
+		$count = $this->db->get_count('meta',
+			'item_type = ? and item_id = ? and meta_type = ?',
+			array($type, $item_id, $meta));
+		$this->add_meta($type, $item_id, Meta::TAG_COUNT, $count);
 
 		$this->set_success(true);
 	}
