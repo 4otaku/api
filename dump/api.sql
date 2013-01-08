@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS `art` (
   PRIMARY KEY (`id`),
   KEY `selector` (`id_parent`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+ALTER TABLE  `art` ADD UNIQUE  `md5` (  `md5` );
 
 -- --------------------------------------------------------
 
@@ -225,7 +226,7 @@ CREATE TABLE IF NOT EXISTS `art_upload` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `md5` char(32) NOT NULL,
-  `extension` varchar(4) NOT NULL,
+  `ext` varchar(4) NOT NULL,
   `name` text NOT NULL,
   `resized` tinyint(3) unsigned NOT NULL,
   `animated` tinyint(3) unsigned NOT NULL,
@@ -384,9 +385,11 @@ CREATE TABLE IF NOT EXISTS `user` (
   `email` varchar(255) CHARACTER SET utf8 NOT NULL,
   `cookie` char(32) CHARACTER SET utf8 NOT NULL,
   `rights` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-ALTER TABLE  `api`.`user` ADD UNIQUE  `unique` (  `login` );
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique` (`login`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+INSERT INTO  `user` (`id` ,`login` ,`pass` ,`email` ,`cookie` ,`rights`)
+VALUES ('0',  'Анонимно',  '********************************',  'default@avatar.mail',  '********************************',  '0');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

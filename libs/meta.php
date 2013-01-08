@@ -24,6 +24,14 @@ class Meta
 		MORE = '>';
 
 	const
+		STATE_UNAPPROVED = 1,
+		STATE_APPROVED = 2,
+		STATE_DISAPPROVED = 3,
+		STATE_DELETED = 4,
+		STATE_UNTAGGED = 5,
+		STATE_TAGGED = 6;
+
+	const
 		ART = 1,
 		POST = 2;
 

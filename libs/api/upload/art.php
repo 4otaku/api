@@ -8,7 +8,7 @@ class Api_Upload_Art extends Api_Upload_Abstract
 	{
 		$success = $this->db->insert('art_upload', array(
 			'md5' => $data['md5'],
-			'extension' => $data['extension'],
+			'ext' => $data['extension'],
 			'name' => $data['name'],
 			'resized' => $data['resized'],
 			'animated' => $data['animated'],
@@ -21,7 +21,7 @@ class Api_Upload_Art extends Api_Upload_Abstract
 			throw new Error_Upload(Error_Upload::SAVE_ERROR);
 		}
 
-		$data['id_upload'] = $this->db->last_id();
+		$data['upload_key'] = $data['md5'] . $this->db->last_id();
 	}
 }
 

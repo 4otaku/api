@@ -96,6 +96,9 @@ unset($old_categories);
 $users = $db_read->limit($limit)->get_full_vector('user');
 $tmp_users = array();
 foreach ($users as $user) {
+	if (lower($user['login']) == 'anonimno' || lower($user['login']) == 'anonimus') {
+		continue;
+	}
 	$db_write->insert('user', $user);
 	$tmp_users[lower($user['login'])] = $db_write->last_id();
 	log_progress('user', count($users));
@@ -103,8 +106,11 @@ foreach ($users as $user) {
 unset($users);
 
 $authors = $db_read->limit($limit)->get_full_vector('author');
-$author_alias = array();
+$author_alias = array('anonimno' => 0, 'anonimus' => 0);
 foreach ($authors as $author) {
+	if (lower($author['alias']) == 'anonimno' || lower($author['alias']) == 'anonimus') {
+		continue;
+	}
 
 	if (isset($tmp_users[lower($author['name'])])) {
 		$author_alias[lower($author['alias'])] = $tmp_users[lower($author['name'])];

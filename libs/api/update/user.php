@@ -2,8 +2,8 @@
 
 class Api_Update_User extends Api_Update_Abstract
 {
-	public function process() {
-
+	public function process()
+	{
 		$login = $this->get('login');
 
 		if (empty($login)) {
