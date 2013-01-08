@@ -11,7 +11,7 @@ class Api_Read_User extends Api_Read_Abstract
 		}
 
 		$user = $this->db->join('art_artist', 'u.id = aa.id_user')
-			->get_row('user', array('login', 'rights', 'id_user'),
+			->get_row('user', array('login', 'rights', 'aa.id'),
 			'cookie = ?', $cookie);
 
 		if (empty($user)) {
@@ -20,7 +20,7 @@ class Api_Read_User extends Api_Read_Abstract
 
 		$this->add_answer('login', $user['login']);
 		$this->add_answer('moderator', $user['rights'] > 0);
-		$this->add_answer('gallery', $user['id_user']);
+		$this->add_answer('gallery', $user['id']);
 		$this->set_success(true);
 	}
 }
