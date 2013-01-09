@@ -28,10 +28,12 @@ abstract class Api_Update_Tag extends Api_Update_Abstract
 				$meta_id = $this->insert_tag($tag);
 			}
 			$this->add_meta($type, $item_id, $meta, $meta_id);
+			$this->after_add($item_id, $meta_id);
 		}
 		foreach ($remove as $tag) {
 			if (isset($ids[$tag])) {
 				$this->remove_meta($type, $item_id, $meta, $ids[$tag]);
+				$this->after_remove($item_id, $ids[$tag]);
 			}
 		}
 
@@ -40,8 +42,21 @@ abstract class Api_Update_Tag extends Api_Update_Abstract
 			array($type, $item_id, $meta));
 		$this->add_meta($type, $item_id, Meta::TAG_COUNT, $count);
 
+		$this->remove_meta($type, $item_id, Meta::STATE, Meta::STATE_UNTAGGED);
+		$this->remove_meta($type, $item_id, Meta::STATE, Meta::STATE_TAGGED);
+		if ($count > 4) {
+			$this->add_meta($type, $item_id, Meta::STATE, Meta::STATE_TAGGED);
+		} else {
+			$this->add_meta($type, $item_id, Meta::STATE, Meta::STATE_UNTAGGED);
+		}
+
 		$this->set_success(true);
 	}
+
+	protected function after_add($item_id, $tag_id)
+	{}
+	protected function after_remove($item_id, $tag_id)
+	{}
 
 	protected function get_ids($tags)
 	{

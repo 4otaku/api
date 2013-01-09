@@ -10,11 +10,13 @@ class Api_Update_Art_Group extends Api_Update_Art_Pool
 			'id_group' => $data['id'],
 			'id_art' => $id,
 		));
+		return true;
 	}
 
 	protected function remove_item($id, $data)
 	{
 		$this->db->delete('art_group_item', 'id_group = ? and id_art = ?',
 			array($data['id'], $id));
+		return true;
 	}
 }

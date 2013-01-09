@@ -14,11 +14,13 @@ class Api_Update_Art_Manga extends Api_Update_Art_Pool
 			'id_art' => $id,
 			'order' => $order + 1
 		));
+		return true;
 	}
 
 	protected function remove_item($id, $data)
 	{
 		$this->db->delete('art_manga_item', 'id_manga = ? and id_art = ?',
 			array($data['id'], $id));
+		return true;
 	}
 }
