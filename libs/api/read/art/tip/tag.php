@@ -5,12 +5,14 @@ class Api_Read_Art_Tip_Tag extends Api_Read_Abstract
 	public function process() {
 
 		if (!$this->get('left')) {
-			$this->add_error(Error_Api::MISSING_INPUT);
-			return;
+			$condition = false;
+			$params = false;
+		} else {
+			$left = $this->get('left');
+			$length = mb_strlen($left);
+			$condition = 'LEFT(name, ' . $length . ') = ?';
+			$params = array($left);
 		}
-
-		$left = $this->get('left');
-		$length = mb_strlen($left);
 
 		$page = max(1, (int) $this->get('page'));
 		$per_page = $this->get('per_page') ? $this->get('per_page') : 10;
@@ -19,7 +21,7 @@ class Api_Read_Art_Tip_Tag extends Api_Read_Abstract
 		$this->db->set_counter()->limit($per_page * 2, $per_page * ($page - 1));
 
 		$tags = $this->db->order('count')->get_full_table('art_tag_count',
-			'LEFT(name, ' . $length . ') = ?', $left);
+			$condition, $params);
 
 		$return = array();
 		foreach ($tags as $tag) {

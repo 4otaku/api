@@ -5,12 +5,6 @@ abstract class Api_Read_Art_Tip_Pool extends Api_Read_Abstract
 	protected $table;
 
 	public function process() {
-
-		if (!$this->get('text')) {
-			$this->add_error(Error_Api::MISSING_INPUT);
-			return;
-		}
-
 		$text = $this->get('text');
 		$terms = array_filter(preg_split('/\s+/ui', $text));
 		$params = array();
@@ -28,7 +22,7 @@ abstract class Api_Read_Art_Tip_Pool extends Api_Read_Abstract
 
 		$this->db->set_counter()->limit($per_page, $per_page * ($page - 1));
 
-		$return = $this->db->get_table($this->table,
+		$return = $this->db->order('sortdate')->get_table($this->table,
 			array('id', 'title'), $query, $params);
 
 		$this->add_answer('data', $return);
