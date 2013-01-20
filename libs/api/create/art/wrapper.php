@@ -125,6 +125,15 @@ class Api_Create_Art extends Api_Create_Abstract
 			$worker->process_request();
 		}
 
+		if ($this->get('comment')) {
+			$request = new Api_Request_Inner(array(
+				'id' => $id,
+				'comment' => (string) $this->get('comment')
+			));
+			$worker = new Api_Update_Art_Comment($request);
+			$worker->process_request();
+		}
+
 		$this->add_answer('id', $id);
 		$this->set_success(true);
 	}

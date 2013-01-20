@@ -17,6 +17,11 @@ class Api_Read_Art_List_Artist extends Api_Read_Art_List_Abstract
 			$users[] = $item['id_user'];
 		}
 
+		if (!empty($users)) {
+			$users = $this->db->get_table('user', array('id', 'login'),
+				$this->db->array_in('id', $users), $users);
+		}
+
 		if (!empty($ids)) {
 			$covers = $this->db->order('a.sortdate')->join('meta',
 				'm.item_type = 1 and m.meta_type = ' . Meta::ART_ARTIST . ' and m.id_item = a.id')
@@ -36,20 +41,15 @@ class Api_Read_Art_List_Artist extends Api_Read_Art_List_Abstract
 						break;
 					}
 				}
-			}
-			unset($item);
-		}
 
-		if (!empty($users)) {
-			$users = $this->db->get_table('user', array('id', 'login'),
-				$this->db->array_in('id', $users), $users);
-
-			foreach ($users as $user) {
-				if ($item['id_user'] == $user['id']) {
-					$item['artist'] = $user['login'];
-					break;
+				foreach ($users as $user) {
+					if ($item['id_user'] == $user['id']) {
+						$item['artist'] = $user['login'];
+						break;
+					}
 				}
 			}
+			unset($item);
 		}
 	}
 }

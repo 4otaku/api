@@ -33,7 +33,8 @@ CREATE TABLE IF NOT EXISTS `art` (
   `animated` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `vector` text,
   `similar_tested` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `source` text NOT NULL,
+  `source` text NULL DEFAULT NULL,
+  `comment` text NULL DEFAULT NULL,
   `sortdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `selector` (`id_parent`)
