@@ -392,6 +392,38 @@ CREATE TABLE IF NOT EXISTS `user` (
 INSERT INTO  `user` (`id` ,`login` ,`pass` ,`email` ,`cookie` ,`rights`)
 VALUES ('0',  'Анонимно',  '********************************',  'default@avatar.mail',  '********************************',  '0');
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `art_group_tag_count`
+--
+
+CREATE TABLE IF NOT EXISTS `art_group_tag_count` (
+  `id_tag` int(10) unsigned NOT NULL,
+  `count` int(10) unsigned NOT NULL DEFAULT '0',
+  KEY `selector` (`id_tag`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `art_manga_tag_count`
+--
+
+CREATE TABLE IF NOT EXISTS `art_manga_tag_count` (
+  `id_tag` int(10) unsigned NOT NULL,
+  `count` int(10) unsigned NOT NULL DEFAULT '0',
+  KEY `selector` (`id_tag`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `art_pack_tag_count`
+--
+
+CREATE TABLE IF NOT EXISTS `art_pack_tag_count` (
+  `id_tag` int(10) unsigned NOT NULL,
+  `count` int(10) unsigned NOT NULL DEFAULT '0',
+  KEY `selector` (`id_tag`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

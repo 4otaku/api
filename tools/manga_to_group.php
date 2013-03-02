@@ -30,6 +30,9 @@ foreach ($argv as $key => $manga) {
 	Database::db('api')->update('meta', array('meta_type' => 4, 'meta' => $id),
 		'meta_type = 5 and item_type = 1 and meta = ?', $manga);
 
+	Database::db('api')->update('meta', array('meta_type' => 4, 'id_item' => $id),
+		'meta_type = 5 and item_type = 11 and id_item = ?', $manga);
+
 	$items = Database::db('api')->get_table('meta', 'id_item',
 		'meta_type = 4 and item_type = 1 and meta = ?', $id);
 

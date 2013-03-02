@@ -449,6 +449,12 @@ foreach ($packs as $pack) {
 		'sortdate' => $pack['date'],
 	));
 	$pack_ids[$pack['id']] = $db_write->last_id();
+	$db_write->insert('meta', array(
+		'item_type' => 3,
+		'id_item' => $pack_ids[$pack['id']],
+		'meta_type' => 11,
+		'meta' => 0,
+	));
 	log_progress('pack', count($packs));
 }
 unset($packs);
@@ -482,6 +488,12 @@ foreach ($groups as $group) {
 		'sortdate' => $db_write->unix_to_date($group['sortdate'] / 1000),
 	));
 	$groups_ids[$group['id']] = $db_write->last_id();
+	$db_write->insert('meta', array(
+		'item_type' => 5,
+		'id_item' => $groups_ids[$group['id']],
+		'meta_type' => 11,
+		'meta' => 0,
+	));
 	log_progress('group', count($groups));
 }
 unset($groups);

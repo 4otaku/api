@@ -14,7 +14,10 @@ class Meta
 		COMMENT_DATE = 10,
 		TAG_COUNT = 11,
 		TRANSLATOR = 12,
-		TRANSLATION_DATE = 13;
+		TRANSLATION_DATE = 13,
+		ART_PACK_TAG = 14,
+		ART_GROUP_TAG = 15,
+		ART_MANGA_TAG = 16;
 
 	const
 		IS = '=',
@@ -33,7 +36,11 @@ class Meta
 
 	const
 		ART = 1,
-		POST = 2;
+		POST = 2,
+		PACK = 3,
+		GROUP = 4,
+		MANGA = 5,
+		ARTIST = 6;
 
 	public static function parse($string) {
 		$const = strtoupper($string);

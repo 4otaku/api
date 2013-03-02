@@ -1,42 +1,28 @@
 <?php
 
-class Api_Update_Art_Tag extends Api_Update_Tag
+class Api_Update_Art_Tag extends Api_Update_Art_Abstract_Tag
 {
+	protected $count_table = 'art_tag_count';
+
 	protected function get_item_type()
 	{
 		return Meta::ART;
 	}
 
-	protected function get_meta_type()
-	{
-		return Meta::ART_TAG;
+	protected function after_process($count, $id) {
+		$type = $this->get_item_type();
+		$this->remove_meta($type, $id, Meta::STATE, Meta::STATE_UNTAGGED);
+		$this->remove_meta($type, $id, Meta::STATE, Meta::STATE_TAGGED);
+		if ($count > 4) {
+			$this->add_meta($type, $id, Meta::STATE, Meta::STATE_TAGGED);
+		} else {
+			$this->add_meta($type, $id, Meta::STATE, Meta::STATE_UNTAGGED);
+		}
 	}
 
-	protected function insert_tag($tag)
-	{
-		$this->db->insert('art_tag', array('name' => $tag));
-		$id = $this->db->last_id();
-		$this->db->insert('art_tag_count', array(
-			'name' => $tag,
-			'id_tag' => $id,
-			'count' => 0,
-			'original' => 1
+	protected function get_count_insert_data($tag, $id) {
+		return array_merge(parent::get_count_insert_data($tag, $id), array(
+			'name' => $tag, 'original' => 1
 		));
-
-		return $id;
-	}
-
-	protected function after_add($item_id, $tag_id)
-	{
-		$this->db->update('art_tag_count', array(
-			'count' => new Database_Action(Database_Action::INCREMENT)
-		), 'id_tag = ?', $tag_id);
-	}
-
-	protected function after_remove($item_id, $tag_id)
-	{
-		$this->db->update('art_tag_count', array(
-			'count' => new Database_Action(Database_Action::DECREMENT)
-		), 'id_tag = ?', $tag_id);
 	}
 }

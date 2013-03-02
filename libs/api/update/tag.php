@@ -38,17 +38,11 @@ abstract class Api_Update_Tag extends Api_Update_Abstract
 		}
 
 		$count = $this->db->get_count('meta',
-			'item_type = ? and item_id = ? and meta_type = ?',
+			'item_type = ? and id_item = ? and meta_type = ?',
 			array($type, $item_id, $meta));
 		$this->add_meta($type, $item_id, Meta::TAG_COUNT, $count);
 
-		$this->remove_meta($type, $item_id, Meta::STATE, Meta::STATE_UNTAGGED);
-		$this->remove_meta($type, $item_id, Meta::STATE, Meta::STATE_TAGGED);
-		if ($count > 4) {
-			$this->add_meta($type, $item_id, Meta::STATE, Meta::STATE_TAGGED);
-		} else {
-			$this->add_meta($type, $item_id, Meta::STATE, Meta::STATE_UNTAGGED);
-		}
+		$this->after_process($count, $item_id);
 
 		$this->set_success(true);
 	}
@@ -56,6 +50,8 @@ abstract class Api_Update_Tag extends Api_Update_Abstract
 	protected function after_add($item_id, $tag_id)
 	{}
 	protected function after_remove($item_id, $tag_id)
+	{}
+	protected function after_process($count, $item_id)
 	{}
 
 	protected function get_ids($tags)
