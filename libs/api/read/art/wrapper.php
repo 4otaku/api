@@ -46,7 +46,7 @@ class Api_Read_Art extends Api_Read_Abstract
 		}
 		unset($item);
 		$rating = $this->db->get_vector('meta', array('id_item', 'meta'),
-			'm.item_type = 1 and m.meta_type = ' . Meta::ART_RATING .
+			'm.item_type = ' . Meta::ART . ' and m.meta_type = ' . Meta::ART_RATING .
 			' and ' . $sql->array_in('id_item', $ids), $ids);
 		foreach ($data as &$item) {
 			$item['rating'] = $rating[$item['id']];
@@ -57,8 +57,8 @@ class Api_Read_Art extends Api_Read_Abstract
 			$tags = $this->db->join('art_tag', 'at.id = m.meta')->
 				join('art_tag_count', 'at.id = atc.id_tag and atc.original = 1')->
 				get_table('meta', array('m.id_item', 'at.*', 'atc.count'),
-					'm.item_type = 1 and m.meta_type = ' . Meta::ART_TAG .
-					' and ' . $sql->array_in('m.id_item', $ids), $ids);
+					'm.item_type = ' . Meta::ART . ' and m.meta_type = ' . Meta::ART_TAG .
+					' and ' . $this->db->array_in('m.id_item', $ids), $ids);
 			foreach ($data as &$item) {
 				$item['tag'] = array();
 			}
@@ -74,7 +74,7 @@ class Api_Read_Art extends Api_Read_Abstract
 		if ($this->get('add_state')) {
 			$states = $this->db->join('state', 's.id = m.meta')->
 				get_table('meta', array('m.id_item', 's.*'),
-					'm.item_type = 1 and m.meta_type = ' . Meta::STATE .
+					'm.item_type = ' . Meta::ART . ' and m.meta_type = ' . Meta::STATE .
 					' and ' . $sql->array_in('m.id_item', $ids), $ids);
 			foreach ($data as &$item) {
 				$item['state'] = array();
@@ -104,7 +104,7 @@ class Api_Read_Art extends Api_Read_Abstract
 			$groups = $this->db->join('art_group', 'ag.id = m.meta')
 				->order('ag.sortdate')->get_table('meta',
 					array('m.id_item', 'ag.id', 'ag.title'),
-					'm.item_type = 1 and m.meta_type = ' . Meta::ART_GROUP .
+					'm.item_type = ' . Meta::ART . ' and m.meta_type = ' . Meta::ART_GROUP .
 					' and ' . $sql->array_in('m.id_item', $ids), $ids);
 			foreach ($data as &$item) {
 				$item['group'] = array();
@@ -122,7 +122,7 @@ class Api_Read_Art extends Api_Read_Abstract
 				->join('art_manga_item', 'm.id_item = ami.id_art and am.id = ami.id_manga')
 				->order('am.sortdate')->get_table('meta',
 					array('m.id_item', 'am.id', 'am.title', 'ami.order'),
-					'm.item_type = 1 and m.meta_type = ' . Meta::ART_MANGA .
+					'm.item_type = ' . Meta::ART . ' and m.meta_type = ' . Meta::ART_MANGA .
 					' and ' . $sql->array_in('m.id_item', $ids), $ids);
 			foreach ($data as &$item) {
 				$item['manga'] = array();
@@ -140,7 +140,7 @@ class Api_Read_Art extends Api_Read_Abstract
 				->join('art_pack_item', 'm.id_item = api.id_art and ap.id = api.id_pack')
 				->order('ap.sortdate')->get_table('meta',
 					array('m.id_item', 'ap.id', 'ap.title', 'api.order', 'api.filename'),
-					'm.item_type = 1 and m.meta_type = ' . Meta::ART_PACK .
+					'm.item_type = ' . Meta::ART . ' and m.meta_type = ' . Meta::ART_PACK .
 					' and ' . $sql->array_in('m.id_item', $ids), $ids);
 			foreach ($data as &$item) {
 				$item['pack'] = array();
@@ -158,7 +158,7 @@ class Api_Read_Art extends Api_Read_Abstract
 				->order('aa.sortdate')->join('user', 'u.id = aa.id_user')
 				->get_table('meta',
 					array('m.id_item', 'aa.id', 'u.login as artist'),
-					'm.item_type = 1 and m.meta_type = ' . Meta::ART_ARTIST .
+					'm.item_type = ' . Meta::ART . ' and m.meta_type = ' . Meta::ART_ARTIST .
 					' and ' . $sql->array_in('m.id_item', $ids), $ids);
 			foreach ($data as &$item) {
 				$item['artist'] = array();

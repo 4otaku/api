@@ -238,11 +238,11 @@ abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
 			$ids[] = $item['id'];
 		}
 
-		$tags = $this->db->join('art_tag', 'at.id = m.meta')->
-			join('art_tag_count', 'at.id = atc.id_tag and atc.original = 1')->
-			get_table('meta', array('m.id_item', 'at.*', 'atc.count'),
-				'm.item_type = ' . $this->item_type . ' and m.meta_type = ' . Meta::ART_TAG .
-				' and ' . $this->db->array_in('m.id_item', $ids), $ids);
+		$query = $this->db->join('art_tag', 'at.id = m.meta');
+		$this->add_tag_count_join($query);
+		$tags = $query->get_table('meta', array('m.id_item', 'at.*', 'count'),
+			'm.item_type = ' . $this->item_type . ' and m.meta_type = ' .
+			Meta::ART_TAG .	' and ' . $this->db->array_in('m.id_item', $ids), $ids);
 
 		foreach ($data as &$item) {
 			$item['tag'] = array();
@@ -255,5 +255,9 @@ abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
 			}
 		}
 		unset($item);
+	}
+
+	protected function add_tag_count_join($query) {
+		$query->join('art_tag_count', 'at.id = atc.id_tag and atc.original = 1');
 	}
 }

@@ -11,7 +11,7 @@ class Api_Read_Art_List_Group extends Api_Read_Art_List_Abstract
 
 		$ids = array();
 		foreach ($data as &$item) {
-			$item['md5'] = 'error';
+			$item['md5'] = false;
 			$ids[] = $item['id'];
 		}
 
@@ -37,5 +37,9 @@ class Api_Read_Art_List_Group extends Api_Read_Art_List_Abstract
 			}
 			unset($item);
 		}
+	}
+
+	protected function add_tag_count_join($query) {
+		$query->join('art_group_tag_count', 'at.id = agtc.id_tag');
 	}
 }

@@ -25,16 +25,36 @@ abstract class Api_Read_Art_Pool extends Api_Read_Abstract
 			return;
 		}
 
-		$this->get_data($ids);
+		$data = $this->get_data($ids);
 
+		if ($this->get('add_tags')) {
+			$tags = $this->db->join('art_tag', 'at.id = m.meta')->
+				join($this->table . '_tag_count', 'at.id = id_tag')->
+				get_table('meta', array('m.id_item', 'at.*', 'count'),
+				'm.item_type = ' . Meta::parse(strtoupper($this->table)) .
+					' and m.meta_type = ' . Meta::ART_TAG .
+					' and ' . $this->db->array_in('m.id_item', $ids), $ids);
+			foreach ($data as &$item) {
+				$item['tag'] = array();
+			}
+			unset($item);
+			foreach ($tags as $tag) {
+				$link = &$data[$tag['id_item']]['tag'];
+				unset($tag['id_item']);
+				unset($tag['id']);
+				$link[] = $tag;
+			}
+		}
+
+		$this->add_answer('data', $data);
 		$this->set_success(true);
 	}
 
 	protected function get_data($ids) {
-		$data = $this->db->set_counter()->get_table($this->table,
+		$data = $this->db->set_counter()->get_vector($this->table,
 			$this->fields, $this->db->array_in('id', $ids), $ids);
 
-		$this->add_answer('data', $data);
 		$this->add_answer('count', $this->db->get_counter());
+		return $data;
 	}
 }

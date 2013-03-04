@@ -12,7 +12,7 @@ class Api_Read_Art_List_Pack extends Api_Read_Art_List_Abstract
 		$cover = array();
 		$nocover = array();
 		foreach ($data as &$item) {
-			$item['md5'] = 'error';
+			$item['md5'] = false;
 			if (!empty($item['cover'])) {
 				$cover[] = $item['cover'];
 			} else {
@@ -51,5 +51,9 @@ class Api_Read_Art_List_Pack extends Api_Read_Art_List_Abstract
 			}
 			unset($item);
 		}
+	}
+
+	protected function add_tag_count_join($query) {
+		$query->join('art_pack_tag_count', 'at.id = aptc.id_tag');
 	}
 }

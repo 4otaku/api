@@ -11,7 +11,7 @@ class Api_Read_Art_List_Manga extends Api_Read_Art_List_Abstract
 
 		$nocover = array();
 		foreach ($data as &$item) {
-			$item['md5'] = 'error';
+			$item['md5'] = false;
 			$item['cover'] = false;
 			$nocover[] = $item['id'];
 		}
@@ -47,5 +47,9 @@ class Api_Read_Art_List_Manga extends Api_Read_Art_List_Abstract
 			}
 			unset($item);
 		}
+	}
+
+	protected function add_tag_count_join($query) {
+		$query->join('art_manga_tag_count', 'at.id = amtc.id_tag');
 	}
 }
