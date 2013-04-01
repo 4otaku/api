@@ -17,15 +17,9 @@ class Api_Read_Art extends Api_Read_Abstract
 
 		$deleted = $this->db->get_field('state', 'id', 'name = ?', 'deleted');
 
-		$sql = $this->db->set_counter()->filter('meta', array(
-			'item_type = 1',
-			'id_item = id',
-			'meta_type = ' . Meta::STATE,
-			'meta = ' . $deleted
-		), 'meta');
-
-		$data = $sql->get_vector('art',
-			$this->fields, $this->db->array_in('id', $ids), $ids);
+		$data = $this->db->set_counter()->filter('meta', array('item_type = 1',
+			'id_item = id', 'meta_type = ' . Meta::STATE, 'meta = ' . $deleted),
+			'meta')->get_vector('art', $this->fields, $this->db->array_in('id', $ids), $ids);
 
 		$this->add_answer('count', $this->db->get_counter());
 
@@ -40,18 +34,27 @@ class Api_Read_Art extends Api_Read_Abstract
 		unset($item);
 
 		$users = $this->db->get_vector('user', array('id', 'login'),
-			$sql->array_in('id', $users), $users);
+			$this->db->array_in('id', $users), $users);
 		foreach ($data as &$item) {
 			$item['user'] = $users[$item['id_user']];
 		}
 		unset($item);
 		$rating = $this->db->get_vector('meta', array('id_item', 'meta'),
 			'm.item_type = ' . Meta::ART . ' and m.meta_type = ' . Meta::ART_RATING .
-			' and ' . $sql->array_in('id_item', $ids), $ids);
+			' and ' . $this->db->array_in('id_item', $ids), $ids);
 		foreach ($data as &$item) {
 			$item['rating'] = $rating[$item['id']];
 		}
 		unset($item);
+
+		if ($this->get('add_voted') && $this->get('cookie') && $this->get('ip')) {
+			$voted = $this->db->get_vector('art_rating', array('id_art', 'rating'),
+				'cookie	= ? or ip = ? and ' . $this->db->array_in('id_art', $ids),
+				array_merge(array($this->get('cookie'), $this->get('ip')), $ids));
+			foreach ($data as &$item) {
+				$item['voted'] = isset($voted[$item['id']]) ? $voted[$item['id']] : 0;
+			}
+		}
 
 		if ($this->get('add_tags')) {
 			$tags = $this->db->join('art_tag', 'at.id = m.meta')->
@@ -75,7 +78,7 @@ class Api_Read_Art extends Api_Read_Abstract
 			$states = $this->db->join('state', 's.id = m.meta')->
 				get_table('meta', array('m.id_item', 's.*'),
 					'm.item_type = ' . Meta::ART . ' and m.meta_type = ' . Meta::STATE .
-					' and ' . $sql->array_in('m.id_item', $ids), $ids);
+					' and ' . $this->db->array_in('m.id_item', $ids), $ids);
 			foreach ($data as &$item) {
 				$item['state'] = array();
 			}
@@ -87,7 +90,7 @@ class Api_Read_Art extends Api_Read_Abstract
 		}
 
 		if ($this->get('add_similar')) {
-			$similar = $sql->order('id_parent_order', 'asc')->get_table('art',
+			$similar = $this->db->order('id_parent_order', 'asc')->get_table('art',
 				array('id', 'id_parent'), $this->db->array_in('id_parent', $parents), $parents);
 			foreach ($data as &$item) {
 				$item['similar'] = array();
@@ -105,7 +108,7 @@ class Api_Read_Art extends Api_Read_Abstract
 				->order('ag.sortdate')->get_table('meta',
 					array('m.id_item', 'ag.id', 'ag.title'),
 					'm.item_type = ' . Meta::ART . ' and m.meta_type = ' . Meta::ART_GROUP .
-					' and ' . $sql->array_in('m.id_item', $ids), $ids);
+					' and ' . $this->db->array_in('m.id_item', $ids), $ids);
 			foreach ($data as &$item) {
 				$item['group'] = array();
 			}
@@ -123,7 +126,7 @@ class Api_Read_Art extends Api_Read_Abstract
 				->order('am.sortdate')->get_table('meta',
 					array('m.id_item', 'am.id', 'am.title', 'ami.order'),
 					'm.item_type = ' . Meta::ART . ' and m.meta_type = ' . Meta::ART_MANGA .
-					' and ' . $sql->array_in('m.id_item', $ids), $ids);
+					' and ' . $this->db->array_in('m.id_item', $ids), $ids);
 			foreach ($data as &$item) {
 				$item['manga'] = array();
 			}
@@ -141,7 +144,7 @@ class Api_Read_Art extends Api_Read_Abstract
 				->order('ap.sortdate')->get_table('meta',
 					array('m.id_item', 'ap.id', 'ap.title', 'api.order', 'api.filename'),
 					'm.item_type = ' . Meta::ART . ' and m.meta_type = ' . Meta::ART_PACK .
-					' and ' . $sql->array_in('m.id_item', $ids), $ids);
+					' and ' . $this->db->array_in('m.id_item', $ids), $ids);
 			foreach ($data as &$item) {
 				$item['pack'] = array();
 			}
@@ -159,7 +162,7 @@ class Api_Read_Art extends Api_Read_Abstract
 				->get_table('meta',
 					array('m.id_item', 'aa.id', 'u.login as artist'),
 					'm.item_type = ' . Meta::ART . ' and m.meta_type = ' . Meta::ART_ARTIST .
-					' and ' . $sql->array_in('m.id_item', $ids), $ids);
+					' and ' . $this->db->array_in('m.id_item', $ids), $ids);
 			foreach ($data as &$item) {
 				$item['artist'] = array();
 			}
@@ -180,7 +183,7 @@ class Api_Read_Art extends Api_Read_Abstract
 
 			$translations = $this->db->get_table('art_translation',
 				array('id', 'id_art', 'x1', 'x2', 'y1', 'y2', 'text'),
-				'state = 1 and ' . $sql->array_in('id_art', $ids), $ids);
+				'state = 1 and ' . $this->db->array_in('id_art', $ids), $ids);
 			foreach ($translations as $translation) {
 				$link = &$data[$translation['id_art']]['translation'];
 				unset($translation['id_art']);
