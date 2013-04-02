@@ -111,17 +111,7 @@ abstract class Api_Abstract
 		$this->id_user = 0;
 		$this->rights = 0;
 
-		$name = Config::get('cookie', 'name', false);
-
-		if (!$name) {
-			return;
-		}
-
-		if (isset($_COOKIE[$name])) {
-			$cookie = $_COOKIE[$name];
-		} else {
-			$cookie = $this->get('cookie');
-		}
+		$cookie = $this->get_cookie();
 		if (!$cookie) {
 			return;
 		}
@@ -135,6 +125,22 @@ abstract class Api_Abstract
 
 		$this->id_user = (int) $data['id'];
 		$this->rights = (int) $data['rights'];
+	}
+
+	protected function get_cookie()
+	{
+		$name = Config::get('cookie', 'name', false);
+
+		if ($name && isset($_COOKIE[$name])) {
+			return $_COOKIE[$name];
+		}
+
+		return $this->get('cookie');
+	}
+
+	protected function get_ip()
+	{
+		return $this->get('ip') ? $this->get('ip') : $_SERVER['REMOTE_ADDR'];
 	}
 
 	protected function get_images_path()

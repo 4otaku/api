@@ -47,10 +47,11 @@ class Api_Read_Art extends Api_Read_Abstract
 		}
 		unset($item);
 
-		if ($this->get('add_voted') && $this->get('cookie') && $this->get('ip')) {
+		$cookie = $this->get_cookie();
+		if ($this->get('add_voted') && $cookie) {
 			$voted = $this->db->get_vector('art_rating', array('id_art', 'rating'),
 				'cookie	= ? or ip = ? and ' . $this->db->array_in('id_art', $ids),
-				array_merge(array($this->get('cookie'), $this->get('ip')), $ids));
+				array_merge(array($cookie, $this->get_ip()), $ids));
 			foreach ($data as &$item) {
 				$item['voted'] = isset($voted[$item['id']]) ? $voted[$item['id']] : 0;
 			}
