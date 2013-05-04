@@ -9,8 +9,13 @@ abstract class Api_Update_Art_Pool extends Api_Update_Abstract
 		$id = $this->get('id');
 		$add = (array) $this->get('add');
 		$remove = (array) $this->get('remove');
+		$title = $this->get('title');
+		$text = $this->get('text');
 
-		if (empty($id) || (empty($add) && empty($remove))) {
+		$have_changes = !empty($add) || !empty($remove) ||
+			!empty($title) || $text !== null;
+
+		if (empty($id) || !$have_changes) {
 			throw new Error_Api(Error_Api::MISSING_INPUT);
 		}
 
@@ -30,6 +35,14 @@ abstract class Api_Update_Art_Pool extends Api_Update_Abstract
 					$this->remove_meta(Meta::ART, $id, $meta, $item['id']);
 				}
 			}
+		}
+
+		if (!empty($title)) {
+			$this->db->update($this->table, array('title' => $title), $id);
+		}
+
+		if ($text !== null) {
+			$this->db->update($this->table, array('text' => $text), $id);
 		}
 
 		$this->set_success(true);
