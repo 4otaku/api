@@ -60,7 +60,7 @@ class Api_Update_Art_Translation extends Api_Update_Abstract
 		$this->db->insert('art_translation', array(
 			'id_translation' => $this->next_translation_id,
 			'id_art' => $id,
-			'id_user' => $this->id_user,
+			'id_user' => $this->get_user(),
 			'x1' => $data['x1'],
 			'x2' => $data['x2'],
 			'y1' => $data['y1'],
@@ -91,7 +91,7 @@ class Api_Update_Art_Translation extends Api_Update_Abstract
 		$this->db->insert('art_translation', array(
 			'id_translation' => $data['id'],
 			'id_art' => $id,
-			'id_user' => $this->id_user,
+			'id_user' => $this->get_user(),
 			'x1' => isset($data['x1']) ? $data['x1'] : $last['x1'],
 			'x2' => isset($data['x2']) ? $data['x2'] : $last['x2'],
 			'y1' => isset($data['y1']) ? $data['y1'] : $last['y1'],
@@ -114,7 +114,7 @@ class Api_Update_Art_Translation extends Api_Update_Abstract
 		$this->db->insert('art_translation', array(
 			'id_translation' => $data,
 			'id_art' => $id,
-			'id_user' => $this->id_user,
+			'id_user' => $this->get_user(),
 			'state' => 3
 		));
 	}

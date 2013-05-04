@@ -216,7 +216,7 @@ CREATE TABLE IF NOT EXISTS `art_translation` (
   `sortdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `state` tinyint(3) unsigned NOT NULL DEFAULT '1' COMMENT '1 - active, 2 - old, 3 - deleted',
   PRIMARY KEY (`id`),
-  KEY `id_translation` (`id_translation`,`id_art`,`sortdate`)
+  UNIQUE KEY `id_translation` (`id_translation`,`id_art`,`sortdate`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
