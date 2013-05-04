@@ -183,7 +183,7 @@ class Api_Read_Art extends Api_Read_Abstract
 			unset($item);
 
 			$translations = $this->db->get_table('art_translation',
-				array('id', 'id_art', 'x1', 'x2', 'y1', 'y2', 'text'),
+				array('id_translation', 'id_art', 'x1', 'x2', 'y1', 'y2', 'text'),
 				'state = 1 and ' . $this->db->array_in('id_art', $ids), $ids);
 			foreach ($translations as $translation) {
 				$link = &$data[$translation['id_art']]['translation'];
