@@ -4,6 +4,21 @@ class Api_Update_Art_Pack extends Api_Update_Art_Pool
 {
 	protected $table = 'art_pack';
 
+	public function process()
+	{
+		parent::process();
+
+		if ($this->get('cover')) {
+			$this->db->update($this->table,
+				array('cover' => (int) $this->get('cover')), $this->get('id'));
+		}
+	}
+
+	protected function have_changes()
+	{
+		return parent::have_changes() || $this->get('cover');
+	}
+
 	protected function add_item($id, $data)
 	{
 		if (empty($data['filename'])) {
