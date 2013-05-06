@@ -26,11 +26,11 @@ class Api_Update_Art_Pack extends Api_Update_Art_Pool
 		}
 
 		$order = $this->db->order('order')->get_field('art_pack_item',
-			'order', 'id_pack = ?', $data['id']);
+			'order', 'id_pack = ?', $id);
 
 		$this->db->insert('art_pack_item', array(
-			'id_pack' => $data['id'],
-			'id_art' => $id,
+			'id_pack' => $id,
+			'id_art' => $data['id'],
 			'order' => $order + 1,
 			'filename' => $data['filename']
 		));
@@ -40,7 +40,14 @@ class Api_Update_Art_Pack extends Api_Update_Art_Pool
 	protected function remove_item($id, $data)
 	{
 		$this->db->delete('art_pack_item', 'id_pack = ? and id_art = ?',
-			array($data['id'], $id));
+			array($id, $data));
+
+		if ($this->db->get_count('art_pack', 'id = ? and cover = ?',
+			array($id, $data))) {
+
+			$this->db->update('art_pack', array('cover' => 0), $id);
+		}
+
 		return true;
 	}
 }

@@ -17,16 +17,14 @@ abstract class Api_Update_Art_Pool extends Api_Update_Abstract
 		foreach ((array) $this->get('add') as $item) {
 			if (isset($item['id']) && $this->check_pool($item['id'])) {
 				if ($this->add_item($id, $item)) {
-					$this->add_meta(Meta::ART, $id, $meta, $item['id']);
+					$this->add_meta(Meta::ART, $item['id'], $meta, $id);
 				}
 			}
 		}
 
 		foreach ((array) $this->get('remove') as $item) {
-			if (isset($item['id'])) {
-				if ($this->remove_item($id, $item)) {
-					$this->remove_meta(Meta::ART, $id, $meta, $item['id']);
-				}
+			if ($this->remove_item($id, (int) $item)) {
+				$this->remove_meta(Meta::ART, (int) $item, $meta, $id);
 			}
 		}
 

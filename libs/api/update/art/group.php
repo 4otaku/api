@@ -7,8 +7,8 @@ class Api_Update_Art_Group extends Api_Update_Art_Pool
 	protected function add_item($id, $data)
 	{
 		$this->db->insert('art_group_item', array(
-			'id_group' => $data['id'],
-			'id_art' => $id,
+			'id_group' => $id,
+			'id_art' => $data['id'],
 		));
 		return true;
 	}
@@ -16,7 +16,7 @@ class Api_Update_Art_Group extends Api_Update_Art_Pool
 	protected function remove_item($id, $data)
 	{
 		$this->db->delete('art_group_item', 'id_group = ? and id_art = ?',
-			array($data['id'], $id));
+			array($id, $data));
 		return true;
 	}
 }
