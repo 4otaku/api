@@ -1,6 +1,6 @@
 <?php
 
-class Api_Update_Art_Manga extends Api_Update_Art_Pool
+class Api_Update_Art_Manga extends Api_Update_Art_Pool_Sortable
 {
 	protected $table = 'art_manga';
 

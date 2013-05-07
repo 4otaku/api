@@ -106,6 +106,7 @@ CREATE TABLE IF NOT EXISTS `art_manga_item` (
   `order` mediumint(8) unsigned NOT NULL,
   PRIMARY KEY (`id_manga`,`order`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE  `art_manga_item` ADD UNIQUE  `unique` (  `id_manga` ,  `id_art` );
 
 -- --------------------------------------------------------
 
@@ -137,6 +138,7 @@ CREATE TABLE IF NOT EXISTS `art_pack_item` (
   `order` mediumint(8) unsigned NOT NULL,
   PRIMARY KEY (`id_pack`,`order`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `art_pack_item` ADD UNIQUE  `unique` (  `id_pack` ,  `id_art` )
 
 -- --------------------------------------------------------
 

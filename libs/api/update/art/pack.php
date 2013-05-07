@@ -1,6 +1,6 @@
 <?php
 
-class Api_Update_Art_Pack extends Api_Update_Art_Pool
+class Api_Update_Art_Pack extends Api_Update_Art_Pool_Sortable
 {
 	protected $table = 'art_pack';
 
