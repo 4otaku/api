@@ -127,7 +127,7 @@ abstract class Api_Abstract
 		$this->rights = (int) $data['rights'];
 	}
 
-	protected function get_cookie()
+	protected function get_cookie($strict = false)
 	{
 		$name = Config::get('cookie', 'name', false);
 
@@ -135,12 +135,13 @@ abstract class Api_Abstract
 			return $_COOKIE[$name];
 		}
 
-		return $this->get('cookie');
+		return $strict ? null : $this->get('cookie');
 	}
 
-	protected function get_ip()
+	protected function get_ip($strict = false)
 	{
-		return $this->get('ip') ? $this->get('ip') : $_SERVER['REMOTE_ADDR'];
+		return $this->get('ip') && !$strict ? $this->get('ip') :
+			$_SERVER['REMOTE_ADDR'];
 	}
 
 	protected function get_images_path()

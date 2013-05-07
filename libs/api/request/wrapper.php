@@ -53,7 +53,7 @@ class Api_Request
 			return $this->data;
 		}
 
-		if (!empty($this->data[$field])) {
+		if (isset($this->data[$field])) {
 			return $this->data[$field];
 		}
 
