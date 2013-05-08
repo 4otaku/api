@@ -18,6 +18,9 @@ abstract class Api_Abstract
 	protected $errors = array();
 	protected $answer = array();
 
+	// @TODO turn into trait Api_Trait_Art
+	protected static $upload_cache = array();
+
 	public function __construct(Api_Request $request)
 	{
 		$this->db = Database::db($this->db_type);
@@ -148,6 +151,57 @@ abstract class Api_Abstract
 	{
 		return defined('API_IMAGES') ?
 			API_IMAGES . SL : IMAGES . SL;
+	}
+
+	// @TODO turn into trait Api_Trait_Art
+	protected function get_upload_data($key)
+	{
+		$md5 = substr($key, 0, 32);
+		$id = substr($key, 32);
+
+		if (!isset(self::$upload_cache[$id])) {
+			self::$upload_cache[$id] =
+				$this->db->get_full_row('art_upload', $id);
+		}
+
+		$data = self::$upload_cache[$id];
+		if (empty($data) ||$data['md5'] != $md5) {
+			throw new Error_Api('upload_key', Error_Api::INCORRECT_INPUT);
+		}
+
+		$exist = $this->db->get_field('art', 'id', 'md5 = ?', $md5);
+		if ($exist) {
+			throw new Error_Api($exist, Error_Upload::ALREADY_EXISTS);
+		}
+
+		unset($data['id'], $data['date'], $data['name']);
+		if (
+			function_exists('puzzle_fill_cvec_from_file') &&
+			function_exists('puzzle_compress_cvec')
+		) {
+			$imagelink = $this->get_images_path()
+				. 'art' . SL . $md5 . '_largethumb.jpg';
+
+			$vector = puzzle_fill_cvec_from_file($imagelink);
+			$vector = base64_encode(puzzle_compress_cvec($vector));
+			$data['vector'] = $vector;
+		}
+
+		return $data;
+	}
+
+	// @TODO turn into trait Api_Trait_Art
+	protected function get_upload_name($key)
+	{
+		$id = substr($key, 32);
+
+		if (!isset(self::$upload_cache[$id])) {
+			self::$upload_cache[$id] =
+				$this->db->get_full_row('art_upload', $id);
+		}
+
+		return isset(self::$upload_cache[$id]['name']) ?
+			self::$upload_cache[$id]['name'] : '';
 	}
 
 	protected function add_meta($item_type, $id_item, $meta_type, $meta)

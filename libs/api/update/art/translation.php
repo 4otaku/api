@@ -11,7 +11,7 @@ class Api_Update_Art_Translation extends Api_Update_Abstract
 		$change = (array) $this->get('change');
 		$remove = (array) $this->get('remove');
 
-		if (empty($id) || empty($add) && empty($change) && empty($remove)) {
+		if (empty($id) || (empty($add) && empty($change) && empty($remove))) {
 			throw new Error_Api(Error_Api::MISSING_INPUT);
 		}
 
