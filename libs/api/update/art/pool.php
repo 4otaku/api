@@ -12,12 +12,16 @@ abstract class Api_Update_Art_Pool extends Api_Update_Abstract
 			throw new Error_Api(Error_Api::MISSING_INPUT);
 		}
 
+		if (!$this->check_pool($id)) {
+			throw new Error_Api(Error_Api::INCORRECT_INPUT);
+		}
+
 		$meta = Meta::parse($this->table);
 
 		foreach ((array) $this->get('add') as $item) {
-			if (isset($item['id']) && $this->check_pool($item['id'])) {
+			if (!$this->in_pool($id, $item['id'])) {
 				if ($this->add_item($id, $item)) {
-					$this->add_meta(Meta::ART, $item['id'], $meta, $id);
+					$this->add_meta(Meta::ART, (int) $item['id'], $meta, $id);
 				}
 			}
 		}
@@ -53,5 +57,16 @@ abstract class Api_Update_Art_Pool extends Api_Update_Abstract
 	protected function check_pool($id)
 	{
 		return (bool) $this->db->get_count($this->table, $id);
+	}
+
+	protected function in_pool($pool, $id)
+	{
+		return (bool) $this->db->get_count($this->table . '_item',
+			$this->get_id_field() . ' = ? and id_art = ?', array($pool, $id));
+	}
+
+	protected function get_id_field()
+	{
+		return str_replace('art_', 'id_', $this->table);
 	}
 }

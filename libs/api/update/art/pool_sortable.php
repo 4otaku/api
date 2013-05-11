@@ -20,7 +20,7 @@ abstract class Api_Update_Art_Pool_Sortable extends Api_Update_Art_Pool
 	{
 		$this->db->begin();
 
-		$id_field = str_replace('art_', 'id_', $this->table);
+		$id_field = $this->get_id_field();
 		$max = $this->db->order('order')->limit(1)->get_field(
 			$this->table . '_item', 'order', $id_field . ' = ?', $id);
 		$this->db->update($this->table . '_item',
