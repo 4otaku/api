@@ -44,7 +44,12 @@ class Api_Create_Art extends Api_Create_Abstract
 				));
 				$id_artist = $this->db->last_id();
 			}
-			$this->add_meta(Meta::ART, $id, Meta::ART_ARTIST, $id_artist);
+			$request = new Api_Request_Inner(array(
+				'id' => $id_artist,
+				'add' => array(array('id' => $id))
+			));
+			$worker = new Api_Update_Art_Artist($request);
+			$worker->process_request();
 		}
 
 		if ($this->get('tag')) {
