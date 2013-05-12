@@ -8,6 +8,10 @@ abstract class Api_Update_Art_Pool extends Api_Update_Abstract
 	{
 		$id = $this->get('id');
 
+		if (!$this->is_moderator() && $this->get('remove')) {
+			throw new Error_Api(Error_Api::INSUFFICIENT_RIGHTS);
+		}
+
 		if (empty($id) || !$this->have_changes()) {
 			throw new Error_Api(Error_Api::MISSING_INPUT);
 		}
@@ -17,7 +21,14 @@ abstract class Api_Update_Art_Pool extends Api_Update_Abstract
 		}
 
 		$meta = Meta::parse($this->table);
-		$this->add_items($id);
+
+		foreach ((array) $this->get('add') as $item) {
+			if (!$this->in_pool($id, $item['id'])) {
+				if ($this->add_item($id, $item)) {
+					$this->add_meta(Meta::ART, (int) $item['id'], $meta, $id);
+				}
+			}
+		}
 
 		foreach ((array) $this->get('remove') as $item) {
 			if ($this->remove_item($id, (int) $item)) {
@@ -36,19 +47,6 @@ abstract class Api_Update_Art_Pool extends Api_Update_Abstract
 		}
 
 		$this->set_success(true);
-	}
-
-	protected function add_items($id)
-	{
-		$meta = Meta::parse($this->table);
-
-		foreach ((array) $this->get('add') as $item) {
-			if (!$this->in_pool($id, $item['id'])) {
-				if ($this->add_item($id, $item)) {
-					$this->add_meta(Meta::ART, (int) $item['id'], $meta, $id);
-				}
-			}
-		}
 	}
 
 	protected function have_changes()

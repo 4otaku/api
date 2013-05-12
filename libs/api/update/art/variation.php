@@ -11,6 +11,10 @@ class Api_Update_Art_Variation extends Api_Update_Abstract
 		$remove = (array) $this->get('remove');
 		$order = (array) $this->get('order');
 
+		if (!$this->is_moderator()) {
+			throw new Error_Api(Error_Api::INSUFFICIENT_RIGHTS);
+		}
+
 		if (empty($id) || (empty($add) && empty($remove) && empty($order))) {
 			throw new Error_Api(Error_Api::MISSING_INPUT);
 		}

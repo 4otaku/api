@@ -7,6 +7,10 @@ class Api_Update_Art_Image extends Api_Update_Abstract
 		$id = (int) $this->get('id');
 		$key = $this->get('upload_key');
 
+		if (!$this->is_moderator()) {
+			throw new Error_Api(Error_Api::INSUFFICIENT_RIGHTS);
+		}
+
 		if (empty($id) || empty($key)) {
 			throw new Error_Api(Error_Api::MISSING_INPUT);
 		}

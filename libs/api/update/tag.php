@@ -8,7 +8,7 @@ abstract class Api_Update_Tag extends Api_Update_Abstract
 
 	public function process()
 	{
-		$item_id = $this->get('id');
+		$item_id = (int) $this->get('id');
 		$add = (array) $this->get('add');
 		$remove = (array) $this->get('remove');
 
