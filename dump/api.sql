@@ -33,13 +33,15 @@ CREATE TABLE IF NOT EXISTS `art` (
   `animated` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `vector` text,
   `similar_tested` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `source` text NULL DEFAULT NULL,
-  `comment` text NULL DEFAULT NULL,
-  `sortdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `source` text,
+  `comment` text,
+  `sortdate` timestamp NULL DEFAULT NULL,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `selector` (`id_parent`)
+  UNIQUE KEY `md5` (`md5`),
+  KEY `selector` (`id_parent`),
+  KEY `date` (`id`,`sortdate`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-ALTER TABLE  `art` ADD UNIQUE  `md5` (  `md5` );
 
 -- --------------------------------------------------------
 

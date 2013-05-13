@@ -36,7 +36,7 @@ $db_write->sql('truncate table art_similar');
 $db_write->sql('truncate table art_translation');
 $db_write->sql('truncate table comment');
 
-$limit = 0;
+$limit = 10000000;
 function log_progress($type, $count) {
 	global $log_type, $log_count;
 	if (empty($log_type) || $log_type != $type) {
@@ -143,7 +143,7 @@ foreach ($old_arts as $old_art) {
 		file_put_contents($file, file_get_contents($url));
 
 		try {
-			$upload = new Transform_Upload_Art($file, $old_art['md5'] . '.' . $old_art['extension']);
+			$upload = new Transform_Upload_Art($file, $old_art['md5'] . '.' . $old_art['extension'], IMAGES);
 			$answer = $upload->process_file();
 		} catch (Exception $e) {
 			echo(serialize($e)); die;
@@ -252,7 +252,7 @@ foreach ($variations as $variation) {
 		file_put_contents($file, file_get_contents($url));
 
 		try {
-			$upload = new Transform_Upload_Art($file, $variation['md5'] . '.' . $variation['extension']);
+			$upload = new Transform_Upload_Art($file, $variation['md5'] . '.' . $variation['extension'], IMAGES);
 			$answer = $upload->process_file();
 		} catch (Exception $e) {
 			echo(serialize($e)); die;
