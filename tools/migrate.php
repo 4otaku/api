@@ -245,6 +245,9 @@ unset($old_arts);
 
 $variations = $db_read->limit($limit)->get_full_table('art_variation');
 foreach ($variations as $variation) {
+	if (!isset($art_ids[$variation['art_id']])) {
+		continue;
+	}
 
 	if (!file_exists(IMAGES . SL . 'art' . SL . $variation['md5'] . '.' . $variation['extension'])) {
 		$url = $argv[2] . $variation['md5'] . '.' . $variation['extension'];
@@ -444,7 +447,7 @@ $pack_ids = array();
 foreach ($packs as $pack) {
 	$db_write->insert('art_pack', array(
 		'filename' => $pack['filename'],
-		'cover' => $art_ids[$db_read->get_field('art', 'id', 'thumb = ?', $pack['cover'])],
+		'cover' => $art_ids[$db_read->get_field('art', 'id', 'thumb = ? or md5 = ?', array($pack['cover'], $pack['cover']))],
 		'title' => $pack['title'],
 		'text' => $pack['pretty_text'],
 		'sortdate' => $pack['date'],

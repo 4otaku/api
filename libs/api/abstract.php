@@ -111,7 +111,7 @@ abstract class Api_Abstract
 
 	protected function get_user_data()
 	{
-		$this->id_user = 0;
+		$this->id_user = 1;
 		$this->rights = 0;
 
 		$cookie = $this->get_cookie();
