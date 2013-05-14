@@ -26,15 +26,16 @@ $db_write->insert('user', array(
 ));
 $db_write->sql('truncate table meta');
 $db_write->sql('truncate table art');
+$db_write->sql('truncate table art_tag');
 $db_write->sql('truncate table art_pack');
 $db_write->sql('truncate table art_pack_item');
 $db_write->sql('truncate table art_group');
 $db_write->sql('truncate table art_manga');
 $db_write->sql('truncate table art_manga_item');
 $db_write->sql('truncate table art_rating');
-$db_write->sql('truncate table art_similar');
 $db_write->sql('truncate table art_translation');
 $db_write->sql('truncate table comment');
+$db_write->sql('truncate table user');
 
 $limit = 10000000;
 function log_progress($type, $count) {
@@ -339,6 +340,9 @@ unset($similar_ids);
 
 $ratings = $db_read->limit($limit)->get_table('art_rating', array('`art_id` as id_art', 'cookie', 'ip', 'rating'));
 foreach ($ratings as $rating) {
+	if (!isset($art_ids[$rating['id_art']])) {
+		continue;
+	}
 	$rating['id_art'] = $art_ids[$rating['id_art']];
 	$db_write->insert('art_rating', $rating);
 	$db_write->update('meta', array(
@@ -350,7 +354,7 @@ foreach ($ratings as $rating) {
 unset($ratings);
 
 $comments = $db_read->limit($limit)->order('sortdate', 'asc')
-	->get_full_table('comment', 'place = ?', 'art');
+	->get_full_table('comment', 'place = ? and post_id not like "ext_%"', 'art');
 $comment_ids = array();
 $rumonth = array(
 	'','Январь','Февраль','Март','Апрель',
@@ -463,12 +467,18 @@ foreach ($packs as $pack) {
 }
 unset($packs);
 
-$packs_arts = $db_read->limit($limit)->get_full_table('art_in_pack', 'art_id > 0');
+$packs_arts = $db_read->limit($limit)->order('order', 'asc')
+	->get_full_table('art_in_pack', 'art_id > 0');
 foreach ($packs_arts as $art) {
+	if (!isset($pack_ids[$art['pack_id']]) || !isset($art_ids[$art['art_id']])) {
+		continue;
+	}
 	$db_write->insert('art_pack_item', array(
 		'id_pack' => $pack_ids[$art['pack_id']],
 		'id_art' => $art_ids[$art['art_id']],
-		'order' => $art['order'],
+		'order' => $db_write->get_count('art_pack_item', 'id_pack = ? and `order` = ?', array($pack_ids[$art['pack_id']], $art['order'])) ?
+			$db_write->order('order')->get_field('art_pack_item', 'order', 'id_pack = ?', $pack_ids[$art['pack_id']]) + 1:
+			$art['order'],
 		'filename' => $art['filename'],
 	));
 	$db_write->insert('meta', array(
@@ -504,6 +514,9 @@ unset($groups);
 
 $groups_arts = $db_read->limit($limit)->get_full_table('art_in_pool');
 foreach ($groups_arts as $art) {
+	if (!isset($groups_ids[$art['pool_id']]) || !isset($art_ids[$art['art_id']])) {
+		continue;
+	}
 	$db_write->insert('art_manga_item', array(
 		'id_manga' => $groups_ids[$art['pool_id']],
 		'id_art' => $art_ids[$art['art_id']],
