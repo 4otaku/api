@@ -339,7 +339,8 @@ foreach ($ratings as $rating) {
 	$rating['id_art'] = $art_ids[$rating['id_art']];
 	$db_write->insert('art_rating', $rating);
 	$db_write->update('meta', array(
-		'meta' => $rating['rating'] > 0 ? '++' : '--',
+		'meta' => Database_Action::get($rating['rating'] > 0 ?
+			Database_Action::INCREMENT : Database_Action::DECREMENT),
 	), 'item_type = 1 and meta_type = 7 and id_item = ?', $rating['id_art']);
 	log_progress('rating', count($ratings));
 }
@@ -374,7 +375,7 @@ foreach ($comments as $comment) {
 	$db_write->insert('comment', $insert);
 	$comment_ids[$comment['id']] = $db_write->last_id();
 	$db_write->update('meta', array(
-		'meta' => '++',
+		'meta' => Database_Action::get(Database_Action::INCREMENT),
 	), 'item_type = 1 and meta_type = 9 and id_item = ?', $art_ids[$comment['post_id']]);
 	$max_date = $db_write->get_field('meta', 'item_type = 1 and meta_type = 10 and id_item = ?',
 		$art_ids[$comment['post_id']]);
