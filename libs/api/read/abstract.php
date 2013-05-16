@@ -28,18 +28,18 @@ abstract class Api_Read_Abstract extends Api_Abstract
 		return $per_page;
 	}
 
-	protected function get_page() {
-		$page = $this->get('page');
-		if (empty($page)) {
-			return $this->default_page;
+	protected function get_offset() {
+		$offset = (int) $this->get('offset');
+		if ($offset >= 0) {
+			return $offset;
 		}
 
-		$page = (int) $page;
-		if ($page <= 0) {
-			return $this->default_page;
+		$page = (int) $this->get('page');
+		if (empty($page) || $page <= 0) {
+			$page = $this->default_page;
 		}
 
-		return $page;
+		return ($page - 1) * $this->get_per_page();
 	}
 
 	protected function get_sort_by() {

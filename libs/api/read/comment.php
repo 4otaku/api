@@ -23,7 +23,7 @@ class Api_Read_Comment extends Api_Read_Abstract
 		$sort_by = $this->get_sort_by();
 		$sort_order = $this->get_sort_order();
 		$per_page = $this->get_per_page();
-		$page = $this->get_page();
+		$offset = $this->get_offset();
 
 		$condition = array('deleted = ?');
 		$params = array(0);
@@ -33,7 +33,7 @@ class Api_Read_Comment extends Api_Read_Abstract
 			$params[] = 0;
 		}
 
-		$sql = $this->db->limit($per_page, ($page - 1) * $per_page)
+		$sql = $this->db->limit($per_page, $offset)
 			->order($sort_by, $sort_order)->set_counter();
 		foreach ($this->get_filters() as $key => $filter) {
 			$condition[] = $this->db->array_in($key, $filter);

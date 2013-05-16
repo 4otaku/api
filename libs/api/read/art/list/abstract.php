@@ -23,10 +23,10 @@ abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
 		$filters = $this->get_filters($params);
 		$this->get_filter_values($filters);
 		$per_page = $this->get_per_page();
-		$page = $this->get_page();
+		$offset = $this->get_offset();
 		$sorter = $this->get_sorter($params);
 
-		$sql = $this->db->limit($per_page, ($page - 1) * $per_page)
+		$sql = $this->db->limit($per_page, $offset)
 			->set_counter();
 		foreach ($filters as $filter) {
 			$sql->filter('meta', array(
