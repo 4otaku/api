@@ -29,7 +29,9 @@ abstract class Api_Read_Art_List_Art extends Api_Read_Art_List_Abstract
 		}
 		$count = $sql->get_counter();
 
-		$this->add_meta_data($data);
+		if (!$this->get('skip_meta')) {
+			$this->add_meta_data($data);
+		}
 
 		$this->send_answer($data, $count);
 	}

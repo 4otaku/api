@@ -46,7 +46,9 @@ abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
 		$data = $sql->get_table($this->table, $this->fields);
 		$count = $sql->get_counter();
 
-		$this->add_meta_data($data);
+		if (!$this->get('skip_meta')) {
+			$this->add_meta_data($data);
+		}
 
 		$this->send_answer($data, $count);
 	}
