@@ -29,9 +29,9 @@ abstract class Api_Read_Abstract extends Api_Abstract
 	}
 
 	protected function get_offset() {
-		$offset = (int) $this->get('offset');
-		if ($offset >= 0) {
-			return $offset;
+		$offset = $this->get('offset');
+		if ($offset !== null && (int) $offset >= 0) {
+			return (int) $offset;
 		}
 
 		$page = (int) $this->get('page');
