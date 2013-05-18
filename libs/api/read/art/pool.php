@@ -52,7 +52,7 @@ abstract class Api_Read_Art_Pool extends Api_Read_Abstract
 
 	protected function get_data($ids) {
 		$data = $this->db->set_counter()->get_vector($this->table,
-			$this->fields, $this->db->array_in('id', $ids), $ids);
+			$this->fields, $this->db->array_in('id', $ids), $ids, false);
 
 		$this->add_answer('count', $this->db->get_counter());
 		return $data;
