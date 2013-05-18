@@ -5,6 +5,11 @@ class Cron_Tag extends Cron_Abstract
 	protected function do_count()
 	{
 		// Main table
+		$this->db->sql('drop table if exists art_tag_count_temp');
+		$this->db->sql('drop table if exists art_pack_tag_count_temp');
+		$this->db->sql('drop table if exists art_group_tag_count_temp');
+		$this->db->sql('drop table if exists art_manga_tag_count_temp');
+		$this->db->sql('drop table if exists art_artist_tag_count_temp');
 		$this->db->sql('create table art_tag_count_temp select * from art_tag_count limit 0');
 		$this->db->sql('create table art_pack_tag_count_temp select * from art_pack_tag_count limit 0');
 		$this->db->sql('create table art_group_tag_count_temp select * from art_group_tag_count limit 0');
