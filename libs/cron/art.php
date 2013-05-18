@@ -62,12 +62,12 @@ class Cron_Art extends Cron_Abstract
 			$all[$id] = puzzle_uncompress_cvec(base64_decode($vector));
 		}
 
-		foreach ($arts as $id => $art) {
-			$art['vector'] = puzzle_uncompress_cvec(base64_decode($art['vector']));
-			foreach ($all as $compare_id => $vector) {
+		foreach ($arts as $id => $vector) {
+			$vector = puzzle_uncompress_cvec(base64_decode($vector));
+			foreach ($all as $compare_id => $compare_vector) {
 				if (
 					$id != $compare_id &&
-					puzzle_vector_normalized_distance($art['vector'], $vector) < 0.3
+					puzzle_vector_normalized_distance($vector, $compare_vector) < 0.3
 				) {
 					$id_first = min($id, $compare_id);
 					$id_second = min($id, $compare_id);
