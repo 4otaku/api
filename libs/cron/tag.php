@@ -85,8 +85,10 @@ class Cron_Tag extends Cron_Abstract
 	{
 		$tags = Database::db('wiki')->get_vector('page', array('page_title'),
 			'page_namespace = ?', 500);
-		$already_marked = $this->db->get_vector('tag', array('name'),
+		$already_marked = $this->db->get_vector('art_tag', array('name'),
 			'have_description = ?', 1);
+		$tags = array_keys($tags);
+		$already_marked = array_keys($already_marked);
 
 		if (empty($already_marked)) {
 			$already_marked = array();
@@ -94,7 +96,7 @@ class Cron_Tag extends Cron_Abstract
 
 		foreach ($tags as $tag) {
 			if (!in_array($tag, $already_marked)) {
-				$this->db->update('tag', array('have_description' => 1),
+				$this->db->update('art_tag', array('have_description' => 1),
 					'name = ?', $tag);
 			}
 		}

@@ -4,6 +4,12 @@ class Transform_Upload_Art extends Transform_Upload_Abstract_Image
 {
 	protected $md5 = 'unknown';
 
+	public function __construct($file, $name, $base_path = false) {
+		parent::__construct($file, $name, $base_path);
+
+		$this->md5 = md5_file($file);
+	}
+
 	protected function get_max_size() {
 		return Config::get('art', 'filesize');
 	}
@@ -11,12 +17,10 @@ class Transform_Upload_Art extends Transform_Upload_Abstract_Image
 	protected function test_file() {
 		parent::test_file();
 
-		$md5 = md5_file($this->file);
-		if ($id = Database::db('api')->get_field('art', 'id', 'md5 = ?', $md5)) {
+		$id = Database::db('api')->get_field('art', 'id', 'md5 = ?', $this->md5);
+		if (!empty($id)) {
 			throw new Error_Upload($id, Error_Upload::ALREADY_EXISTS);
 		}
-
-		$this->md5 = $md5;
 	}
 
 	protected function process() {
@@ -61,8 +65,8 @@ class Transform_Upload_Art extends Transform_Upload_Abstract_Image
 	}
 
 	public function resize() {
-		$md5 = md5_file($this->file);
-		$resized = IMAGES.SL.'booru'.SL.'resized'.SL.$md5.'.jpg';
+		$base = $this->get_base_path();
+		$resized = $base.SL.'art'.SL.$this->md5.'_resize.jpg';
 
 		$this->worker = Transform_Image::get_worker($this->file);
 		$this->animated = $this->is_animated($this->file);
