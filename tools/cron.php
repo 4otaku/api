@@ -15,8 +15,8 @@ Cache::$base_prefix = Config::get('cache', 'prefix');
 define('LOCK_FILE', '/tmp/cron_api_lock');
 
 if (!empty($argv[1]) && !empty($argv[2])) {
-	$cron = new Cron();
-	$cron->process($argv[1], $argv[2]);
+	Cron::set_db('api');
+	Cron::process($argv[1], $argv[2]);
 	exit();
 }
 
