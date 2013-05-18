@@ -9,6 +9,7 @@ class Cron_Tag extends Cron_Abstract
 		$this->db->sql('create table art_pack_tag_count_temp select * from art_pack_tag_count limit 0');
 		$this->db->sql('create table art_group_tag_count_temp select * from art_group_tag_count limit 0');
 		$this->db->sql('create table art_manga_tag_count_temp select * from art_manga_tag_count limit 0');
+		$this->db->sql('create table art_artist_tag_count_temp select * from art_artist_tag_count limit 0');
 		$tags = $this->db->get_vector('art_tag', array('id', 'name'));
 
 		foreach ($tags as $id => &$tag) {
@@ -45,6 +46,10 @@ class Cron_Tag extends Cron_Abstract
 				'id_tag' => $id,
 				'count' => $tag['count_manga']
 			));
+			$this->db->insert('art_artist_tag_count_temp', array(
+				'id_tag' => $id,
+				'count' => $tag['count_manga']
+			));
 		}
 		unset($tag);
 
@@ -61,6 +66,7 @@ class Cron_Tag extends Cron_Abstract
 		$this->db->sql('alter table art_pack_tag_count_temp add index `selector` (`id_tag`)');
 		$this->db->sql('alter table art_group_tag_count_temp add index `selector` (`id_tag`)');
 		$this->db->sql('alter table art_manga_tag_count_temp add index `selector` (`id_tag`)');
+		$this->db->sql('alter table art_artist_tag_count_temp add index `selector` (`id_tag`)');
 		$this->db->sql('drop table art_tag_count');
 		$this->db->sql('rename table art_tag_count_temp to art_tag_count');
 		$this->db->sql('drop table art_pack_tag_count');
@@ -69,6 +75,29 @@ class Cron_Tag extends Cron_Abstract
 		$this->db->sql('rename table art_group_tag_count_temp to art_group_tag_count');
 		$this->db->sql('drop table art_manga_tag_count');
 		$this->db->sql('rename table art_manga_tag_count_temp to art_manga_tag_count');
+		$this->db->sql('drop table art_artist_tag_count');
+		$this->db->sql('rename table art_artist_tag_count_temp to art_artist_tag_count');
+
+		return memory_get_usage();
+	}
+
+	protected function check_wiki()
+	{
+		$tags = Database::db('wiki')->get_vector('page', array('page_title'),
+			'page_namespace = ?', 500);
+		$already_marked = $this->db->get_vector('tag', array('name'),
+			'have_description = ?', 1);
+
+		if (empty($already_marked)) {
+			$already_marked = array();
+		}
+
+		foreach ($tags as $tag) {
+			if (!in_array($tag, $already_marked)) {
+				$this->db->update('tag', array('have_description' => 1),
+					'name = ?', $tag);
+			}
+		}
 
 		return memory_get_usage();
 	}
