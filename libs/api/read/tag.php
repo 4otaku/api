@@ -18,13 +18,21 @@ abstract class Api_Read_Tag extends Api_Read_Abstract
 		$condition = '';
 		$params = array();
 
+		$id = (int) $this->get('id');
+		$name = (string) $this->get('name');
 		$filter = (string) $this->get('filter');
 
 		$sql = $this->db->limit($per_page, $offset)
 			->order($sort_by, $sort_order)->set_counter();
-		if ($filter) {
+		if ($id) {
+			$condition = 'id = ?';
+			$params[] = $id;
+		} elseif ($name) {
+			$condition = 'name = ?';
+			$params[] = trim($name);
+		} elseif ($filter) {
 			$condition = 'name like ?';
-			$params[] = '%' . $filter . '%';
+			$params[] = '%' . trim($filter) . '%';
 		}
 
 		$data = $sql->get_table($this->table, $this->fields,

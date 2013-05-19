@@ -14,10 +14,7 @@ class Meta
 		COMMENT_DATE = 10,
 		TAG_COUNT = 11,
 		TRANSLATOR = 12,
-		TRANSLATION_DATE = 13,
-		ART_PACK_TAG = 14,
-		ART_GROUP_TAG = 15,
-		ART_MANGA_TAG = 16;
+		TRANSLATION_DATE = 13;
 
 	const
 		IS = '=',
