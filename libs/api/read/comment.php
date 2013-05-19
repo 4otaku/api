@@ -4,7 +4,7 @@ class Api_Read_Comment extends Api_Read_Abstract
 {
 	protected $fields = array(
 		'id', 'rootparent', 'parent', 'id_item', 'area', 'username',
-		'text', 'email', 'editdate', 'sortdate'
+		'cookie', 'text', 'email', 'editdate', 'sortdate'
 	);
 	protected $legal_sort = array(
 		'id', 'rootparent', 'parent', 'id_item', 'area', 'username',
@@ -45,7 +45,9 @@ class Api_Read_Comment extends Api_Read_Abstract
 
 		foreach ($data as &$item) {
 			$item['avatar'] = md5($item['email']);
+			$item['is_author'] = ($item['cookie'] == $this->get_cookie());
 			unset($item['email']);
+			unset($item['cookie']);
 		}
 		unset($item);
 

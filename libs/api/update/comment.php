@@ -13,7 +13,10 @@ class Api_Update_Comment extends Api_Update_Abstract
 		}
 
 		if (!$this->is_moderator()) {
-			throw new Error_Api(Error_Api::INSUFFICIENT_RIGHTS);
+			$cookie = $this->db->get_field('comment', 'cookie', $id);
+			if ($cookie != $this->get_cookie()) {
+				throw new Error_Api(Error_Api::INSUFFICIENT_RIGHTS);
+			}
 		}
 
 		$this->db->update('comment', array(
