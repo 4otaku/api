@@ -19,16 +19,18 @@ class Api_Update_Tag_Art extends Api_Update_Abstract
 
 		if ($variant !== null) {
 			$this->db->delete('art_tag_variant', 'id_tag = ?', $id);
+			$variant = empty($variant) ? array() : (array) $variant;
 			foreach((array) $variant as $item) {
+				$item = (string) $item;
 				if (
-					$this->db->get_count('art_tag', 'name = ?', $name) ||
-					$this->db->get_count('art_tag_variant', 'name = ?', $name)
+					$this->db->get_count('art_tag', 'name = ?', $item) ||
+					$this->db->get_count('art_tag_variant', 'name = ?', $item)
 				) {
 					$this->add_error(Error_Api::TAG_EXISTS);
 				} else {
 					$this->db->insert('art_tag_variant', array(
 						'id_tag' => $id,
-						'name' => (string) $item
+						'name' => $item
 					));
 				}
 			}
