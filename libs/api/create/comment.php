@@ -1,17 +1,18 @@
 <?php
 
-abstract class Api_Create_Comment_Abstract extends Api_Create_Abstract
+class Api_Create_Comment extends Api_Create_Abstract
 {
 	public function process()
 	{
 		$id_item = (int) $this->get('id_item');
+		$area = Meta::parse($this->get('area'));
 		$parent = (int) $this->get('parent');
 		$name = (string) $this->get('name');
 		$mail = (string) $this->get('mail');
 		$text = (string) $this->get('text');
 		$text = trim($text);
 
-		if (empty($text) || empty($id_item)) {
+		if (empty($text) || empty($id_item) || empty($area)) {
 			throw new Error_Api(Error_Api::MISSING_INPUT);
 		}
 
@@ -38,7 +39,7 @@ abstract class Api_Create_Comment_Abstract extends Api_Create_Abstract
 			'parent' => $parent,
 			'rootparent' => $root,
 			'id_item' => $id_item,
-			'area' => $this->get_area(),
+			'area' => $area,
 			'username' => $name,
 			'email' => $mail,
 			'ip' => $this->get_ip(),
@@ -59,6 +60,4 @@ abstract class Api_Create_Comment_Abstract extends Api_Create_Abstract
 
 		$this->set_success(true);
 	}
-
-	abstract protected function get_area();
 }

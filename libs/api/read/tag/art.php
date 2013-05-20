@@ -1,6 +1,6 @@
 <?php
 
-class Api_Read_Art_Tag extends Api_Read_Tag
+class Api_Read_Tag_Art extends Api_Read_Tag
 {
 	protected $fields = array('id', 'name', 'color');
 	protected $table = 'art_tag';

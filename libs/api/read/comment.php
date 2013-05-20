@@ -18,8 +18,8 @@ class Api_Read_Comment extends Api_Read_Abstract
 	protected $max_per_page = 100;
 	protected $default_item_type = 1;
 
-	public function process() {
-
+	public function process()
+	{
 		$sort_by = $this->get_sort_by();
 		$sort_order = $this->get_sort_order();
 		$per_page = $this->get_per_page();
@@ -101,7 +101,8 @@ class Api_Read_Comment extends Api_Read_Abstract
 		$this->set_success(true);
 	}
 
-	protected function get_filters() {
+	protected function get_filters()
+	{
 		$filters = (array) $this->get('filter');
 
 		foreach ($filters as $key => &$filter) {
@@ -125,7 +126,8 @@ class Api_Read_Comment extends Api_Read_Abstract
 		return array_filter($filters);
 	}
 
-	protected function get_sort_by() {
+	protected function get_sort_by()
+	{
 		$sort_by = parent::get_sort_by();
 
 		if (!in_array($sort_by, $this->legal_sort)) {
