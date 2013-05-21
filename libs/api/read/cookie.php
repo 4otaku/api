@@ -23,7 +23,7 @@ class Api_Read_Cookie extends Api_Read_Abstract
 		}
 
 		if ($user['pass'] != md5($password)) {
-			throw new Error_Api('Неправильный старый пароль.', Error_Api::INCORRECT_INPUT);
+			throw new Error_Api('Неправильный пароль.', Error_Api::INCORRECT_INPUT);
 		}
 
 		$this->set_success(true);

@@ -166,7 +166,7 @@ abstract class Api_Abstract
 
 		$data = self::$upload_cache[$id];
 		if (empty($data) ||$data['md5'] != $md5) {
-			throw new Error_Api('upload_key', Error_Api::INCORRECT_INPUT);
+			throw new Error_Api('Неверный ключ загрузки', Error_Api::INCORRECT_INPUT);
 		}
 
 		$exist = $this->db->get_field('art', 'id', 'md5 = ?', $md5);

@@ -47,7 +47,7 @@ class Api_Update_Art_Translation extends Api_Update_Abstract
 		if (!isset($data['x1']) || !isset($data['x2']) || !isset($data['y1']) ||
 			!isset($data['y2']) || !isset($data['text'])) {
 
-			throw new Error_Api('Insufficient data to create translation',
+			throw new Error_Api('Недостаточно данных для создания перевода',
 				Error_Api::INCORRECT_INPUT);
 		}
 
@@ -74,7 +74,7 @@ class Api_Update_Art_Translation extends Api_Update_Abstract
 	protected function do_update($id, $data)
 	{
 		if (empty($data['id'])) {
-			throw new Error_Api('For editing translation id is required',
+			throw new Error_Api('Для редактирования перевода нужно указать его id',
 				Error_Api::INCORRECT_INPUT);
 		}
 
@@ -84,8 +84,8 @@ class Api_Update_Art_Translation extends Api_Update_Abstract
 			'id_art = ? and id_translation = ?', array($id, $data['id']));
 
 		if (empty($last)) {
-			throw new Error_Api('Translation with id ' . $data['id'] .
-				' not found', Error_Api::INCORRECT_INPUT);
+			throw new Error_Api('Перевода с id ' . $data['id'] .
+				' не существует', Error_Api::INCORRECT_INPUT);
 		}
 
 		$this->db->insert('art_translation', array(
@@ -105,7 +105,7 @@ class Api_Update_Art_Translation extends Api_Update_Abstract
 		$data = (int) $data;
 
 		if (empty($data)) {
-			throw new Error_Api('For deleting translation id is required',
+			throw new Error_Api('Для удаления перевода необходимо указать его id',
 				Error_Api::INCORRECT_INPUT);
 		}
 

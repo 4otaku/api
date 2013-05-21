@@ -18,7 +18,8 @@ class Api_Update_Art_Rating extends Api_Update_Abstract
 			array($id, $cookie, $ip));
 
 		if ($test) {
-			throw new Error_Api('Already voted', Error_Api::INCORRECT_INPUT);
+			throw new Error_Api('Вы уже голосовали за этот арт',
+				Error_Api::INCORRECT_INPUT);
 		}
 
 		$this->db->insert('art_rating', array(

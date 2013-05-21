@@ -10,7 +10,7 @@ abstract class Api_Create_Art_Pool extends Api_Create_Abstract
 		$text = $this->get('text');
 
 		if (empty($title)) {
-			throw new Error_Api('title', Error_Api::MISSING_INPUT);
+			throw new Error_Api(Error_Api::MISSING_INPUT);
 		}
 
 		$success = (bool) $this->db->insert($this->table, array(

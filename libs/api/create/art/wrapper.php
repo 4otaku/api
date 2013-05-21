@@ -7,7 +7,7 @@ class Api_Create_Art extends Api_Create_Abstract
 		$key = $this->get('upload_key');
 
 		if (empty($key)) {
-			throw new Error_Api('upload_key', Error_Api::MISSING_INPUT);
+			throw new Error_Api('Пропущен ключ загрузки', Error_Api::MISSING_INPUT);
 		}
 
 		$insert = $this->get_upload_data($key);
