@@ -416,6 +416,25 @@ $translations = $db_read->limit($limit)->order('sortdate', 'asc')->get_full_tabl
 foreach ($translations as $translation) {
 	$data = unserialize(base64_decode($translation['data']));
 	foreach ((array) $data as $key => $item) {
+		$text = preg_replace('/&lt;br[\s\/]*&gt;/si', "\n", $item['pretty_text']);
+		$text = preg_replace('/&lt;(b|strong)&gt;/si', "[b]", $text);
+		$text = preg_replace('/&lt;\/(b|strong)&gt;/si', "[/b]", $text);
+		$text = preg_replace('/&lt;(i|em|italic)&gt;/si', "[i]", $text);
+		$text = preg_replace('/&lt;\/(i|em|italic)&gt;/si', "[/i]", $text);
+		$text = preg_replace('/&lt;\/div&gt;/si', "", $text);
+		$text = preg_replace('/&lt;small&gt;/si', "[size=85]", $text);
+		$text = preg_replace('/&lt;\/small&gt;/si', "[/size]", $text);
+		$text = preg_replace('/&lt;big&gt;/si', "[size=150]", $text);
+		$text = preg_replace('/&lt;\/big&gt;/si', "[/size]", $text);
+		$text = preg_replace('/&lt;font\s+size=\s*&quot;\s*\+(\d)\s*&quot;\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=1\${1}0]\\2[/size]", $text);
+		$text = preg_replace('/&apos;/si', '\'', $text);
+		$text = preg_replace('/&quot;/si', '"', $text);
+
+		if ($text != $item['pretty_text']) {
+			$log_id = $art_ids[$translation['art_id']];
+			print "\nПреобразование текста в арте номер $log_id, было:\n$item[pretty_text]\nСтало:$text\n";
+		}
+
 		$db_write->insert('art_translation', array(
 			'id_translation' => $key + 1,
 			'id_art' => $art_ids[$translation['art_id']],
@@ -424,7 +443,7 @@ foreach ($translations as $translation) {
 			'x2' => $item['x2'],
 			'y1' => $item['y1'],
 			'y2' => $item['y2'],
-			'text' => $item['pretty_text'],
+			'text' => $text,
 			'sortdate' => $db_write->unix_to_date($translation['sortdate'] / 1000),
 		));
 	}
