@@ -432,7 +432,7 @@ foreach ($translations as $translation) {
 
 		if ($text != $item['pretty_text']) {
 			$log_id = $art_ids[$translation['art_id']];
-			print "\nПреобразование текста в арте номер $log_id, было:\n$item[pretty_text]\nСтало:$text\n";
+			print "\nПреобразование текста в арте номер $log_id, было:\n$item[pretty_text]\nСтало:\n$text\n";
 		}
 
 		$db_write->insert('art_translation', array(
@@ -448,7 +448,8 @@ foreach ($translations as $translation) {
 		));
 	}
 
-	$max_date = $db_write->get_field('meta', 'item_type = 1 and meta_type = 13 and id_item = ?',
+	$max_date = $db_write->get_field('meta', 'meta',
+		'item_type = 1 and meta_type = 13 and id_item = ?',
 		$art_ids[$translation['art_id']]);
 	if (!$max_date) {
 		$db_write->insert('meta', array(
