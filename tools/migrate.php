@@ -426,7 +426,12 @@ foreach ($translations as $translation) {
 		$text = preg_replace('/&lt;\/small&gt;/si', "[/size]", $text);
 		$text = preg_replace('/&lt;big&gt;/si', "[size=150]", $text);
 		$text = preg_replace('/&lt;\/big&gt;/si', "[/size]", $text);
-		$text = preg_replace('/&lt;font\s+size=\s*&quot;\s*\+(\d)\s*&quot;\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=1\${1}0]\\2[/size]", $text);
+		$text = preg_replace('/&lt;h4&gt;/si', "[size=180]", $text);
+		$text = preg_replace('/&lt;\/h4&gt;/si', "[/size]", $text);
+		$text = preg_replace('/&lt;s&gt;/si', "[s]", $text);
+		$text = preg_replace('/&lt;\/s&gt;/si', "[/s]", $text);
+		$text = preg_replace('/&lt;\/a&gt;/si', " ", $text);
+		$text = preg_replace('/&lt;font\s+size\s*=\s*&quot;\s*\+(\d)\s*&quot;\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=1\${1}0]\\2[/size]", $text);
 		$text = preg_replace('/&apos;/si', '\'', $text);
 		$text = preg_replace('/&quot;/si', '"', $text);
 
