@@ -416,7 +416,7 @@ $translations = $db_read->limit($limit)->order('sortdate', 'asc')->get_full_tabl
 foreach ($translations as $translation) {
 	$data = unserialize(base64_decode($translation['data']));
 	foreach ((array) $data as $key => $item) {
-		$text = preg_replace('/&lt;br[\s\/]*&gt;/si', "\n", $item['pretty_text']);
+		$text = preg_replace('/&lt;[\s\/]*br[\s\/]*&gt;/si', "\n", $item['pretty_text']);
 		$text = preg_replace('/&lt;(b|strong)&gt;/si', "[b]", $text);
 		$text = preg_replace('/&lt;\/(b|strong)&gt;/si', "[/b]", $text);
 		$text = preg_replace('/&lt;(i|em|italic)&gt;/si', "[i]", $text);
@@ -428,12 +428,24 @@ foreach ($translations as $translation) {
 		$text = preg_replace('/&lt;\/big&gt;/si', "[/size]", $text);
 		$text = preg_replace('/&lt;h4&gt;/si', "[size=180]", $text);
 		$text = preg_replace('/&lt;\/h4&gt;/si', "[/size]", $text);
-		$text = preg_replace('/&lt;s&gt;/si', "[s]", $text);
-		$text = preg_replace('/&lt;\/s&gt;/si', "[/s]", $text);
+		$text = preg_replace('/&lt;(s|strike)&gt;/si', "[s]", $text);
+		$text = preg_replace('/&lt;\/(s|strike)&gt;/si', "[/s]", $text);
 		$text = preg_replace('/&lt;\/a&gt;/si', " ", $text);
-		$text = preg_replace('/&lt;font\s+size\s*=\s*&quot;\s*\+(\d)\s*&quot;\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=1\${1}0]\\2[/size]", $text);
+		$text = preg_replace('/&lt;\/span&gt;/si', "", $text);
+		$text = preg_replace('/&lt;font\s+size\s*=\s*(?:&quot;|&apos;)?\s*\+(\d)\s*(?:&quot;)?\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=1\${1}0]\\2[/size]", $text);
+		$text = preg_replace('/&lt;font\s+size\s*=\s*(?:&quot;|&apos;)?\s*(?:8|\+20)\s*(?:&quot;|&apos;)?\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=300]\\1[/size]", $text);
+		$text = preg_replace('/&lt;font\s+size\s*=\s*(?:&quot;|&apos;)?\s*(?:6|\+10)\s*(?:&quot;|&apos;)?\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=200]\\1[/size]", $text);
+		$text = preg_replace('/&lt;font\s+size\s*=\s*(?:&quot;|&apos;)?\s*5\s*(?:&quot;|&apos;)?\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=150]\\1[/size]", $text);
+		$text = preg_replace('/&lt;font\s+size\s*=\s*(?:&quot;|&apos;)?\s*4\s*(?:&quot;|&apos;)?\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=112]\\1[/size]", $text);
+		$text = preg_replace('/&lt;font\s+size\s*=\s*(?:&quot;|&apos;)?\s*(?:2|\-1)\s*(?:&quot;|&apos;)?\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=80]\\1[/size]", $text);
+		$text = preg_replace('/&lt;font\s+size\s*=\s*(?:&quot;|&apos;)?\s*(?:1|\-[2-9])\s*(?:&quot;|&apos;)?\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=62]\\1[/size]", $text);
+		$text = preg_replace('/&lt;font\s+color\s*=\s*(?:&quot;|&apos;)?\s*([^\s]{1,20})\s*(?:&quot;|&apos;)?\s*&gt;(.*?)&lt;\/font&gt;/si', "[color=\\1]\\2[/color]", $text);
+		$text = preg_replace('/&lt;span\s+style\s*=\s*(?:&quot;|&apos;)?\s*color\s*:\s*([^\s]{1,20})\s*;?\s*(?:&quot;|&apos;)?\s*&gt;(.*?)&lt;\/span&gt;/si', "[color=\\1]\\2[/color]", $text);
+		$text = preg_replace('/&lt;color\s*=\s*(?:&quot;)?([^\s]{1,10})(?:&quot;)?\s*&gt;/si', "[color=\\1]", $text);
+		$text = preg_replace('/&lt;\/color&gt;/si', "[/color]", $text);
 		$text = preg_replace('/&apos;/si', '\'', $text);
 		$text = preg_replace('/&quot;/si', '"', $text);
+		$text = preg_replace('/\[color#/si', '[color=#', $text);
 
 		if ($text != $item['pretty_text']) {
 			$log_id = $art_ids[$translation['art_id']];
