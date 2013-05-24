@@ -385,7 +385,8 @@ foreach ($comments as $comment) {
 	$db_write->update('meta', array(
 		'meta' => Database_Action::get(Database_Action::INCREMENT),
 	), 'item_type = 1 and meta_type = 9 and id_item = ?', $art_ids[$comment['post_id']]);
-	$max_date = $db_write->get_field('meta', 'item_type = 1 and meta_type = 10 and id_item = ?',
+	$max_date = $db_write->get_field('meta', 'meta',
+		'item_type = 1 and meta_type = 10 and id_item = ?',
 		$art_ids[$comment['post_id']]);
 	if (!$max_date) {
 		$db_write->insert('meta', array(
@@ -432,16 +433,16 @@ foreach ($translations as $translation) {
 		$text = preg_replace('/&lt;\/(s|strike)&gt;/si', "[/s]", $text);
 		$text = preg_replace('/&lt;\/a&gt;/si', " ", $text);
 		$text = preg_replace('/&lt;\/span&gt;/si', "", $text);
-		$text = preg_replace('/&lt;font\s+size\s*=\s*(?:&quot;|&apos;)?\s*\+(\d)\s*(?:&quot;)?\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=1\${1}0]\\2[/size]", $text);
-		$text = preg_replace('/&lt;font\s+size\s*=\s*(?:&quot;|&apos;)?\s*(?:8|\+20)\s*(?:&quot;|&apos;)?\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=300]\\1[/size]", $text);
-		$text = preg_replace('/&lt;font\s+size\s*=\s*(?:&quot;|&apos;)?\s*(?:6|\+10)\s*(?:&quot;|&apos;)?\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=200]\\1[/size]", $text);
-		$text = preg_replace('/&lt;font\s+size\s*=\s*(?:&quot;|&apos;)?\s*5\s*(?:&quot;|&apos;)?\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=150]\\1[/size]", $text);
-		$text = preg_replace('/&lt;font\s+size\s*=\s*(?:&quot;|&apos;)?\s*4\s*(?:&quot;|&apos;)?\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=112]\\1[/size]", $text);
-		$text = preg_replace('/&lt;font\s+size\s*=\s*(?:&quot;|&apos;)?\s*(?:2|\-1)\s*(?:&quot;|&apos;)?\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=80]\\1[/size]", $text);
-		$text = preg_replace('/&lt;font\s+size\s*=\s*(?:&quot;|&apos;)?\s*(?:1|\-[2-9])\s*(?:&quot;|&apos;)?\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=62]\\1[/size]", $text);
-		$text = preg_replace('/&lt;font\s+color\s*=\s*(?:&quot;|&apos;)?\s*([^\s]{1,20})\s*(?:&quot;|&apos;)?\s*&gt;(.*?)&lt;\/font&gt;/si', "[color=\\1]\\2[/color]", $text);
+		$text = preg_replace('/&lt;font\s+size\s*=\s*(?:&quot;|&apos;)?\s*\+(\d)\s*;?\s*(?:&quot;|&apos;)?\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=1\${1}0]\\2[/size]", $text);
+		$text = preg_replace('/&lt;font\s+size\s*=\s*(?:&quot;|&apos;)?\s*(?:8|\+20)\s*;?\s*(?:&quot;|&apos;)?\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=300]\\1[/size]", $text);
+		$text = preg_replace('/&lt;font\s+size\s*=\s*(?:&quot;|&apos;)?\s*(?:6|\+10)\s*;?\s*(?:&quot;|&apos;)?\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=200]\\1[/size]", $text);
+		$text = preg_replace('/&lt;font\s+size\s*=\s*(?:&quot;|&apos;)?\s*5\s*;?\s*(?:&quot;|&apos;)?\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=150]\\1[/size]", $text);
+		$text = preg_replace('/&lt;font\s+size\s*=\s*(?:&quot;|&apos;)?\s*4\s*;?\s*(?:&quot;|&apos;)?\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=112]\\1[/size]", $text);
+		$text = preg_replace('/&lt;font\s+size\s*=\s*(?:&quot;|&apos;)?\s*(?:2|\-1)\s*;?\s*(?:&quot;|&apos;)?\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=80]\\1[/size]", $text);
+		$text = preg_replace('/&lt;font\s+size\s*=\s*(?:&quot;|&apos;)?\s*(?:1|\-[2-9])\s*;?\s*(?:&quot;|&apos;)?\s*&gt;(.*?)&lt;\/font&gt;/si', "[size=62]\\1[/size]", $text);
+		$text = preg_replace('/&lt;font\s+color\s*=\s*(?:&quot;|&apos;)?\s*([^\s]{1,20})\s*;?\s*(?:&quot;|&apos;)?\s*&gt;(.*?)&lt;\/font&gt;/si', "[color=\\1]\\2[/color]", $text);
 		$text = preg_replace('/&lt;span\s+style\s*=\s*(?:&quot;|&apos;)?\s*color\s*:\s*([^\s]{1,20})\s*;?\s*(?:&quot;|&apos;)?\s*&gt;(.*?)&lt;\/span&gt;/si', "[color=\\1]\\2[/color]", $text);
-		$text = preg_replace('/&lt;color\s*=\s*(?:&quot;)?([^\s]{1,10})(?:&quot;)?\s*&gt;/si', "[color=\\1]", $text);
+		$text = preg_replace('/&lt;color\s*=\s*(?:&quot;)?\s*([^\s]{1,10})\s*;?\s*(?:&quot;)?\s*&gt;/si', "[color=\\1]", $text);
 		$text = preg_replace('/&lt;\/color&gt;/si', "[/color]", $text);
 		$text = preg_replace('/&apos;/si', '\'', $text);
 		$text = preg_replace('/&quot;/si', '"', $text);
