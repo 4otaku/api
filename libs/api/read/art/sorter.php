@@ -37,6 +37,10 @@ class Api_Read_Art_Sorter
 		$sql->order('sortdate', $this->direction);
 	}
 
+	protected function created($sql) {
+		$sql->order('created', $this->direction);
+	}
+
 	protected function width($sql) {
 		$sql->order('width', $this->direction);
 	}

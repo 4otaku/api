@@ -19,19 +19,29 @@ class Api_Update_Art_Variation extends Api_Update_Abstract
 			throw new Error_Api(Error_Api::MISSING_INPUT);
 		}
 
-		$actual_order = array();
 		$previous_order = array_keys($this->db->order('id_parent_order', 'asc')
 			->get_vector('art', 'id', 'id_parent = ?', $id));
+
+		$previous_keys = array();
+		$actual_order = array();
+		foreach ($previous_order as $key => $item) {
+			if (!in_array($item, $remove)) {
+				$actual_order[$key] = $item;
+			}
+		}
+		foreach ($order as $key => $item) {
+			if (in_array($item, $actual_order) && !in_array($item, $remove)) {
+				$previous_keys[] = array_search($item, $actual_order);
+			} else {
+				unset($order[$key]);
+			}
+		}
+		sort($previous_keys);
 		foreach ($order as $item) {
-			if (in_array($item, $previous_order) && !in_array($item, $remove)) {
-				array_push($actual_order, $item);
-			}
+			$actual_order[array_shift($previous_keys)] = $item;
 		}
-		foreach ($previous_order as $item) {
-			if (!in_array($item, $actual_order) && !in_array($item, $remove)) {
-				array_push($actual_order, $item);
-			}
-		}
+		$actual_order = array_values($actual_order);
+
 		$id = reset($actual_order);
 
 		foreach ($remove as $item) {

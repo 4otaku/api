@@ -21,14 +21,35 @@ abstract class Api_Update_Art_Pool_Sortable extends Api_Update_Art_Pool
 		$this->db->begin();
 
 		$id_field = $this->get_id_field();
-		$max = $this->db->order('order')->limit(1)->get_field(
-			$this->table . '_item', 'order', $id_field . ' = ?', $id);
+
+		$old_order = $this->db->order('order', 'asc')->get_vector(
+			$this->table . '_item', array('order', 'id_art'),
+			$id_field . ' = ?', $id);
+
+		$max = max(array_keys($old_order));
+
+		$old_keys = array();
+		foreach ($order as $art_id) {
+			$old_key = array_search($art_id, $old_order);
+			if ($old_key === false) {
+				$old_key = $max + 1;
+				$max++;
+			}
+			$old_keys[] = $old_key;
+		}
+
+		sort($old_keys);
+		foreach ($order as $art_id) {
+			$old_order[array_shift($old_keys)] = $art_id;
+		}
+
 		$this->db->update($this->table . '_item',
 			array('order' => Database_Action::get(Database_Action::ADD, $max)),
 			$id_field . ' = ?', $id);
-		foreach ($order as $key => $art_id) {
+
+		foreach ($old_order as $key => $art_id) {
 			$this->db->replace($this->table . '_item',
-				array('order' => $key + 1, $id_field => $id, 'id_art' => $art_id),
+				array('order' => $key, $id_field => $id, 'id_art' => $art_id),
 				array($id_field, 'id_art'));
 		}
 
