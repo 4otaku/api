@@ -370,6 +370,17 @@ CREATE TABLE IF NOT EXISTS `meta` (
   PRIMARY KEY (`item_type`,`id_item`,`meta_type`,`meta`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+CREATE TABLE IF NOT EXISTS `log` (
+  `id` int(10) unsigned NOT NULL,
+  `cookie` varchar(32) NOT NULL,
+  `ip` bigint(20) NOT NULL,
+  `user` int(10) unsigned NOT NULL,
+  `api` varchar(128) NOT NULL,
+  `params` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- --------------------------------------------------------
 
 --

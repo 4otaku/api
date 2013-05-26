@@ -36,6 +36,7 @@ $db_write->sql('truncate table art_rating');
 $db_write->sql('truncate table art_translation');
 $db_write->sql('truncate table comment');
 $db_write->sql('truncate table user');
+$db_write->sql('truncate table log');
 $db_write->sql("INSERT INTO  `user` (`id` ,`login` ,`pass` ,`email` ,`cookie` ,`rights`) VALUES ('0',  'Анонимно',  '********************************',  'default@avatar.mail',  '********************************',  '0');");
 
 $limit = 10000000;

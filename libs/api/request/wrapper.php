@@ -12,8 +12,8 @@ class Api_Request
 
 	protected $data = array();
 
-	public function __construct($converter = false) {
-
+	public function __construct($converter = false)
+	{
 		if (!empty($converter) && class_exists('Api_Request_' . ucfirst($converter))) {
 			$converters = array('Api_Request_' . ucfirst($converter));
 		} else {
@@ -36,7 +36,8 @@ class Api_Request
 		$this->data = $data;
 	}
 
-	public function get_response_class() {
+	public function get_response_class()
+	{
 		if (empty($this->data['format']) ||
 			!class_exists('Api_Response_' . ucfirst($this->data['format']))) {
 
@@ -48,7 +49,8 @@ class Api_Request
 		return 'Api_Response_' . ucfirst($format);
 	}
 
-	public function get($field = false) {
+	public function get($field = false)
+	{
 		if (empty($field)) {
 			return $this->data;
 		}
@@ -58,5 +60,22 @@ class Api_Request
 		}
 
 		return null;
+	}
+
+	public function get_cookie($strict = false)
+	{
+		$name = Config::get('cookie', 'name', false);
+
+		if ($name && isset($_COOKIE[$name])) {
+			return $_COOKIE[$name];
+		}
+
+		return $strict ? null : $this->get('cookie');
+	}
+
+	public function get_ip($strict = false)
+	{
+		return $this->get('ip') && !$strict ? $this->get('ip') :
+			$_SERVER['REMOTE_ADDR'];
 	}
 }

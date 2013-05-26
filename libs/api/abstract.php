@@ -25,6 +25,8 @@ abstract class Api_Abstract
 	{
 		$this->db = Database::db($this->db_type);
 		$this->request = $request;
+
+		$this->write_log();
 	}
 
 	abstract public function process();
@@ -132,19 +134,23 @@ abstract class Api_Abstract
 
 	protected function get_cookie($strict = false)
 	{
-		$name = Config::get('cookie', 'name', false);
-
-		if ($name && isset($_COOKIE[$name])) {
-			return $_COOKIE[$name];
-		}
-
-		return $strict ? null : $this->get('cookie');
+		return $this->request->get_cookie($strict);
 	}
 
 	protected function get_ip($strict = false)
 	{
-		return $this->get('ip') && !$strict ? $this->get('ip') :
-			$_SERVER['REMOTE_ADDR'];
+		return $this->request->get_ip($strict);
+	}
+
+	protected function write_log()
+	{
+		Database::db('api')->insert('log', array(
+			'cookie' => $this->get_cookie(),
+			'ip' => ip2long($this->get_ip()),
+			'user' => $this->get_user(),
+			'api' => get_called_class(),
+			'params' => json_encode($this->get())
+		));
 	}
 
 	protected function get_images_path()
