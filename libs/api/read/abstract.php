@@ -2,6 +2,7 @@
 
 abstract class Api_Read_Abstract extends Api_Abstract
 {
+	protected $is_logged = false;
 	protected $default_page = 1;
 	protected $default_per_page = 100;
 	protected $default_sorter = 'id';

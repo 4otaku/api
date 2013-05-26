@@ -14,6 +14,7 @@ abstract class Api_Abstract
 	protected $db_type = 'api';
 
 	protected $success = false;
+	protected $is_logged = true;
 
 	protected $errors = array();
 	protected $answer = array();
@@ -26,7 +27,9 @@ abstract class Api_Abstract
 		$this->db = Database::db($this->db_type);
 		$this->request = $request;
 
-		$this->write_log();
+		if ($this->is_logged) {
+			$this->write_log();
+		}
 	}
 
 	abstract public function process();
