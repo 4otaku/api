@@ -109,9 +109,11 @@ foreach ($users as $user) {
 unset($users);
 
 $authors = $db_read->limit($limit)->get_full_vector('author');
-$author_alias = array('anonimno' => 0, 'anonimus' => 0);
+$author_alias = array('anonimno' => 0, 'anonimus' => 0, '' => 0);
 foreach ($authors as $author) {
-	if (lower($author['alias']) == 'anonimno' || lower($author['alias']) == 'anonimus') {
+	if (empty($author['alias']) ||
+		lower($author['alias']) == 'anonimno' ||
+		lower($author['alias']) == 'anonimus') {
 		continue;
 	}
 
@@ -140,26 +142,32 @@ foreach ($old_arts as $old_art) {
 	$authors = array_filter(explode('|', $old_art['author']));
 	$similars = array_filter(explode('|', $old_art['similar']));
 
-	if (!file_exists(IMAGES . SL . 'art' . SL . $old_art['md5'] . '.' . $old_art['extension'])) {
+	if ($old_art['extension'] == 'jpeg') {
+		$new_ext = 'jpg';
+	} else {
+		$new_ext = $old_art['extension'];
+	}
+
+	if (!file_exists(IMAGES . SL . 'art' . SL . $old_art['md5'] . '.' . $new_ext)) {
 		$url = $argv[2] . $old_art['md5'] . '.' . $old_art['extension'];
 		$file = CACHE.SL.'migrate_'.$old_art['id'];
 		file_put_contents($file, file_get_contents($url));
 
 		try {
-			$upload = new Transform_Upload_Art($file, $old_art['md5'] . '.' . $old_art['extension'], IMAGES);
+			$upload = new Transform_Upload_Art($file, $old_art['md5'] . '.' . $new_ext, IMAGES);
 			$answer = $upload->process_file();
 		} catch (Exception $e) {
 			echo(serialize($e)); die;
 		}
 	} else {
-		$object = Transform_Image::get_worker(IMAGES . SL . 'art' . SL . $old_art['md5'] . '.' . $old_art['extension']);
+		$object = Transform_Image::get_worker(IMAGES . SL . 'art' . SL . $old_art['md5'] . '.' . $new_ext);
 
 		$answer = array(
 			'resized' => (int) !empty($old_art['resized']),
 			'animated' => (int) $old_art['animated'],
 			'width' => $object->get_image_width(),
 			'height' => $object->get_image_height(),
-			'weight' => filesize(IMAGES . SL . 'art' . SL . $old_art['md5'] . '.' . $old_art['extension']),
+			'weight' => filesize(IMAGES . SL . 'art' . SL . $old_art['md5'] . '.' . $new_ext),
 		);
 	}
 
@@ -170,7 +178,7 @@ foreach ($old_arts as $old_art) {
 	$db_write->insert('art', array(
 		'id_user' => empty($author_alias[lower(current($authors))]) ? 1 : $author_alias[lower(current($authors))],
 		'md5' => $old_art['md5'],
-		'ext' => $old_art['extension'],
+		'ext' => $new_ext,
 		'width' => $answer['width'],
 		'height' => $answer['height'],
 		'weight' => $answer['weight'],
@@ -252,26 +260,32 @@ foreach ($variations as $variation) {
 		continue;
 	}
 
-	if (!file_exists(IMAGES . SL . 'art' . SL . $variation['md5'] . '.' . $variation['extension'])) {
+	if ($variation['extension'] == 'jpeg') {
+		$new_ext = 'jpg';
+	} else {
+		$new_ext = $variation['extension'];
+	}
+
+	if (!file_exists(IMAGES . SL . 'art' . SL . $variation['md5'] . '.' . $new_ext)) {
 		$url = $argv[2] . $variation['md5'] . '.' . $variation['extension'];
 		$file = CACHE.SL.'variation_'.$variation['id'];
 		file_put_contents($file, file_get_contents($url));
 
 		try {
-			$upload = new Transform_Upload_Art($file, $variation['md5'] . '.' . $variation['extension'], IMAGES);
+			$upload = new Transform_Upload_Art($file, $variation['md5'] . '.' . $new_ext, IMAGES);
 			$answer = $upload->process_file();
 		} catch (Exception $e) {
 			echo(serialize($e)); die;
 		}
 	} else {
-		$object = Transform_Image::get_worker(IMAGES . SL . 'art' . SL . $variation['md5'] . '.' . $variation['extension']);
+		$object = Transform_Image::get_worker(IMAGES . SL . 'art' . SL . $variation['md5'] . '.' . $new_ext);
 
 		$answer = array(
 			'resized' => (int) !empty($variation['resized']),
 			'animated' => (int) $variation['animated'],
 			'width' => $object->get_image_width(),
 			'height' => $object->get_image_height(),
-			'weight' => filesize(IMAGES . SL . 'art' . SL . $variation['md5'] . '.' . $variation['extension']),
+			'weight' => filesize(IMAGES . SL . 'art' . SL . $variation['md5'] . '.' . $new_ext),
 		);
 	}
 
@@ -280,7 +294,7 @@ foreach ($variations as $variation) {
 		'id_parent' => $art_ids[$variation['art_id']],
 		'id_parent_order' => $variation['order'] + 1,
 		'md5' => $variation['md5'],
-		'ext' => $variation['extension'],
+		'ext' => $new_ext,
 		'width' => $answer['width'],
 		'height' => $answer['height'],
 		'weight' => $answer['weight'],
@@ -363,6 +377,10 @@ $rumonth = array(
 	'Май','Июнь','Июль','Август',
 	'Сентябрь','Октябрь','Ноябрь','Декабрь');
 foreach ($comments as $comment) {
+
+	$comment['pretty_text'] = preg_replace('/(\[spoiler=[^\]]*?])[^\n]/uis',
+		"$1\n", $comment['pretty_text']);
+
 	$insert = array(
 		'id_item' => $art_ids[$comment['post_id']],
 		'area' => 1,

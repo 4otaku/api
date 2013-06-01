@@ -11,12 +11,46 @@ class Api_Update_Art_Tag extends Api_Update_Art_Abstract_Tag
 
 	protected function after_process($count, $id) {
 		$type = $this->get_item_type();
-		$this->remove_meta($type, $id, Meta::STATE, Meta::STATE_UNTAGGED);
-		$this->remove_meta($type, $id, Meta::STATE, Meta::STATE_TAGGED);
+
+		$was_tagged = false;
+		$was_untagged = false;
+		$state = $this->db->get_table('meta', 'meta',
+			'item_type = ? and id_item = ? and meta_type = ? and
+				(meta = ? or meta = ?)',
+			array($type, $id, Meta::STATE, Meta::STATE_UNTAGGED,
+				Meta::STATE_TAGGED));
+
+		foreach ($state as $item) {
+			if ($item['meta'] == Meta::STATE_TAGGED) {
+				$was_tagged = true;
+			}
+			if ($item['meta'] == Meta::STATE_UNTAGGED) {
+				$was_untagged = true;
+			}
+		}
+
+		$update = false;
 		if ($count > 4) {
-			$this->add_meta($type, $id, Meta::STATE, Meta::STATE_TAGGED);
+			if ($was_untagged) {
+				$this->remove_meta($type, $id, Meta::STATE, Meta::STATE_UNTAGGED);
+			}
+			if (!$was_tagged) {
+				$this->add_meta($type, $id, Meta::STATE, Meta::STATE_TAGGED);
+				$update = true;
+			}
 		} else {
-			$this->add_meta($type, $id, Meta::STATE, Meta::STATE_UNTAGGED);
+			if (!$was_untagged) {
+				$this->add_meta($type, $id, Meta::STATE, Meta::STATE_UNTAGGED);
+			}
+			if ($was_tagged) {
+				$this->remove_meta($type, $id, Meta::STATE, Meta::STATE_TAGGED);
+				$update = true;
+			}
+		}
+
+		if ($update) {
+			$this->db->update('art', array('sortdate' =>
+				$this->db->unix_to_date()), $id);
 		}
 	}
 
