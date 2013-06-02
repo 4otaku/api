@@ -378,8 +378,10 @@ $rumonth = array(
 	'Сентябрь','Октябрь','Ноябрь','Декабрь');
 foreach ($comments as $comment) {
 
-	$comment['pretty_text'] = preg_replace('/(\[spoiler=[^\]]*?])([^\n])/uis',
+	$comment['pretty_text'] = preg_replace('/(\[spoiler=[^\]]*?\])([^\n])/uis',
 		"$1\n$2", $comment['pretty_text']);
+	$comment['pretty_text'] = preg_replace('/\[img=[^\]]*?\]/uis',
+		"[img]", $comment['pretty_text']);
 
 	$insert = array(
 		'id_item' => $art_ids[$comment['post_id']],
