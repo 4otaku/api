@@ -383,6 +383,7 @@ foreach ($comments as $comment) {
 	$comment['pretty_text'] = preg_replace('/\[img=[^\]]*?\]/uis',
 		"[img]", $comment['pretty_text']);
 
+	$is_deleted = (int) ($comment['area'] == 'deleted');
 	$insert = array(
 		'id_item' => $art_ids[$comment['post_id']],
 		'area' => 1,
@@ -392,7 +393,7 @@ foreach ($comments as $comment) {
 		'cookie' => $comment['cookie'],
 		'text' => $comment['pretty_text'],
 		'sortdate' => $db_write->unix_to_date($comment['sortdate'] / 1000),
-		'deleted' => (int) ($comment['area'] == 'deleted')
+		'deleted' => $is_deleted
 	);
 	if (!empty($comment['edit_date'])) {
 		$edit_date = explode(';', $comment['edit_date']);
@@ -403,23 +404,25 @@ foreach ($comments as $comment) {
 	}
 	$db_write->insert('comment', $insert);
 	$comment_ids[$comment['id']] = $db_write->last_id();
-	$db_write->update('meta', array(
-		'meta' => Database_Action::get(Database_Action::INCREMENT),
-	), 'item_type = 1 and meta_type = 9 and id_item = ?', $art_ids[$comment['post_id']]);
-	$max_date = $db_write->get_field('meta', 'meta',
-		'item_type = 1 and meta_type = 10 and id_item = ?',
-		$art_ids[$comment['post_id']]);
-	if (!$max_date) {
-		$db_write->insert('meta', array(
-			'item_type' => 1,
-			'id_item' => $art_ids[$comment['post_id']],
-			'meta_type' => 10,
-			'meta' => round($comment['sortdate'] / 1000),
-		));
-	} else {
+	if (!$is_deleted) {
 		$db_write->update('meta', array(
-			'meta' => max($max_date, $comment['sortdate'] / 1000),
-		), 'item_type = 1 and meta_type = 10 and id_item = ?', $art_ids[$comment['post_id']]);
+			'meta' => Database_Action::get(Database_Action::INCREMENT),
+		), 'item_type = 1 and meta_type = 9 and id_item = ?', $art_ids[$comment['post_id']]);
+		$max_date = $db_write->get_field('meta', 'meta',
+			'item_type = 1 and meta_type = 10 and id_item = ?',
+			$art_ids[$comment['post_id']]);
+		if (!$max_date) {
+			$db_write->insert('meta', array(
+				'item_type' => 1,
+				'id_item' => $art_ids[$comment['post_id']],
+				'meta_type' => 10,
+				'meta' => round($comment['sortdate'] / 1000),
+			));
+		} else {
+			$db_write->update('meta', array(
+				'meta' => max($max_date, $comment['sortdate'] / 1000),
+			), 'item_type = 1 and meta_type = 10 and id_item = ?', $art_ids[$comment['post_id']]);
+		}
 	}
 	log_progress('comment', count($comments));
 }
