@@ -23,7 +23,7 @@ abstract class Api_Read_Abstract extends Api_Abstract
 
 		$per_page = (int) $per_page;
 		if ($per_page <= 0 || $per_page > $this->max_per_page) {
-			return $this->default_per_page;
+			return $this->max_per_page;
 		}
 
 		return $per_page;
