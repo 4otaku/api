@@ -15,7 +15,7 @@ class Api_Read_Comment extends Api_Read_Abstract
 	);
 	protected $default_sorter = 'sortdate';
 	protected $default_per_page = 7;
-	protected $max_per_page = 100;
+	protected $max_per_page = 10000;
 	protected $default_item_type = 1;
 
 	public function process()

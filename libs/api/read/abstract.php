@@ -7,7 +7,7 @@ abstract class Api_Read_Abstract extends Api_Abstract
 	protected $default_per_page = 100;
 	protected $default_sorter = 'id';
 	protected $default_sorter_order = 'desc';
-	protected $max_per_page = 1000;
+	protected $max_per_page = 100;
 
 	public function process_request() {
 		$this->add_answer('data', array());
