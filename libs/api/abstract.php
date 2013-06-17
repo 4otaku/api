@@ -56,12 +56,9 @@ abstract class Api_Abstract
 
 	public function send_headers()
 	{
-		$headers = $this->response->get_headers();
 		ob_end_clean();
 
-		foreach ($headers as $key => $header) {
-			header("$key: $header");
-		}
+		$this->response->send_headers();
 
 		return $this;
 	}

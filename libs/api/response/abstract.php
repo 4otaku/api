@@ -20,11 +20,26 @@ abstract class Api_Response_Abstract
 	}
 
 	public function get_headers() {
-		return $this->headers;
+		$return = $this->headers;
+		$headers = apache_request_headers();
+		if (isset($headers['Origin'])) {
+			$host = parse_url($headers['Origin'], PHP_URL_HOST);
+			if ($host == '4otaku.org' || strpos($host, '.4otaku.org')) {
+				$return['Access-Control-Allow-Origin'] = $headers['Origin'];
+			}
+		}
+
+		return $return;
 	}
 
 	protected function set_header($name, $value) {
 		$this->headers[$name] = $value;
+	}
+
+	public function send_headers() {
+		foreach ($this->get_headers() as $key => $header) {
+			header("$key: $header");
+		}
 	}
 
 	public function get() {

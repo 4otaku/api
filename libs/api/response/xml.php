@@ -2,7 +2,9 @@
 
 class Api_Response_Xml extends Api_Response_Abstract
 {
-	protected $headers = array('Content-type' => 'application/xml');
+	protected $headers = array(
+		'Content-type' => 'application/xml'
+	);
 
 	public function encode(Array $data) {
 

@@ -42,7 +42,7 @@ class Api_Create_Comment extends Api_Create_Abstract
 			'area' => $area,
 			'username' => $name,
 			'email' => $mail,
-			'ip' => $this->get_ip(),
+			'ip' => ip2long($this->get_ip()),
 			'cookie' => $this->get_cookie(),
 			'text' => $text,
 			'sortdate' => $this->db->unix_to_date($time),
