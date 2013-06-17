@@ -15,14 +15,16 @@ class Api_Read_Art_List_Comment extends Api_Read_Art_List_Art
 		parent::add_meta_data($data);
 
 		$ids = array();
-		foreach ($data as $item) {
+		foreach ($data as &$item) {
 			$ids[] = $item['id'];
+			$item['comment'] = array();
+			$item['comment_count'] = 0;
 		}
 
-		$comments = $this->db->order('sortdate')->make_temp('comment',
+		$comments = $this->db->order('sortdate')->get_table('comment',
 			array('id', 'id_item', 'username', 'email', 'text', 'sortdate'),
-			'area = 1 and ' . $this->db->array_in('id_item', $ids), $ids)
-			->group('id_item')->get_full_table('tmp');
+			'area = 1 and deleted = 0 and ' . $this->db->array_in('id_item', $ids),
+			$ids);
 
 		foreach ($comments as $comment) {
 			foreach ($data as &$item) {
@@ -30,7 +32,10 @@ class Api_Read_Art_List_Comment extends Api_Read_Art_List_Art
 					$comment['avatar'] = md5($comment['email']);
 					unset($comment['email']);
 					unset($comment['id_item']);
-					$item['comment'] = $comment;
+					if (count($item['comment']) < 5) {
+						$item['comment'][] = $comment;
+					}
+					$item['comment_count']++;
 					continue 2;
 				}
 			}
