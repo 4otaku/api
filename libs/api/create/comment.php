@@ -29,10 +29,8 @@ class Api_Create_Comment extends Api_Create_Abstract
 			$root = 0;
 		}
 
-		$name = $name ?
-			$name : $this->db->get_field('user', 'login', 0);
-		$mail = $mail ?
-			$mail : $this->db->get_field('user', 'email', 0);
+		$name = $name ? $name : $this->db->get_field('user', 'login', 1);
+		$mail = $mail ? $mail : $this->db->get_field('user', 'email', 1);
 		$time = time();
 
 		$this->db->insert('comment', array(

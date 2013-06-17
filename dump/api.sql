@@ -422,7 +422,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   UNIQUE KEY `unique` (`login`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 INSERT INTO  `user` (`id` ,`login` ,`pass` ,`email` ,`cookie` ,`rights`)
-VALUES ('0',  'Анонимно',  '********************************',  'default@avatar.mail',  '********************************',  '0');
+VALUES ('1',  'Анонимно',  '********************************',  'default@avatar.mail',  '********************************',  '0');
 
 -- --------------------------------------------------------
 
