@@ -22,7 +22,7 @@ abstract class Api_Update_Tag extends Api_Update_Abstract
 		$ids = $this->get_ids(array_merge($add, $remove));
 
 		foreach ($add as $tag) {
-			$tag = trim($tag);
+			$tag = strtolower(trim($tag));
 			if (!strlen($tag)) {
 				continue;
 			}
@@ -36,7 +36,7 @@ abstract class Api_Update_Tag extends Api_Update_Abstract
 			$this->after_add($item_id, $meta_id);
 		}
 		foreach ($remove as $tag) {
-			$tag = trim($tag);
+			$tag = strtolower(trim($tag));
 			if (!strlen($tag)) {
 				continue;
 			}
@@ -76,6 +76,8 @@ abstract class Api_Update_Tag extends Api_Update_Abstract
 			$variant = array();
 		}
 
-		return array_replace($variant, $direct);
+		$return = array_replace($variant, $direct);
+		array_walk($return, 'strtolower');
+		return $return;
 	}
 }
