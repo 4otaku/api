@@ -76,8 +76,13 @@ abstract class Api_Update_Tag extends Api_Update_Abstract
 			$variant = array();
 		}
 
-		$return = array_replace($variant, $direct);
-		array_walk($return, 'strtolower');
+		$return = array();
+		foreach ($variant as $name => $id) {
+			$return[strtolower($name)] = $id;
+		}
+		foreach ($direct as $name => $id) {
+			$return[strtolower($name)] = $id;
+		}
 		return $return;
 	}
 }
