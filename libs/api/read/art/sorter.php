@@ -20,9 +20,13 @@ class Api_Read_Art_Sorter
 		$this->item = (int) $item;
 	}
 
+	/**
+	 * @param $sql
+	 */
 	public function apply_to($sql) {
 		$method = $this->type;
 		$this->$method($sql);
+		$sql->order('id', $this->direction);
 	}
 
 	protected function none($sql) {}
