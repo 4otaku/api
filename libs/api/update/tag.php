@@ -22,6 +22,11 @@ abstract class Api_Update_Tag extends Api_Update_Abstract
 		$ids = $this->get_ids(array_merge($add, $remove));
 
 		foreach ($add as $tag) {
+			$tag = trim($tag);
+			if (!strlen($tag)) {
+				continue;
+			}
+
 			if (isset($ids[$tag])) {
 				$meta_id = $ids[$tag];
 			} else {
@@ -31,6 +36,11 @@ abstract class Api_Update_Tag extends Api_Update_Abstract
 			$this->after_add($item_id, $meta_id);
 		}
 		foreach ($remove as $tag) {
+			$tag = trim($tag);
+			if (!strlen($tag)) {
+				continue;
+			}
+
 			if (isset($ids[$tag])) {
 				$this->remove_meta($type, $item_id, $meta, $ids[$tag]);
 				$this->after_remove($item_id, $ids[$tag]);

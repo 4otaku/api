@@ -1,6 +1,6 @@
 <?php
 
-class Api_Delete_Art_Tag extends Api_Delete_Abstract
+class Api_Delete_Tag_Art extends Api_Delete_Abstract
 {
 	public function process()
 	{
