@@ -70,7 +70,7 @@ class Cron_Art extends Cron_Abstract
 					puzzle_vector_normalized_distance($vector, $compare_vector) < 0.3
 				) {
 					$id_first = min($id, $compare_id);
-					$id_second = min($id, $compare_id);
+					$id_second = max($id, $compare_id);
 					$this->db->insert('art_similar', array(
 						'id_first' => $id_first,
 						'id_second' => $id_second
