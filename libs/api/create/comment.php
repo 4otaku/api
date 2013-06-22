@@ -50,11 +50,7 @@ class Api_Create_Comment extends Api_Create_Abstract
 		), 'item_type = ? and id_item = ? and meta_type = ?', array(
 			Meta::ART, $id_item, Meta::COMMENT_COUNT
 		));
-		$this->db->update('meta', array(
-			'meta' => $time,
-		), 'item_type = ? and id_item = ? and meta_type = ?', array(
-			Meta::ART, $id_item, Meta::COMMENT_DATE
-		));
+		$this->add_single_meta(Meta::ART, $id_item, Meta::COMMENT_DATE, $time);
 
 		$this->set_success(true);
 	}

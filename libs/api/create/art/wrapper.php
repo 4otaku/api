@@ -25,7 +25,6 @@ class Api_Create_Art extends Api_Create_Abstract
 
 		$this->add_meta(Meta::ART, $id, Meta::ART_RATING, 0);
 		$this->add_meta(Meta::ART, $id, Meta::COMMENT_COUNT, 0);
-		$this->add_meta(Meta::ART, $id, Meta::COMMENT_DATE, 0);
 		$this->add_meta(Meta::ART, $id, Meta::TAG_COUNT, 0);
 
 		if ($this->get('approved') && $this->is_moderator()) {

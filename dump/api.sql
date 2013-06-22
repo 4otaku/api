@@ -378,6 +378,7 @@ CREATE TABLE IF NOT EXISTS `log` (
   `user` int(10) unsigned NOT NULL,
   `api` varchar(128) NOT NULL,
   `params` text NOT NULL,
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

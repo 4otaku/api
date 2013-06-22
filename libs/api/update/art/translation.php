@@ -39,6 +39,20 @@ class Api_Update_Art_Translation extends Api_Update_Abstract
 			}
 		}
 
+		$this->add_single_meta(Meta::ART, $id, Meta::TRANSLATION_DATE, time());
+
+		if (!$this->db->get_count('meta',
+			'item_type = ? and meta_type = ? and id_item = ? and meta = ?',
+			array(Meta::ART, Meta::TRANSLATOR, $id, $this->get_user()))) {
+
+			$this->db->insert('meta', array(
+				'item_type' => Meta::ART,
+				'meta_type' => Meta::TRANSLATOR,
+				'id_item' => $id,
+				'meta' => $this->get_user()
+			));
+		}
+
 		$this->set_success(true);
 	}
 

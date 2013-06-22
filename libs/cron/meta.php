@@ -29,8 +29,8 @@ class Cron_Meta extends Cron_Abstract
 
 		foreach ($count as $id => $number) {
 			$this->db->update('meta', array('meta' => $number),
-				'item_type = 1 and meta_type = ? and id_item = ?',
-				array($meta_type, $id));
+				'item_type = ? and meta_type = ? and id_item = ?',
+				array(Meta::ART, $meta_type, $id));
 		}
 
 		foreach ($types as $key => $type) {
@@ -41,11 +41,11 @@ class Cron_Meta extends Cron_Abstract
 			$meta_type = Meta::parse($type);
 			$items = $this->db->group('meta')->get_vector('meta',
 				'meta, group_concat(`id_item`)',
-				'item_type = 1 and meta_type = ?', $meta_type);
+				'item_type = ? and meta_type = ?', array(Meta::ART, $meta_type));
 			foreach ($items as $item => $ids) {
 				$count = $this->db->get_field('meta', 'sum(`meta`)',
-					'item_type = 1 and meta_type = ? and id_item in (' . $ids . ')',
-					$meta_type);
+					'item_type = ? and meta_type = ? and id_item in (' . $ids . ')',
+					array(Meta::ART, $meta_type));
 
 				$this->db->update('meta', array('meta' => $count),
 					'item_type = ? and meta_type = ? and id_item = ?',
@@ -65,15 +65,15 @@ class Cron_Meta extends Cron_Abstract
 
 		foreach ($dates as $id => $date) {
 			if ($this->db->get_count('meta',
-				'item_type = 1 and meta_type = ? and id_item = ?',
-				array($meta_type, $id))) {
+				'item_type = ? and meta_type = ? and id_item = ?',
+				array(Meta::ART, $meta_type, $id))) {
 
 				$this->db->update('meta', array('meta' => strtotime($date)),
-					'item_type = 1 and meta_type = ? and id_item = ?',
-					array($meta_type, $id));
+					'item_type = ? and meta_type = ? and id_item = ?',
+					array(Meta::ART, $meta_type, $id));
 			} else {
 				$this->db->insert('meta', array(
-					'item_type' => 1,
+					'item_type' => Meta::ART,
 					'meta_type' => $meta_type,
 					'id_item' => $id,
 					'meta' => strtotime($date)
