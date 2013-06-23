@@ -15,6 +15,24 @@ abstract class Api_Read_Tag extends Api_Read_Abstract
 		$per_page = $this->get_per_page();
 		$offset = $this->get_offset();
 
+		$sql = $this->db->limit($per_page, $offset)
+			->order($sort_by, $sort_order)->set_counter();
+
+		$data = $this->fetch_data($sql);
+
+		$this->add_additional_data($data);
+
+		$this->add_answer('data', $data);
+		$this->add_answer('count', $sql->get_counter());
+		$this->set_success(true);
+	}
+
+	/**
+	 * @param Database_Instance $sql
+	 * @return mixed
+	 */
+	protected function fetch_data($sql)
+	{
 		$condition = '';
 		$params = array();
 
@@ -22,8 +40,6 @@ abstract class Api_Read_Tag extends Api_Read_Abstract
 		$name = (string) $this->get('name');
 		$filter = (string) $this->get('filter');
 
-		$sql = $this->db->limit($per_page, $offset)
-			->order($sort_by, $sort_order)->set_counter();
 		if ($id) {
 			$condition = 'id = ?';
 			$params[] = $id;
@@ -35,14 +51,8 @@ abstract class Api_Read_Tag extends Api_Read_Abstract
 			$params[] = '%' . trim($filter) . '%';
 		}
 
-		$data = $sql->get_table($this->table, $this->fields,
+		return $sql->get_table($this->table, $this->fields,
 			$condition, $params);
-
-		$this->add_additional_data($data);
-
-		$this->add_answer('data', $data);
-		$this->add_answer('count', $sql->get_counter());
-		$this->set_success(true);
 	}
 
 	protected function add_additional_data(&$data)

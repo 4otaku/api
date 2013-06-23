@@ -214,6 +214,8 @@ CREATE TABLE IF NOT EXISTS `art_tag_variant` (
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+ALTER TABLE  `art_tag_variant` ADD INDEX  `parent` (  `id_tag` );
+
 
 -- --------------------------------------------------------
 

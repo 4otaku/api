@@ -2,8 +2,43 @@
 
 class Api_Read_Tag_Art extends Api_Read_Tag
 {
-	protected $fields = array('id', 'name', 'color');
+	protected $fields = array('at.id', 'at.name', 'at.color');
 	protected $table = 'art_tag';
+
+	/**
+	 * @param Database_Instance $sql
+	 * @return mixed
+	 */
+	protected function fetch_data($sql)
+	{
+		$condition = '';
+		$params = array();
+
+		$id = (int) $this->get('id');
+		$name = (string) $this->get('name');
+		$filter = (string) $this->get('filter');
+
+		if ($id) {
+			$condition = 'at.id = ?';
+			$params[] = $id;
+		} elseif ($name) {
+			$condition = 'at.name = ? or atv.name = ?';
+			$name = trim($name);
+			$params[] = $name;
+			$params[] = $name;
+		} elseif ($filter) {
+			$condition = 'at.name like ? or atv.name like ?';
+			$filter = '%' . trim($filter) . '%';
+			$params[] = $filter;
+			$params[] = $filter;
+		}
+
+		$sql->join('art_tag_variant', 'atv.id_tag = at.id');
+		$sql->group('at.id');
+
+		return $sql->get_table($this->table, $this->fields,
+			$condition, $params);
+	}
 
 	protected function add_additional_data(&$data)
 	{
