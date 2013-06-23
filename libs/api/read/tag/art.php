@@ -28,7 +28,7 @@ class Api_Read_Tag_Art extends Api_Read_Tag
 			$params[] = $name;
 		} elseif ($filter) {
 			$condition = 'at.name like ? or atv.name like ?';
-			$filter = '%' . str_replace('\\', '\\\\\\\\', trim($filter)) . '%';
+			$filter = '%' . str_replace('\\', '\\\\', trim($filter)) . '%';
 			$params[] = $filter;
 			$params[] = $filter;
 		}
@@ -36,8 +36,9 @@ class Api_Read_Tag_Art extends Api_Read_Tag
 		$sql->join('art_tag_variant', 'atv.id_tag = at.id');
 		$sql->group('at.id');
 
-		return $sql->get_table($this->table, $this->fields,
+		 $sql->get_table($this->table, $this->fields,
 			$condition, $params);
+		$sql->debug(); die;
 	}
 
 	protected function add_additional_data(&$data)
