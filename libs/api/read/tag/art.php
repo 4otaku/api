@@ -36,9 +36,8 @@ class Api_Read_Tag_Art extends Api_Read_Tag
 		$sql->join('art_tag_variant', 'atv.id_tag = at.id');
 		$sql->group('at.id');
 
-		$sql->get_table($this->table, $this->fields,
+		return $sql->get_table($this->table, $this->fields,
 			$condition, $params);
-		$sql->debug(); die;
 	}
 
 	protected function add_additional_data(&$data)
