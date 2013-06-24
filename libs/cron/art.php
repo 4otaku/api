@@ -10,7 +10,6 @@ class Cron_Art extends Cron_Abstract
 				'type' => 'is',
 				'value' => 'need_resize'
 			)),
-			'skip_meta' => 1,
 			'per_page' => 100
 		));
 		$worker = new Api_Read_Art_List($request);
