@@ -21,48 +21,19 @@ abstract class Api_Read_Art_List_Art extends Api_Read_Art_List_Abstract
 	}
 
 	protected function process_query($sql) {
-		$per_page = $this->get_per_page();
-		$offset = $this->get_offset();
-
-		$counter = clone $sql;
-
 		if (empty($this->local_filters)) {
-			$condition = false;
-			$params = false;
+			$data = $sql->get_table($this->table, $this->fields);
 		} else {
-			$condition = implode(' and ', $this->local_filters);
-			$params = $this->local_filter_vars;
+			$data = $sql->get_table($this->table, $this->fields,
+				implode(' and ', $this->local_filters), $this->local_filter_vars);
 		}
-		$counter->set_counter();
-		$counter->get_count($this->table, $condition, $params);
-		$count = $counter->get_counter();
-
-		$data = array();
-		if ($count > 0) {
-			$offset = $count - $offset - $per_page;
-			if ($offset < 0) {
-				$per_page = $per_page + $offset;
-				$offset = 0;
-			}
-
-			if ($per_page > 0) {
-				$sql->limit($per_page, $offset)->set_counter();
-				$data = $sql->get_table($this->table, $this->fields,
-					$condition, $params);
-			}
-		}
-		$data = array_reverse($data);
+		$count = $sql->get_counter();
 
 		if ($this->get('add_meta')) {
 			$this->add_meta_data($data);
 		}
 
 		$this->send_answer($data, $count);
-	}
-
-	protected function get_sorter($params) {
-		$sorter = parent::get_sorter($params);
-		return $sorter->invert();
 	}
 
 	protected function add_meta_data(&$data) {

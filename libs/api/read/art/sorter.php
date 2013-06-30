@@ -20,16 +20,6 @@ class Api_Read_Art_Sorter
 		$this->item = (int) $item;
 	}
 
-	public function invert() {
-		if ($this->direction == 'asc') {
-			$this->direction = 'desc';
-		} else {
-			$this->direction = 'asc';
-		}
-
-		return $this;
-	}
-
 	/**
 	 * @param $sql
 	 */

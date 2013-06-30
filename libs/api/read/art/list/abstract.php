@@ -22,10 +22,12 @@ abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
 
 		$filters = $this->get_filters($params);
 		$this->get_filter_values($filters);
+		$per_page = $this->get_per_page();
+		$offset = $this->get_offset();
 		$sorter = $this->get_sorter($params);
 
-		$sql = $this->db;
-
+		$sql = $this->db->limit($per_page, $offset)
+			->set_counter();
 		foreach ($filters as $filter) {
 			$sql->filter('meta', array(
 				'item_type = ' . $this->item_type,
@@ -41,11 +43,6 @@ abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
 	}
 
 	protected function process_query($sql) {
-		$per_page = $this->get_per_page();
-		$offset = $this->get_offset();
-
-		$sql->limit($per_page, $offset)->set_counter();
-
 		$data = $sql->get_table($this->table, $this->fields);
 		$count = $sql->get_counter();
 
