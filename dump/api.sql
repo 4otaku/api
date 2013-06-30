@@ -357,6 +357,7 @@ CREATE TABLE IF NOT EXISTS `head_menu` (
   PRIMARY KEY (`id`),
   KEY `order` (`order`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+ALTER TABLE  `head_menu` ADD  `separator` TINYINT UNSIGNED NOT NULL DEFAULT  '0';
 
 -- --------------------------------------------------------
 
