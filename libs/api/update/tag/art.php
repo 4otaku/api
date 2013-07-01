@@ -67,10 +67,11 @@ class Api_Update_Tag_Art extends Api_Update_Abstract
 				));
 				$this->db->delete('art_tag', $merge);
 
-				$arts_first = $this->db->get_vector('meta', 'item_id',
+				$arts_first = $this->db->get_vector('meta', 'id_item',
 					'item_type = ? and meta_type = ? and meta = ?',
 					array(Meta::ART, Meta::ART_TAG, $id), false);
-				$arts_second = $this->db->get_vector('meta', 'item_id',
+
+				$arts_second = $this->db->get_vector('meta', 'id_item',
 					'item_type = ? and meta_type = ? and meta = ?',
 					array(Meta::ART, Meta::ART_TAG, $merge), false);
 
@@ -78,23 +79,22 @@ class Api_Update_Tag_Art extends Api_Update_Abstract
 
 				$this->db->delete('meta',
 					'item_type = ? and meta_type = ? and meta = ? and ' .
-						$this->db->array_in('item_id', $delete),
+						$this->db->array_in('id_item', $delete),
 					array_merge(array(Meta::ART, Meta::ART_TAG, $merge), $delete));
 				$this->db->update('meta', array('meta' => Database_Action::get(
 						Database_Action::DECREMENT)),
 					'item_type = ? and meta_type = ? and ' .
-						$this->db->array_in('item_id', $delete),
+						$this->db->array_in('id_item', $delete),
 					array_merge(array(Meta::ART, Meta::TAG_COUNT), $delete));
 
 				$update = array_diff($arts_second, $arts_first);
 
 				$this->db->update('meta', array('meta' => $id),
 					'item_type = ? and meta_type = ? and meta = ? and ' .
-						$this->db->array_in('item_id', $update),
+						$this->db->array_in('id_item', $update),
 					array_merge(array(Meta::ART, Meta::ART_TAG, $merge), $update));
 			}
 		}
-
 
 		$this->set_success(true);
 	}
