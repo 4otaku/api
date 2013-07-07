@@ -58,6 +58,8 @@ class Api_Update_Tag_Art extends Api_Update_Abstract
 			$tag = $this->db->get_full_row('art_tag', $merge);
 			if (!$tag) {
 				$this->add_error(Error_Api::INCORRECT_INPUT);
+			} else if (!$this->is_moderator()) {
+				$this->add_error(Error_Api::INSUFFICIENT_RIGHTS);
 			} else {
 				$this->db->update('art_tag_variant', array('id_tag' => $id),
 					'id_tag = ?', $merge);
