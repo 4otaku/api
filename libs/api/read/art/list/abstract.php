@@ -5,7 +5,6 @@ abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
 	protected $default_filter = array();
 	protected $default_sorter = 'date';
 	protected $default_per_page = 30;
-	protected $max_per_page = 100;
 	protected $item_type = null;
 	protected $table = null;
 	protected $group_field = 'id';

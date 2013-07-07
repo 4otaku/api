@@ -5,7 +5,6 @@ abstract class Api_Read_Tag extends Api_Read_Abstract
 	protected $fields = array('id', 'name');
 	protected $default_sorter = 'name';
 	protected $default_per_page = 20;
-	protected $max_per_page = 100;
 	protected $table;
 
 	public function process()

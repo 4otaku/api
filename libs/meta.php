@@ -49,6 +49,16 @@ class Meta
 		return constant('self::' . $const);
 	}
 
+	public static function get_area($string) {
+		$const = strtoupper($string);
+
+		if (!defined('self::' . $const)) {
+			return null;
+		}
+
+		return constant('self::' . $const);
+	}
+
 	public static function value_needed() {
 		return array(self::STATE, self::ART_TAG, self::TRANSLATOR);
 	}

@@ -15,7 +15,7 @@ class Api_Read_Comment extends Api_Read_Abstract
 	);
 	protected $default_sorter = 'sortdate';
 	protected $default_per_page = 7;
-	protected $max_per_page = 10000;
+	protected $max_per_page = 1000;
 	protected $default_item_type = 1;
 
 	public function process()
@@ -44,6 +44,7 @@ class Api_Read_Comment extends Api_Read_Abstract
 			implode(' and ', $condition), $params);
 
 		foreach ($data as &$item) {
+			$item['area'] = 'art';
 			$item['avatar'] = md5($item['email']);
 			$item['is_author'] = ($item['cookie'] == $this->get_cookie());
 			unset($item['email']);
@@ -69,6 +70,7 @@ class Api_Read_Comment extends Api_Read_Abstract
 							$comment['avatar'] = md5($comment['email']);
 							unset($comment['email']);
 							unset($comment['cookie']);
+							$comment['area'] = 'art';
 							$item['tree'][] = $comment;
 							unset($comments[$key]);
 						}
@@ -89,6 +91,7 @@ class Api_Read_Comment extends Api_Read_Abstract
 							$comment['avatar'] = md5($comment['email']);
 							unset($comment['email']);
 							unset($comment['cookie']);
+							$comment['area'] = 'art';
 							$item['children'][] = $comment;
 							unset($comments[$key]);
 						}
@@ -108,7 +111,7 @@ class Api_Read_Comment extends Api_Read_Abstract
 		$filters = (array) $this->get('filter');
 
 		foreach ($filters as $key => &$filter) {
-			$filter = array($filter);
+			$filter = (array) $filter;
 			if (!in_array($key, $this->legal_filter)) {
 				$filter = null;
 			}
