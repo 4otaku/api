@@ -68,6 +68,7 @@ class Api_Read_Comment extends Api_Read_Abstract
 						if ($item['id'] == $comment['rootparent']) {
 							$comment['avatar'] = md5($comment['email']);
 							unset($comment['email']);
+							unset($comment['cookie']);
 							$item['tree'][] = $comment;
 							unset($comments[$key]);
 						}
@@ -87,6 +88,7 @@ class Api_Read_Comment extends Api_Read_Abstract
 						if ($item['id'] == $comment['parent']) {
 							$comment['avatar'] = md5($comment['email']);
 							unset($comment['email']);
+							unset($comment['cookie']);
 							$item['children'][] = $comment;
 							unset($comments[$key]);
 						}
