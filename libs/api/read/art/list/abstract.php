@@ -32,7 +32,7 @@ abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
 				'item_type = ' . $this->item_type,
 				'id_item = id',
 				'meta_type = ' . $filter['meta_type'],
-				'meta ' . $filter['operator'] . ' ' . $filter['value'],
+				'meta ' . $filter['operator'] . ' ' . ((int) $filter['value']),
 			), empty($filter['reverse']) ? false : 'meta');
 		}
 		$sql->group($this->group_field);
