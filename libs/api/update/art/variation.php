@@ -62,7 +62,8 @@ class Api_Update_Art_Variation extends Api_Update_Abstract
 		foreach ($add as $item) {
 			try {
 				$all = $this->db->order('id_parent_order', 'asc')
-					->get_table('art', 'id', 'id_parent = ?', $item['id']);
+					->get_table('art', 'id', 'id_parent = ? or id = ?',
+						array($item['id'], $item['id']));
 				foreach ($all as $art) {
 					$this->do_insert($id, $art);
 				}
