@@ -61,7 +61,11 @@ class Api_Update_Art_Variation extends Api_Update_Abstract
 
 		foreach ($add as $item) {
 			try {
-				$this->do_insert($id, $item);
+				$all = $this->db->order('id_parent_order', 'asc')
+					->get_table('art', 'id', 'id_parent = ?', $item['id']);
+				foreach ($all as $art) {
+					$this->do_insert($id, $art);
+				}
 			} catch (Error_Api $e) {
 				$this->add_error($e->getCode(), $e->getMessage());
 			}
