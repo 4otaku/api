@@ -3,7 +3,7 @@
 abstract class Api_Upload_Abstract extends Api_Abstract
 {
 	protected $worker_name;
-	protected $have_succesful = false;
+	protected $have_successful = false;
 	protected $answers = array();
 	protected $base_path = IMAGES;
 
@@ -15,17 +15,64 @@ abstract class Api_Upload_Abstract extends Api_Abstract
 
 	public function process()
 	{
-		foreach ($_FILES as $file) {
-			if (is_array($file['tmp_name'])) {
-				foreach ($file['tmp_name'] as $key => $tmp_name) {
-					$this->process_file($tmp_name, $file['name'][$key]);
+		$process = array();
+
+		$links = (array) $this->get('file');
+		foreach ($links as $key => $link) {
+			$ret = filter_var($link, FILTER_VALIDATE_URL);
+
+			if ($ret === false) {
+				unset($links[$key]);
+				$this->answers[] = array(
+					'error' => true,
+					'error_code' => Error::INCORRECT_URL,
+					'error_text' => $link . ' is not correct url'
+				);
+			}
+		};
+
+		if (!empty($links)) {
+			$limit = Config::get('art', 'filesize');
+			$worker = new Http();
+			$worker->enable_limit($limit)->add($links)->exec();
+
+			foreach ($links as $link) {
+				$file = $worker->get($link);
+				$headers = $worker->get_headers($link);
+				if (
+					!isset($headers['Content-Length']) ||
+					$headers['Content-Length'] > $limit
+				) {
+					$this->answers[] = array(
+						'error' => true,
+						'error_code' => Error_Upload::FILE_TOO_LARGE,
+						'error_text' => $link . ' is too large'
+					);
+				} else {
+					$name = explode('?', basename($link));
+					$process[] = array('name' => $name[0] ? $name[0] : 'tmp',
+						'file' => $file);
 				}
-			} else {
-				$this->process_file($file['tmp_name'], $file['name']);
 			}
 		}
 
-		if ($this->have_succesful) {
+		foreach ($_FILES as $file) {
+			if (is_array($file['tmp_name'])) {
+				foreach ($file['tmp_name'] as $key => $tmp_name) {
+					$process[] = array('name' => $file['name'][$key],
+						'file' => $tmp_name);
+				}
+			} else {
+				$process[] = array('name' => $file['name'],
+					'file' => $file['tmp_name']);
+			}
+		}
+
+		foreach ($process as $item) {
+			$this->process_file($item['file'], $item['name']);
+		}
+
+		if ($this->have_successful) {
 			$this->set_success(true);
 		}
 
@@ -45,7 +92,7 @@ abstract class Api_Upload_Abstract extends Api_Abstract
 			$data = $upload->process_file();
 			$this->process_data($data);
 			$this->answers[] = $data;
-			$this->have_succesful = true;
+			$this->have_successful = true;
 		} catch (Error_Upload $e) {
 			$this->answers[] = array(
 				'error' => true,

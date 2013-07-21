@@ -7,7 +7,7 @@ class Transform_Upload_Art extends Transform_Upload_Abstract_Image
 	public function __construct($file, $name, $base_path = false) {
 		parent::__construct($file, $name, $base_path);
 
-		$this->md5 = md5_file($file);
+		$this->md5 = md5_file($this->file);
 	}
 
 	protected function get_max_size() {
