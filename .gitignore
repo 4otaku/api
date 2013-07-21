@@ -10,5 +10,6 @@ images/art/*
 
 cache/*
 !cache/.gitignore
+!cache/tmp/.gitignore
 
 define.ini

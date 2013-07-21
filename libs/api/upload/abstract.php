@@ -39,7 +39,13 @@ abstract class Api_Upload_Abstract extends Api_Abstract
 			foreach ($links as $link) {
 				$file = $worker->get($link);
 				$headers = $worker->get_headers($link);
-				if (
+				if (!$file) {
+					$this->answers[] = array(
+						'error' => true,
+						'error_code' => Error::INCORRECT_URL,
+						'error_text' => $link . ' is not responding'
+					);
+				} elseif (
 					!isset($headers['Content-Length']) ||
 					$headers['Content-Length'] > $limit
 				) {
