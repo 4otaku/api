@@ -6,7 +6,7 @@ class Api_Update_Art_Variation extends Api_Update_Abstract
 
 	public function process()
 	{
-		$id = $this->get('id');
+		$id = (int) $this->get('id');
 		$add = (array) $this->get('add');
 		$remove = (array) $this->get('remove');
 		$order = (array) $this->get('order');
@@ -18,6 +18,8 @@ class Api_Update_Art_Variation extends Api_Update_Abstract
 		if (empty($id) || (empty($add) && empty($remove) && empty($order))) {
 			throw new Error_Api(Error_Api::MISSING_INPUT);
 		}
+
+		$id = $this->db->get_field('art', 'id_parent', $id);
 
 		$previous_order = array_keys($this->db->order('id_parent_order', 'asc')
 			->get_vector('art', 'id', 'id_parent = ?', $id));
@@ -61,9 +63,9 @@ class Api_Update_Art_Variation extends Api_Update_Abstract
 
 		foreach ($add as $item) {
 			try {
+				$add_id = $this->db->get_field('art', 'id_parent', $item['id']);
 				$all = $this->db->order('id_parent_order', 'asc')
-					->get_table('art', 'id', 'id_parent = ? or id = ?',
-						array($item['id'], $item['id']));
+					->get_table('art', 'id', 'id_parent = ?', $add_id);
 				foreach ($all as $art) {
 					$this->do_insert($id, $art);
 				}
