@@ -7,7 +7,7 @@ class Api_Update_Art_Source extends Api_Update_Abstract
 		$id = $this->get('id');
 		$source = (string) $this->get('source');
 
-		if (empty($id) || empty($source)) {
+		if (empty($id)) {
 			throw new Error_Api(Error_Api::MISSING_INPUT);
 		}
 
