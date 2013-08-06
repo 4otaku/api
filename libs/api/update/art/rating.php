@@ -9,7 +9,7 @@ class Api_Update_Art_Rating extends Api_Update_Abstract
 		$cookie = $this->get_cookie(true);
 		$ip = ip2long($this->get_ip(true));
 
-		if (empty($id) || $approve === null) {
+		if (empty($id) || $approve === null || empty($cookie) || empty($ip)) {
 			throw new Error_Api(Error_Api::MISSING_INPUT);
 		}
 

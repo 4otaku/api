@@ -24,7 +24,8 @@ abstract class Api_Response_Abstract
 		$headers = apache_request_headers();
 		if (isset($headers['Origin'])) {
 			$host = parse_url($headers['Origin'], PHP_URL_HOST);
-			if ($host == '4otaku.org' || strpos($host, '.4otaku.org')) {
+			$allow = Config::get('domain', 'allow');
+			if ($host == $allow || strpos($host, '.' . $allow)) {
 				$return['Access-Control-Allow-Origin'] = $headers['Origin'];
 			}
 		}

@@ -59,5 +59,6 @@ class Api_Delete_Comment extends Api_Delete_Abstract
 		));
 
 		$this->db->commit();
+		$this->set_success(true);
 	}
 }

@@ -45,6 +45,7 @@ class Api_Create_Comment extends Api_Create_Abstract
 			'text' => $text,
 			'sortdate' => $this->db->unix_to_date($time),
 		));
+
 		$this->db->update('meta', array(
 			'meta' => Database_Action::get(Database_Action::INCREMENT),
 		), 'item_type = ? and id_item = ? and meta_type = ?', array(
