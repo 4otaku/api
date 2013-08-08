@@ -2,6 +2,8 @@
 
 namespace Otaku\Api;
 
+use Otaku\Framework\DatabaseAction;
+
 class ApiUpdateTagArt extends ApiUpdateAbstract
 {
 	public function process()

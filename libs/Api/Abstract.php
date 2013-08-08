@@ -3,6 +3,7 @@
 namespace Otaku\Api;
 
 use Otaku\Framework\Database;
+use Otaku\Framework\ErrorUpload;
 
 abstract class ApiAbstract
 {

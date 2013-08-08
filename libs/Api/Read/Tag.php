@@ -2,6 +2,8 @@
 
 namespace Otaku\Api;
 
+use Otaku\Framework\DatabaseInstance;
+
 abstract class ApiReadTag extends ApiReadAbstract
 {
 	protected $fields = array('id', 'name');
@@ -29,10 +31,10 @@ abstract class ApiReadTag extends ApiReadAbstract
 	}
 
 	/**
-	 * @param Database_Instance $sql
+	 * @param DatabaseInstance $sql
 	 * @return mixed
 	 */
-	protected function fetch_data($sql)
+	protected function fetch_data(DatabaseInstance $sql)
 	{
 		$condition = '';
 		$params = array();

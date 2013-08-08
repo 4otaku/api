@@ -2,6 +2,8 @@
 
 namespace Otaku\Api;
 
+use Otaku\Framework\Config;
+
 class ApiRequest
 {
 	protected $converters = array(

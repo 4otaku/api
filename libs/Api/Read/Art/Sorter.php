@@ -2,6 +2,8 @@
 
 namespace Otaku\Api;
 
+use Otaku\Framework\DatabaseSorter;
+
 class ApiReadArtSorter
 {
 	protected $item = 0;

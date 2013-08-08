@@ -3,6 +3,7 @@
 namespace Otaku\Api;
 
 use Otaku\Framework\CronAbstract;
+use Otaku\Framework\Database;
 
 class CronTag extends CronAbstract
 {

@@ -1,6 +1,10 @@
 #!/usr/bin/php
 <?php
 
+use Otaku\Framework\Config;
+use Otaku\Framework\Cache;
+use Otaku\Framework\Cron;
+
 if (PHP_SAPI != 'cli') {
 	die;
 }

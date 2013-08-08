@@ -2,6 +2,8 @@
 
 namespace Otaku\Api;
 
+use Otaku\Framework\DatabaseAction;
+
 abstract class ApiUpdateArtAbstractTag extends ApiUpdateTag
 {
 	protected $count_table = '';

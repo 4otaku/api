@@ -2,6 +2,8 @@
 
 namespace Otaku\Api;
 
+use Otaku\Framework\DatabaseAction;
+
 class ApiDeleteTagArt extends ApiDeleteAbstract
 {
 	public function process()

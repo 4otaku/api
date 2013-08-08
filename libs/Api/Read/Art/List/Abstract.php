@@ -2,6 +2,8 @@
 
 namespace Otaku\Api;
 
+use Otaku\Framework\Text;
+
 abstract class ApiReadArtListAbstract extends ApiReadAbstract
 {
 	protected $default_filter = array();
@@ -107,8 +109,8 @@ abstract class ApiReadArtListAbstract extends ApiReadAbstract
 				continue;
 			}
 			try {
-				$date = new DateTime($filter['value']);
-			} catch (Exception $e) {
+				$date = new \DateTime($filter['value']);
+			} catch (\Exception $e) {
 				$filter = null;
 				continue;
 			}
@@ -122,7 +124,7 @@ abstract class ApiReadArtListAbstract extends ApiReadAbstract
 					$add[] = array(
 						'name' => $filter['name'],
 						'type' => 'less',
-						'value' => $date->add(new DateInterval('P1D'))->getTimestamp()
+						'value' => $date->add(new \DateInterval('P1D'))->getTimestamp()
 					);
 					break;
 				case Meta::NOT:
@@ -132,7 +134,7 @@ abstract class ApiReadArtListAbstract extends ApiReadAbstract
 					$add[] = array(
 						'name' => $filter['name'],
 						'type' => 'more',
-						'value' => $date->add(new DateInterval('P1D'))->getTimestamp() - 1
+						'value' => $date->add(new \DateInterval('P1D'))->getTimestamp() - 1
 					);
 					break;
 				case Meta::LESS:

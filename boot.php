@@ -3,6 +3,7 @@
 use Otaku\Api\ApiRequest;
 use Otaku\Api\ApiAbstract;
 use Otaku\Api\ApiError;
+use Otaku\Framework\Config;
 
 include 'framework/init.php';
 

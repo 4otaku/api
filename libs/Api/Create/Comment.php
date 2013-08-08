@@ -2,6 +2,8 @@
 
 namespace Otaku\Api;
 
+use Otaku\Framework\DatabaseAction;
+
 class ApiCreateComment extends ApiCreateAbstract
 {
 	public function process()

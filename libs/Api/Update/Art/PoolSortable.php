@@ -2,6 +2,8 @@
 
 namespace Otaku\Api;
 
+use Otaku\Framework\DatabaseAction;
+
 abstract class ApiUpdateArtPoolSortable extends ApiUpdateArtPool
 {
 	public function process()
