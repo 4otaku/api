@@ -40,15 +40,17 @@ class ApiRequest
 
 	public function get_response_class()
 	{
-		if (empty($this->data['format']) ||
-			!class_exists('ApiResponse' . ucfirst($this->data['format']))) {
+		$format = empty($this->data['format']) ?
+			$this->default_response_format : $this->data['format'];
 
-			$format = $this->default_response_format;
-		} else {
-			$format = $this->data['format'];
+		$class = __NAMESPACE__ . '\\' .'ApiResponse' . ucfirst($format);
+
+		if (!class_exists($class)) {
+			$class = __NAMESPACE__ . '\\' .'ApiResponse' .
+				ucfirst($this->default_response_format);
 		}
 
-		return 'ApiResponse' . ucfirst($format);
+		return $class;
 	}
 
 	public function get($field = false)

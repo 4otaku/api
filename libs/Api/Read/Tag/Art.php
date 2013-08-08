@@ -2,16 +2,18 @@
 
 namespace Otaku\Api;
 
+use Otaku\Framework\DatabaseInstance;
+
 class ApiReadTagArt extends ApiReadTag
 {
 	protected $fields = array('at.id', 'at.name', 'at.color');
 	protected $table = 'art_tag';
 
 	/**
-	 * @param Database_Instance $sql
+	 * @param DatabaseInstance $sql
 	 * @return mixed
 	 */
-	protected function fetch_data($sql)
+	protected function fetch_data(DatabaseInstance $sql)
 	{
 		$condition = '';
 		$params = array();

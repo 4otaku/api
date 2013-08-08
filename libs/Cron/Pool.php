@@ -2,6 +2,8 @@
 
 namespace Otaku\Api;
 
+use Otaku\Framework\CronAbstract;
+
 class CronPool extends CronAbstract
 {
 	protected function delete_empty() {
@@ -66,8 +68,8 @@ class CronPool extends CronAbstract
 			unlink($address);
 		}
 
-		$zip = new ZipArchive();
-		if (!$zip->open($address, ZipArchive::CREATE) === true) {
+		$zip = new \ZipArchive();
+		if (!$zip->open($address, \ZipArchive::CREATE) === true) {
 			return false;
 		}
 

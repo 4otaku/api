@@ -2,6 +2,8 @@
 
 namespace Otaku\Api;
 
+use Otaku\Framework\Error;
+
 class ErrorApi extends Error
 {
 	const

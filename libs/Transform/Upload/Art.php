@@ -2,6 +2,12 @@
 
 namespace Otaku\Api;
 
+use Otaku\Framework\TransformUploadAbstractImage;
+use Otaku\Framework\TransformImage;
+use Otaku\Framework\Config;
+use Otaku\Framework\Database;
+use Otaku\Framework\ErrorUpload;
+
 class TransformUploadArt extends TransformUploadAbstractImage
 {
 	protected $md5 = 'unknown';

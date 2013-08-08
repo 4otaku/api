@@ -2,6 +2,8 @@
 
 namespace Otaku\Api;
 
+use Otaku\Framework\Config;
+
 abstract class ApiResponseAbstract
 {
 	protected $headers = array();

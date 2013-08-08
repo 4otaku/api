@@ -1,5 +1,9 @@
 <?php
 
+use Otaku\Api\ApiRequest;
+use Otaku\Api\ApiAbstract;
+use Otaku\Api\ApiError;
+
 include 'framework/init.php';
 
 Autoload::init(array(LIBS, EXTERNAL, FRAMEWORK_LIBS, FRAMEWORK_EXTERNAL), CACHE);
@@ -17,21 +21,21 @@ $class = 'Api_' . implode('_', array_map('ucfirst', $url));
 
 if (!class_exists($class) || !is_subclass_of($class, 'Api_Abstract')) {
 	$class = 'Api_Error';
-	$request = new Api_Request('dummy');
+	$request = new ApiRequest('dummy');
 } else {
 	if (!empty($_GET['f']) && ctype_alpha($_GET['f'])) {
 		$request_type = $_GET['f'];
 		unset($_GET['f']);
-		$request = new Api_Request($request_type);
+		$request = new ApiRequest($request_type);
 	} else {
-		$request = new Api_Request();
+		$request = new ApiRequest();
 	}
 }
 
 $worker = new $class($request);
 
-if (!($worker instanceOf Api_Abstract)) {
-	$worker = new Api_Error($request);
+if (!($worker instanceOf ApiAbstract)) {
+	$worker = new ApiError($request);
 }
 
 echo $worker->process_request()->send_headers()->get_response();

@@ -10,7 +10,7 @@ class ApiResponseXml extends ApiResponseAbstract
 
 	public function encode(Array $data) {
 
-		$xml = new XmlWriter();
+		$xml = new \XmlWriter();
 		$xml->openMemory();
 		$xml->startDocument('1.0', 'UTF-8');
 		$xml->startElement('api_answer');
@@ -21,7 +21,7 @@ class ApiResponseXml extends ApiResponseAbstract
 		return $xml->outputMemory(true);
 	}
 
-	protected function write(XMLWriter $xml, $data) {
+	protected function write(\XMLWriter $xml, $data) {
 
 		foreach($data as $key => $value){
 

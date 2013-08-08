@@ -2,6 +2,11 @@
 
 namespace Otaku\Api;
 
+use Otaku\Framework\Config;
+use Otaku\Framework\Http;
+use Otaku\Framework\Error;
+use Otaku\Framework\ErrorUpload;
+
 abstract class ApiUploadAbstract extends ApiAbstract
 {
 	protected $worker_name;

@@ -2,6 +2,8 @@
 
 namespace Otaku\Api;
 
+use Otaku\Framework\CronAbstract;
+
 class CronArt extends CronAbstract
 {
 	protected function resize()

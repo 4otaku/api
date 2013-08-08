@@ -2,6 +2,8 @@
 
 namespace Otaku\Api;
 
+use Otaku\Framework\CronAbstract;
+
 class CronMeta extends CronAbstract
 {
 	protected function comment_count()

@@ -2,6 +2,8 @@
 
 namespace Otaku\Api;
 
+use Otaku\Framework\ErrorUpload;
+
 class ApiUploadArt extends ApiUploadAbstract
 {
 	protected $worker_name = 'TransformUploadArt';

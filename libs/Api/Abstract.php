@@ -12,7 +12,7 @@ abstract class ApiAbstract
 	protected $rights = null;
 
 	/**
-	 * @var Otaku\Framework\DatabaseInstance
+	 * @var {Otaku\Framework\DatabaseInstance}
 	 */
 	protected $db;
 	protected $db_type = 'api';
