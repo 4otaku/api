@@ -70,7 +70,7 @@ class ApiRequest
 
 	public function get_cookie($strict = false)
 	{
-		$name = Config::get('cookie', 'name', false);
+		$name = Config::getInstance()->get('cookie', 'name', false);
 
 		if ($name && isset($_COOKIE[$name])) {
 			return $_COOKIE[$name];

@@ -19,7 +19,7 @@ class TransformUploadArt extends TransformUploadAbstractImage
 	}
 
 	protected function get_max_size() {
-		return Config::get('art', 'filesize');
+		return Config::getInstance()->get('art', 'filesize');
 	}
 
 	protected function test_file() {
@@ -54,8 +54,9 @@ class TransformUploadArt extends TransformUploadAbstractImage
 
 		$resized = $this->check_resize($resized);
 
-		$this->scale(Config::get('art', 'largethumbsize'), $largethumb);
-		$this->scale(Config::get('art', 'thumbsize'), $thumb);
+		$config = Config::getInstance();
+		$this->scale($config->get('art', 'largethumbsize'), $largethumb);
+		$this->scale($config->get('art', 'thumbsize'), $thumb);
 
 		$this->set(array(
 			'image' => 'art/' . $this->md5 . '.' . $extension,
@@ -84,18 +85,21 @@ class TransformUploadArt extends TransformUploadAbstractImage
 	}
 
 	protected function check_resize($target) {
+		$config = Config::getInstance();
 		$resized = false;
 		$this->sizes = $this->worker->get_image_width().'x'.$this->worker->get_image_height();
 
-		$resize_width = Config::get('art', 'resizewidth') * Config::get('art', 'resizestep');
+		$resize_width = $config->get('art', 'resizewidth') *
+			$config->get('art', 'resizestep');
+
 		if (
 			$this->worker->get_image_width() > $resize_width ||
 			$this->info[0] > $resize_width
 		) {
-			if ($this->scale(Config::get('art', 'resizewidth'), $target, 95, false)) {
+			if ($this->scale($config->get('art', 'resizewidth'), $target, 95, false)) {
 				$resized = true;
 			}
-		} elseif ($this->size > Config::get('art', 'resizeweight')) {
+		} elseif ($this->size > $config->get('art', 'resizeweight')) {
 			if ($this->scale(false, $target, 95, false)) {
 				$resized = true;
 			}

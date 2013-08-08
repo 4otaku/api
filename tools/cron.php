@@ -11,10 +11,13 @@ if (PHP_SAPI != 'cli') {
 
 include dirname(__DIR__) . '/framework/init.php';
 
-Autoload::init(array(LIBS, EXTERNAL, FRAMEWORK_LIBS, FRAMEWORK_EXTERNAL), CACHE);
+new Autoload(array(
+	'Api' => LIBS,
+	'Framework' => FRAMEWORK_LIBS
+), FRAMEWORK_EXTERNAL);
 
-Config::parse('define.ini', true);
-Cache::$base_prefix = Config::get('cache', 'prefix');
+Config::getInstance()->parse('define.ini', true);
+Cache::$base_prefix = Config::getInstance()->get('cache', 'prefix');
 
 define('LOCK_FILE', '/tmp/cron_api_lock');
 

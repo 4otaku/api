@@ -28,7 +28,7 @@ abstract class ApiResponseAbstract
 		$headers = apache_request_headers();
 		if (isset($headers['Origin'])) {
 			$host = parse_url($headers['Origin'], PHP_URL_HOST);
-			$allow = Config::get('domain', 'allow');
+			$allow = Config::getInstance()->get('domain', 'allow');
 			if ($host == $allow || strpos($host, '.' . $allow)) {
 				$return['Access-Control-Allow-Origin'] = $headers['Origin'];
 			}

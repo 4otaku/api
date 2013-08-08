@@ -39,7 +39,7 @@ abstract class ApiUploadAbstract extends ApiAbstract
 		};
 
 		if (!empty($links)) {
-			$limit = Config::get('art', 'filesize');
+			$limit = Config::getInstance()->get('art', 'filesize');
 			$worker = new Http();
 			$worker->enable_limit($limit)->add($links)->exec();
 
