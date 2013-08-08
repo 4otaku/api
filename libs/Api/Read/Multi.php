@@ -11,7 +11,7 @@ class ApiReadMulti extends ApiReadAbstract
 			}
 
 			$class = array_map('ucfirst', explode('_', $request['api']));
-			$class = 'ApiRead' . implode('', $class);
+			$class = __NAMESPACE__ . '\ApiRead' . implode('', $class);
 			$request = new ApiRequestInner($request);
 
 			$worker = new $class($request);
