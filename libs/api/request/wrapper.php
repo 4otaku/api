@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 class Api_Request
 {
 	protected $converters = array(

@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 abstract class Api_Read_Art_List_Art extends Api_Read_Art_List_Abstract
 {
 	protected $item_type = 1;

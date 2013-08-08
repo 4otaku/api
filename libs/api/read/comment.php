@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 class Api_Read_Comment extends Api_Read_Abstract
 {
 	protected $fields = array(

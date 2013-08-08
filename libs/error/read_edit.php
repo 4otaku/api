@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 class Error_Read_Edit extends Error_Read 
 {
 	const DEFAULT_MESSAGE = 'Некорректные данные редактирования';

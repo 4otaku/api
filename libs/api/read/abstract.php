@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 abstract class Api_Read_Abstract extends Api_Abstract
 {
 	protected $is_logged = false;

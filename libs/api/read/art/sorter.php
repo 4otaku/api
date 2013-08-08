@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 class Api_Read_Art_Sorter
 {
 	protected $item = 0;

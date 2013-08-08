@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 class Api_Read_Multi extends Api_Read_Abstract
 {
 	public function process() {

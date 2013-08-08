@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 class Transform_Upload_Art extends Transform_Upload_Abstract_Image
 {
 	protected $md5 = 'unknown';

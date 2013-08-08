@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 abstract class Api_Upload_Abstract extends Api_Abstract
 {
 	protected $worker_name;

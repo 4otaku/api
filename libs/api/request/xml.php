@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 class Api_Request_Xml extends Api_Request_Input
 {
 	protected function convert($input) {

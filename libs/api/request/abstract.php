@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 abstract class Api_Request_Abstract
 {
 	abstract protected function convert($input);

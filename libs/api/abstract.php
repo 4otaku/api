@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 abstract class Api_Abstract
 {
 	protected $request;

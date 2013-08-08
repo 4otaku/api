@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 class Cron_Art extends Cron_Abstract
 {
 	protected function resize()

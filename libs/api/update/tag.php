@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 abstract class Api_Update_Tag extends Api_Update_Abstract
 {
 	abstract protected function get_item_type();

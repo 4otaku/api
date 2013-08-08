@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 class Api_Error extends Api_Abstract
 {
 	public function process() {

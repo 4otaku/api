@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 class Api_Read_Art_Artist extends Api_Read_Art_Pool
 {
 	protected $table = 'art_artist';

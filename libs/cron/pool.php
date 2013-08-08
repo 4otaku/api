@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 class Cron_Pool extends Cron_Abstract
 {
 	protected function delete_empty() {

@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 abstract class Api_Update_Art_Abstract_Tag extends Api_Update_Tag
 {
 	protected $count_table = '';

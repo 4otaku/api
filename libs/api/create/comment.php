@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 class Api_Create_Comment extends Api_Create_Abstract
 {
 	public function process()

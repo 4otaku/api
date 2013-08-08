@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 class Cron_Meta extends Cron_Abstract
 {
 	protected function comment_count()

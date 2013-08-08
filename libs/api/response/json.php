@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 class Api_Response_Json extends Api_Response_Abstract
 {
 	protected $headers = array(

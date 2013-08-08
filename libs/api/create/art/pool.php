@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 abstract class Api_Create_Art_Pool extends Api_Create_Abstract
 {
 	protected $table = '';

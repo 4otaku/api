@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 class Api_Update_Art_Translation extends Api_Update_Abstract
 {
 	protected $next_translation_id = false;

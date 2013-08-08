@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 class Api_Read_Tag_Art extends Api_Read_Tag
 {
 	protected $fields = array('at.id', 'at.name', 'at.color');

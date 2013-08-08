@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 class Api_Update_Art_Group extends Api_Update_Art_Pool
 {
 	protected $table = 'art_group';

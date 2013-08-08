@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 abstract class Api_Read_Tag extends Api_Read_Abstract
 {
 	protected $fields = array('id', 'name');

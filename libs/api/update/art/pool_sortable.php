@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 abstract class Api_Update_Art_Pool_Sortable extends Api_Update_Art_Pool
 {
 	public function process()

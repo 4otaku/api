@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 class Api_Read_Art_Similar extends Api_Read_Abstract
 {
 	protected $default_per_page = 20;

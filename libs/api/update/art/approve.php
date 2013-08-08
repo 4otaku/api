@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 class Api_Update_Art_Approve extends Api_Update_Abstract
 {
 	public function process()

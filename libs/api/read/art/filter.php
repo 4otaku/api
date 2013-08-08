@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 class Api_Read_Art_Filter
 {
 	public static $not_deleted = array(

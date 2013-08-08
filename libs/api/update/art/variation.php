@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 class Api_Update_Art_Variation extends Api_Update_Abstract
 {
 	protected $next_variation_id = false;

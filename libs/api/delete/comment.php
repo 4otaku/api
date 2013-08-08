@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 class Api_Delete_Comment extends Api_Delete_Abstract
 {
 	public function process()

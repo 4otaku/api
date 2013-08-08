@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 class Cron_Tag extends Cron_Abstract
 {
 	protected function do_count()

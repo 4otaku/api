@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 abstract class Api_Read_Art_Pool extends Api_Read_Abstract
 {
 	protected $table = null;

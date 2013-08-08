@@ -1,5 +1,7 @@
 <?php
 
+namespace otaku\api;
+
 class Error_Api extends Error
 {
 	const
