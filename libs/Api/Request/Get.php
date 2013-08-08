@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Request_Get extends Api_Request_Http
+class ApiRequestGet extends ApiRequestHttp
 {
 	protected function get_input() {
 		return $_GET;

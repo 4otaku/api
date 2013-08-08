@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Update_Art_Artist extends Api_Update_Abstract
+class ApiUpdateArtArtist extends ApiUpdateAbstract
 {
 	public function process()
 	{
@@ -11,16 +11,16 @@ class Api_Update_Art_Artist extends Api_Update_Abstract
 		if (!$this->is_moderator()) {
 			$author = $this->db->get_field('art_artist', 'id_user', $id);
 			if ($this->get_user() != $author) {
-				throw new Error_Api(Error_Api::INSUFFICIENT_RIGHTS);
+				throw new ErrorApi(ErrorApi::INSUFFICIENT_RIGHTS);
 			}
 		}
 
 		if (empty($id) || !$this->have_changes()) {
-			throw new Error_Api(Error_Api::MISSING_INPUT);
+			throw new ErrorApi(ErrorApi::MISSING_INPUT);
 		}
 
 		if (!(bool) $this->db->get_count('art_artist', $id)) {
-			throw new Error_Api(Error_Api::INCORRECT_INPUT);
+			throw new ErrorApi(ErrorApi::INCORRECT_INPUT);
 		}
 
 		foreach ((array) $this->get('add') as $item) {

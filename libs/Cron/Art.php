@@ -2,11 +2,11 @@
 
 namespace Otaku\Api;
 
-class Cron_Art extends Cron_Abstract
+class CronArt extends CronAbstract
 {
 	protected function resize()
 	{
-		$request = new Api_Request_Inner(array(
+		$request = new ApiRequestInner(array(
 			'filter' => array(array(
 				'name' => 'art_tag',
 				'type' => 'is',
@@ -14,22 +14,22 @@ class Cron_Art extends Cron_Abstract
 			)),
 			'per_page' => 100
 		));
-		$worker = new Api_Read_Art_List($request);
+		$worker = new ApiReadArtList($request);
 		$response = $worker->process_request()->get_response();
 		$data = $response['data'];
 		foreach ($data as $art) {
 			$name = $art['md5'].'.'.$art['ext'];
 			$path = IMAGES . SL . 'art' . SL . $name;
-			$worker = new Transform_Upload_Art($path, $name, IMAGES);
+			$worker = new TransformUploadArt($path, $name, IMAGES);
 			$resized = $worker->resize();
 			$this->db->update('art', array('resized' => (int) $resized),
 				$art['id']);
 
-			$request = new Api_Request_Inner(array(
+			$request = new ApiRequestInner(array(
 				'id' => $art['id'],
 				'remove' => array('need_resize')
 			));
-			$worker = new Api_Update_Art_Tag($request);
+			$worker = new ApiUpdateArtTag($request);
 			$worker->process_request();
 		}
 	}

@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-abstract class Api_Request_Http extends Api_Request_Abstract
+abstract class ApiRequestHttp extends ApiRequestAbstract
 {
 	protected function convert($input) {
 		return $this->clean_globals($input);

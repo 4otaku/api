@@ -2,11 +2,11 @@
 
 namespace Otaku\Api;
 
-class Api_Request_Xml extends Api_Request_Input
+class ApiRequestXml extends ApiRequestInput
 {
 	protected function convert($input) {
 		if (!function_exists('xml_parser_create')) {
-			throw new Error_Api_Request('Не удается обработать запрос в формате xml');
+			throw new ErrorApiRequest('Не удается обработать запрос в формате xml');
 		}
 
 		$parser = xml_parser_create('');
@@ -17,7 +17,7 @@ class Api_Request_Xml extends Api_Request_Input
 		xml_parser_free($parser);
 
 		if (!$xml_values) {
-			throw new Error_Api_Request('Некорректный xml или неверная кодировка');
+			throw new ErrorApiRequest('Некорректный xml или неверная кодировка');
 		}
 
 		$xml_array = array();

@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-abstract class Api_Create_Art_Pool extends Api_Create_Abstract
+abstract class ApiCreateArtPool extends ApiCreateAbstract
 {
 	protected $table = '';
 
@@ -12,7 +12,7 @@ abstract class Api_Create_Art_Pool extends Api_Create_Abstract
 		$text = $this->get('text');
 
 		if (empty($title)) {
-			throw new Error_Api(Error_Api::MISSING_INPUT);
+			throw new ErrorApi(ErrorApi::MISSING_INPUT);
 		}
 
 		$success = (bool) $this->db->insert($this->table, array(
@@ -20,7 +20,7 @@ abstract class Api_Create_Art_Pool extends Api_Create_Abstract
 		));
 
 		if (!$success) {
-			throw new Error_Api(Error_Api::UNKNOWN_ERROR);
+			throw new ErrorApi(ErrorApi::UNKNOWN_ERROR);
 		}
 
 		$id = $this->db->last_id();
@@ -29,7 +29,7 @@ abstract class Api_Create_Art_Pool extends Api_Create_Abstract
 		$this->add_meta($this->get_meta_type(), $id, Meta::TAG_COUNT, 0);
 
 		if ($this->get('tag')) {
-			$request = new Api_Request_Inner(array(
+			$request = new ApiRequestInner(array(
 				'id' => $id,
 				'add' => (array) $this->get('tag')
 			));

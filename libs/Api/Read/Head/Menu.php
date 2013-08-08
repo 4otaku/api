@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Read_Head_Menu extends Api_Read_Abstract
+class ApiReadHeadMenu extends ApiReadAbstract
 {
 	public function process() {
 

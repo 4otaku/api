@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Update_Art_Group extends Api_Update_Art_Pool
+class ApiUpdateArtGroup extends ApiUpdateArtPool
 {
 	protected $table = 'art_group';
 

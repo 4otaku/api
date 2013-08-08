@@ -2,14 +2,14 @@
 
 namespace Otaku\Api;
 
-class Api_Read_User extends Api_Read_Abstract
+class ApiReadUser extends ApiReadAbstract
 {
 	public function process()
 	{
 		$cookie = $this->get('cookie');
 
 		if (empty($cookie)) {
-			throw new Error_Api(Error_Api::MISSING_INPUT);
+			throw new ErrorApi(ErrorApi::MISSING_INPUT);
 		}
 
 		$user = $this->db->join('art_artist', 'u.id = aa.id_user')

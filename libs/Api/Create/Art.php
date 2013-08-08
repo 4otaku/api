@@ -2,14 +2,14 @@
 
 namespace Otaku\Api;
 
-class Api_Create_Art extends Api_Create_Abstract
+class ApiCreateArt extends ApiCreateAbstract
 {
 	public function process()
 	{
 		$key = $this->get('upload_key');
 
 		if (empty($key)) {
-			throw new Error_Api('Пропущен ключ загрузки', Error_Api::MISSING_INPUT);
+			throw new ErrorApi('Пропущен ключ загрузки', ErrorApi::MISSING_INPUT);
 		}
 
 		$insert = $this->get_upload_data($key);
@@ -19,7 +19,7 @@ class Api_Create_Art extends Api_Create_Abstract
 		$success = (bool) $this->db->insert('art', $insert);
 
 		if (!$success) {
-			throw new Error_Api(Error_Api::UNKNOWN_ERROR);
+			throw new ErrorApi(ErrorApi::UNKNOWN_ERROR);
 		}
 
 		$id = $this->db->last_id();
@@ -46,39 +46,39 @@ class Api_Create_Art extends Api_Create_Abstract
 				));
 				$id_artist = $this->db->last_id();
 			}
-			$request = new Api_Request_Inner(array(
+			$request = new ApiRequestInner(array(
 				'id' => $id_artist,
 				'add' => array(array('id' => $id))
 			));
-			$worker = new Api_Update_Art_Artist($request);
+			$worker = new ApiUpdateArtArtist($request);
 			$worker->process_request();
 		}
 
 		if ($this->get('tag')) {
-			$request = new Api_Request_Inner(array(
+			$request = new ApiRequestInner(array(
 				'id' => $id,
 				'add' => (array) $this->get('tag')
 			));
-			$worker = new Api_Update_Art_Tag($request);
+			$worker = new ApiUpdateArtTag($request);
 			$worker->process_request();
 		}
 
 		if ($this->get('source')) {
-			$request = new Api_Request_Inner(array(
+			$request = new ApiRequestInner(array(
 				'id' => $id,
 				'source' => (string) $this->get('source')
 			));
-			$worker = new Api_Update_Art_Source($request);
+			$worker = new ApiUpdateArtSource($request);
 			$worker->process_request();
 		}
 
 		if ($this->get('group')) {
 			foreach ((array) $this->get('group') as $group) {
-				$request = new Api_Request_Inner(array(
+				$request = new ApiRequestInner(array(
 					'id' => $group['id'],
 					'add' => array(array('id' => $id))
 				));
-				$worker = new Api_Update_Art_Group($request);
+				$worker = new ApiUpdateArtGroup($request);
 				$worker->process_request();
 			}
 		}
@@ -91,32 +91,32 @@ class Api_Create_Art extends Api_Create_Abstract
 					'filename' => empty($pack['filename']) ?
 						$this->get_upload_name($key) : $pack['filename']
 				);
-				$request = new Api_Request_Inner(array(
+				$request = new ApiRequestInner(array(
 					'id' => $pack['id'],
 					'add' => array($item)
 				));
-				$worker = new Api_Update_Art_Pack($request);
+				$worker = new ApiUpdateArtPack($request);
 				$worker->process_request();
 			}
 		}
 
 		if ($this->get('manga')) {
 			foreach ((array) $this->get('manga') as $manga) {
-				$request = new Api_Request_Inner(array(
+				$request = new ApiRequestInner(array(
 					'id' => $manga['id'],
 					'add' => array(array('id' => $id))
 				));
-				$worker = new Api_Update_Art_Manga($request);
+				$worker = new ApiUpdateArtManga($request);
 				$worker->process_request();
 			}
 		}
 
 		if ($this->get('comment')) {
-			$request = new Api_Request_Inner(array(
+			$request = new ApiRequestInner(array(
 				'id' => $id,
 				'comment' => (string) $this->get('comment')
 			));
-			$worker = new Api_Update_Art_Comment($request);
+			$worker = new ApiUpdateArtComment($request);
 			$worker->process_request();
 		}
 

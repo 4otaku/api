@@ -2,18 +2,18 @@
 
 namespace Otaku\Api;
 
-class Api_Delete_Comment extends Api_Delete_Abstract
+class ApiDeleteComment extends ApiDeleteAbstract
 {
 	public function process()
 	{
 		$id = $this->get('id');
 
 		if (empty($id)) {
-			throw new Error_Api(Error_Api::MISSING_INPUT);
+			throw new ErrorApi(ErrorApi::MISSING_INPUT);
 		}
 
 		if (!$this->is_moderator()) {
-			throw new Error_Api(Error_Api::INSUFFICIENT_RIGHTS);
+			throw new ErrorApi(ErrorApi::INSUFFICIENT_RIGHTS);
 		}
 
 		$parent = $this->db->get_field('comment', 'parent', $id);
@@ -45,7 +45,7 @@ class Api_Delete_Comment extends Api_Delete_Abstract
 		$data = $this->db->get_row('comment', array('id_item', 'area'), $id);
 
 		$this->db->update('meta', array(
-			'meta' => Database_Action::get(Database_Action::DECREMENT),
+			'meta' => DatabaseAction::get(DatabaseAction::DECREMENT),
 		), 'item_type = ? and id_item = ? and meta_type = ?', array(
 			$data['area'], $data['id_item'], Meta::COMMENT_COUNT
 		));

@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
+abstract class ApiReadArtListAbstract extends ApiReadAbstract
 {
 	protected $default_filter = array();
 	protected $default_sorter = 'date';
@@ -15,7 +15,7 @@ abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
 	public function process() {
 
 		if ($this->item_type === null || $this->table === null) {
-			$this->add_error(Error_Api::INCORRECT_URL);
+			$this->add_error(ErrorApi::INCORRECT_URL);
 			return;
 		}
 
@@ -161,7 +161,7 @@ abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
 			$this->default_sorter_order :
 			(string) $params['sort_order'];
 
-		return new Api_Read_Art_Sorter($this->item_type,
+		return new ApiReadArtSorter($this->item_type,
 			$sort, $sort_order, $value);
 	}
 
@@ -222,7 +222,7 @@ abstract class Api_Read_Art_List_Abstract extends Api_Read_Abstract
 							$text = $filter['name'] . ' "' . $filter['value'] . '" не существует.';
 							break;
 					}
-					throw new Error_Api($text, Error_Api::INCORRECT_INPUT);
+					throw new ErrorApi($text, ErrorApi::INCORRECT_INPUT);
 				}
 
 				$filter = null;

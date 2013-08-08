@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-abstract class Api_Read_Art_List_Art extends Api_Read_Art_List_Abstract
+abstract class ApiReadArtListArt extends ApiReadArtListAbstract
 {
 	protected $item_type = 1;
 	protected $table = 'art';
@@ -68,7 +68,7 @@ abstract class Api_Read_Art_List_Art extends Api_Read_Art_List_Abstract
 
 	protected function get_default_filter() {
 		$return = parent::get_default_filter();
-		$return[] = Api_Read_Art_Filter::$not_deleted;
+		$return[] = ApiReadArtFilter::$not_deleted;
 		return $return;
 	}
 
@@ -95,9 +95,9 @@ abstract class Api_Read_Art_List_Art extends Api_Read_Art_List_Abstract
 							'id', 'login = ?', $filter['value']);
 
 						if (empty($value) && Meta::parse($filter['type']) == Meta::IS) {
-							throw new Error_Api('Пользователя ' .
+							throw new ErrorApi('Пользователя ' .
 								$filter['value'] . ' не существует.',
-								Error_Api::INCORRECT_INPUT);
+								ErrorApi::INCORRECT_INPUT);
 						}
 
 						$filter['value'] = $value;

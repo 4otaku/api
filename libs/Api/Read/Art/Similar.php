@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Read_Art_Similar extends Api_Read_Abstract
+class ApiReadArtSimilar extends ApiReadAbstract
 {
 	protected $default_per_page = 20;
 

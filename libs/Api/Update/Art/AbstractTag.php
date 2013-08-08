@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-abstract class Api_Update_Art_Abstract_Tag extends Api_Update_Tag
+abstract class ApiUpdateArtAbstractTag extends ApiUpdateTag
 {
 	protected $count_table = '';
 
@@ -30,14 +30,14 @@ abstract class Api_Update_Art_Abstract_Tag extends Api_Update_Tag
 	protected function after_add($item_id, $tag_id)
 	{
 		$this->db->update($this->count_table, array(
-			'count' => Database_Action::get(Database_Action::INCREMENT)
+			'count' => DatabaseAction::get(DatabaseAction::INCREMENT)
 		), 'id_tag = ?', $tag_id);
 	}
 
 	protected function after_remove($item_id, $tag_id)
 	{
 		$this->db->update($this->count_table, array(
-			'count' => Database_Action::get(Database_Action::DECREMENT)
+			'count' => DatabaseAction::get(DatabaseAction::DECREMENT)
 		), 'id_tag = ?', $tag_id);
 	}
 }

@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Request_Inner extends Api_Request
+class ApiRequestInner extends ApiRequest
 {
 	public function __construct($data) {
 

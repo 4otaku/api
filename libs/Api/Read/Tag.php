@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-abstract class Api_Read_Tag extends Api_Read_Abstract
+abstract class ApiReadTag extends ApiReadAbstract
 {
 	protected $fields = array('id', 'name');
 	protected $default_sorter = 'name';

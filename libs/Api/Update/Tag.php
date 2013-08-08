@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-abstract class Api_Update_Tag extends Api_Update_Abstract
+abstract class ApiUpdateTag extends ApiUpdateAbstract
 {
 	abstract protected function get_item_type();
 	abstract protected function get_meta_type();
@@ -15,7 +15,7 @@ abstract class Api_Update_Tag extends Api_Update_Abstract
 		$remove = (array) $this->get('remove');
 
 		if (empty($item_id) || (empty($add) && empty($remove))) {
-			throw new Error_Api(Error_Api::MISSING_INPUT);
+			throw new ErrorApi(ErrorApi::MISSING_INPUT);
 		}
 
 		$type = $this->get_item_type();

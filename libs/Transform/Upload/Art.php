@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Transform_Upload_Art extends Transform_Upload_Abstract_Image
+class TransformUploadArt extends TransformUploadAbstractImage
 {
 	protected $md5 = 'unknown';
 
@@ -21,7 +21,7 @@ class Transform_Upload_Art extends Transform_Upload_Abstract_Image
 
 		$id = Database::db('api')->get_field('art', 'id', 'md5 = ?', $this->md5);
 		if (!empty($id)) {
-			throw new Error_Upload($id, Error_Upload::ALREADY_EXISTS);
+			throw new ErrorUpload($id, ErrorUpload::ALREADY_EXISTS);
 		}
 	}
 
@@ -41,7 +41,7 @@ class Transform_Upload_Art extends Transform_Upload_Abstract_Image
 			file_put_contents($file, file_get_contents($this->file));
 		}
 
-		$this->worker = Transform_Image::get_worker($file);
+		$this->worker = TransformImage::get_worker($file);
 		$this->animated = $this->is_animated($file);
 		$width = $this->worker->get_image_width();
 		$height = $this->worker->get_image_height();
@@ -69,7 +69,7 @@ class Transform_Upload_Art extends Transform_Upload_Abstract_Image
 		$base = $this->get_base_path();
 		$resized = $base.SL.'art'.SL.$this->md5.'_resize.jpg';
 
-		$this->worker = Transform_Image::get_worker($this->file);
+		$this->worker = TransformImage::get_worker($this->file);
 		$this->animated = $this->is_animated($this->file);
 
 		$resized = $this->check_resize($resized);

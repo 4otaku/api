@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-abstract class Api_Read_Art_Pool extends Api_Read_Abstract
+abstract class ApiReadArtPool extends ApiReadAbstract
 {
 	protected $table = null;
 	protected $fields = array('id', 'title', 'text');
@@ -10,7 +10,7 @@ abstract class Api_Read_Art_Pool extends Api_Read_Abstract
 	public function process() {
 
 		if ($this->table === null) {
-			$this->add_error(Error_Api::INCORRECT_URL);
+			$this->add_error(ErrorApi::INCORRECT_URL);
 			return;
 		}
 
@@ -23,7 +23,7 @@ abstract class Api_Read_Art_Pool extends Api_Read_Abstract
 		$ids = array_filter($ids);
 
 		if (empty($ids)) {
-			$this->add_error(Error_Api::INCORRECT_INPUT);
+			$this->add_error(ErrorApi::INCORRECT_INPUT);
 			return;
 		}
 

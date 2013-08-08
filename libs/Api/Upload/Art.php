@@ -2,9 +2,9 @@
 
 namespace Otaku\Api;
 
-class Api_Upload_Art extends Api_Upload_Abstract
+class ApiUploadArt extends ApiUploadAbstract
 {
-	protected $worker_name = 'Transform_Upload_Art';
+	protected $worker_name = 'TransformUploadArt';
 
 	protected function process_data(&$data)
 	{
@@ -20,7 +20,7 @@ class Api_Upload_Art extends Api_Upload_Abstract
 		));
 
 		if (!$success) {
-			throw new Error_Upload(Error_Upload::SAVE_ERROR);
+			throw new ErrorUpload(ErrorUpload::SAVE_ERROR);
 		}
 
 		$data['upload_key'] = $data['md5'] . $this->db->last_id();

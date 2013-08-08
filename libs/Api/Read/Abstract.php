@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-abstract class Api_Read_Abstract extends Api_Abstract
+abstract class ApiReadAbstract extends ApiAbstract
 {
 	protected $is_logged = false;
 	protected $default_page = 1;

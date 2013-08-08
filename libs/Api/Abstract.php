@@ -2,7 +2,9 @@
 
 namespace Otaku\Api;
 
-abstract class Api_Abstract
+use Otaku\Framework\Database;
+
+abstract class ApiAbstract
 {
 	protected $request;
 	protected $response;
@@ -10,7 +12,7 @@ abstract class Api_Abstract
 	protected $rights = null;
 
 	/**
-	 * @var Database_Instance
+	 * @var Otaku\Framework\DatabaseInstance
 	 */
 	protected $db;
 	protected $db_type = 'api';
@@ -24,7 +26,7 @@ abstract class Api_Abstract
 	// @TODO turn into trait Api_Trait_Art
 	protected static $upload_cache = array();
 
-	public function __construct(Api_Request $request)
+	public function __construct(ApiRequest $request)
 	{
 		$this->db = Database::db($this->db_type);
 		$this->request = $request;
@@ -40,7 +42,7 @@ abstract class Api_Abstract
 	{
 		try {
 			$this->process();
-		} catch (Error_Api $e) {
+		} catch (ErrorApi $e) {
 			$this->add_error($e->getCode(), $e->getMessage());
 			$this->set_success(false);
 		}
@@ -174,12 +176,12 @@ abstract class Api_Abstract
 
 		$data = self::$upload_cache[$id];
 		if (empty($data) ||$data['md5'] != $md5) {
-			throw new Error_Api('Неверный ключ загрузки', Error_Api::INCORRECT_INPUT);
+			throw new ErrorApi('Неверный ключ загрузки', ErrorApi::INCORRECT_INPUT);
 		}
 
 		$exist = $this->db->get_field('art', 'id', 'md5 = ?', $md5);
 		if ($exist) {
-			throw new Error_Api($exist, Error_Upload::ALREADY_EXISTS);
+			throw new ErrorApi($exist, ErrorUpload::ALREADY_EXISTS);
 		}
 
 		unset($data['id'], $data['date'], $data['name']);

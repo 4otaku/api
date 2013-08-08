@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Error_Read_Edit extends Error_Read 
+class ErrorReadEdit extends ErrorRead 
 {
 	const DEFAULT_MESSAGE = 'Некорректные данные редактирования';
 	

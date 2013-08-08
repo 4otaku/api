@@ -2,14 +2,14 @@
 
 namespace Otaku\Api;
 
-class Api_Read_Art_List_Translation extends Api_Read_Art_List_Art
+class ApiReadArtListTranslation extends ApiReadArtListArt
 {
 	protected $fields = array('id', 'id_parent', 'md5', 'ext', 'animated');
 	protected $default_sorter = 'translation_date';
 
 	protected function get_default_filter() {
 		$return = parent::get_default_filter();
-		$return[] = Api_Read_Art_Filter::$translated;
+		$return[] = ApiReadArtFilter::$translated;
 		return $return;
 	}
 

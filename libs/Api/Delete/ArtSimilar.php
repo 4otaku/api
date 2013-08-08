@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Delete_Art_Similar extends Api_Delete_Abstract
+class ApiDeleteArtSimilar extends ApiDeleteAbstract
 {
 	public function process()
 	{
@@ -10,11 +10,11 @@ class Api_Delete_Art_Similar extends Api_Delete_Abstract
 		$second = (int) $this->get('id_second');
 
 		if (empty($first) || empty($second)) {
-			throw new Error_Api(Error_Api::MISSING_INPUT);
+			throw new ErrorApi(ErrorApi::MISSING_INPUT);
 		}
 
 		if (!$this->is_moderator()) {
-			throw new Error_Api(Error_Api::INSUFFICIENT_RIGHTS);
+			throw new ErrorApi(ErrorApi::INSUFFICIENT_RIGHTS);
 		}
 
 		$this->db->delete('art_similar', 'id_first = ? and id_second = ?',

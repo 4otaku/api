@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Update_Art_Pack_Tag extends Api_Update_Art_Abstract_Tag
+class ApiUpdateArtPackTag extends ApiUpdateArtAbstractTag
 {
 	protected $count_table = 'art_pack_tag_count';
 

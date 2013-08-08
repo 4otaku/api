@@ -2,12 +2,12 @@
 
 namespace Otaku\Api;
 
-class Api_Request
+class ApiRequest
 {
 	protected $converters = array(
-		'Api_Request_Post', 'Api_Request_Get',
-		'Api_Request_Php', 'Api_Request_Igbinary',
-		'Api_Request_Json', 'Api_Request_Xml'
+		'ApiRequestPost', 'ApiRequestGet',
+		'ApiRequestPhp', 'ApiRequestIgbinary',
+		'ApiRequestJson', 'ApiRequestXml'
 	);
 
 	protected $default_response_format = 'json';
@@ -16,8 +16,8 @@ class Api_Request
 
 	public function __construct($converter = false)
 	{
-		if (!empty($converter) && class_exists('Api_Request_' . ucfirst($converter))) {
-			$converters = array('Api_Request_' . ucfirst($converter));
+		if (!empty($converter) && class_exists('ApiRequest_' . ucfirst($converter))) {
+			$converters = array('ApiRequest_' . ucfirst($converter));
 		} else {
 			$converters = $this->converters;
 		}
@@ -30,7 +30,7 @@ class Api_Request
 			try {
 				$converter = new $converter();
 				$data = $converter->get_data();
-			} catch (Error_Api_Request $e) {
+			} catch (ErrorApiRequest $e) {
 				$data = array();
 			}
 		}
@@ -41,14 +41,14 @@ class Api_Request
 	public function get_response_class()
 	{
 		if (empty($this->data['format']) ||
-			!class_exists('Api_Response_' . ucfirst($this->data['format']))) {
+			!class_exists('ApiResponse' . ucfirst($this->data['format']))) {
 
 			$format = $this->default_response_format;
 		} else {
 			$format = $this->data['format'];
 		}
 
-		return 'Api_Response_' . ucfirst($format);
+		return 'ApiResponse' . ucfirst($format);
 	}
 
 	public function get($field = false)

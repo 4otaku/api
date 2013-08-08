@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Read_Art_Pack extends Api_Read_Art_Pool
+class ApiReadArtPack extends ApiReadArtPool
 {
 	protected $table = 'art_pack';
 	protected $fields = array('id', 'weight', 'title', 'text', 'cover');

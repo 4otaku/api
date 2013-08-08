@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Cron_Meta extends Cron_Abstract
+class CronMeta extends CronAbstract
 {
 	protected function comment_count()
 	{

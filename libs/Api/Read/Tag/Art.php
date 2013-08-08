@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Read_Tag_Art extends Api_Read_Tag
+class ApiReadTagArt extends ApiReadTag
 {
 	protected $fields = array('at.id', 'at.name', 'at.color');
 	protected $table = 'art_tag';

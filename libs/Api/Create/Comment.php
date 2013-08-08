@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Create_Comment extends Api_Create_Abstract
+class ApiCreateComment extends ApiCreateAbstract
 {
 	public function process()
 	{
@@ -15,11 +15,11 @@ class Api_Create_Comment extends Api_Create_Abstract
 		$text = trim($text);
 
 		if (empty($text) || empty($id_item) || empty($area)) {
-			throw new Error_Api(Error_Api::MISSING_INPUT);
+			throw new ErrorApi(ErrorApi::MISSING_INPUT);
 		}
 
 		if (!empty($parent) && !$this->db->get_count('comment', $parent)) {
-			throw new Error_Api(Error_Api::COMMENT_PARENT_DO_NOT_EXIST);
+			throw new ErrorApi(ErrorApi::COMMENT_PARENT_DO_NOT_EXIST);
 		}
 
 		if ($parent) {
@@ -49,7 +49,7 @@ class Api_Create_Comment extends Api_Create_Abstract
 		));
 
 		$this->db->update('meta', array(
-			'meta' => Database_Action::get(Database_Action::INCREMENT),
+			'meta' => DatabaseAction::get(DatabaseAction::INCREMENT),
 		), 'item_type = ? and id_item = ? and meta_type = ?', array(
 			Meta::ART, $id_item, Meta::COMMENT_COUNT
 		));

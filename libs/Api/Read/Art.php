@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Read_Art extends Api_Read_Abstract
+class ApiReadArt extends ApiReadAbstract
 {
 	protected $fields = array('id', 'id_parent', 'id_user', 'md5', 'ext',
 		'width', 'height', 'weight', 'resized', 'animated', 'comment',
@@ -13,7 +13,7 @@ class Api_Read_Art extends Api_Read_Abstract
 		$ids = (array) $this->get('id');
 
 		if (empty($ids)) {
-			$this->add_error(Error_Api::INCORRECT_INPUT);
+			$this->add_error(ErrorApi::INCORRECT_INPUT);
 			return;
 		}
 

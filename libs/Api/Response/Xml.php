@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Response_Xml extends Api_Response_Abstract
+class ApiResponseXml extends ApiResponseAbstract
 {
 	protected $headers = array(
 		'Content-type' => 'application/xml'

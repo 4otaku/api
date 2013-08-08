@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Read_Art_List extends Api_Read_Art_List_Art
+class ApiReadArtList extends ApiReadArtListArt
 {
 	protected $fields = array('id', 'id_parent', 'id_user', 'md5',
 		'ext', 'animated', 'a.sortdate');

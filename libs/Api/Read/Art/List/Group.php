@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Read_Art_List_Group extends Api_Read_Art_List_Abstract
+class ApiReadArtListGroup extends ApiReadArtListAbstract
 {
 	protected $item_type = 4;
 	protected $table = 'art_group';

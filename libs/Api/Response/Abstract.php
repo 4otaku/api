@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-abstract class Api_Response_Abstract
+abstract class ApiResponseAbstract
 {
 	protected $headers = array();
 
@@ -12,7 +12,7 @@ abstract class Api_Response_Abstract
 	protected $answer = array();
 
 	protected $error_messages = array(
-		Error_Api::INCORRECT_URL => 'Incorrect url specified',
+		ErrorApi::INCORRECT_URL => 'Incorrect url specified',
 	);
 
 	public function __construct($success = false, $errors = array(), $answer = array()) {

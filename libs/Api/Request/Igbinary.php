@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Request_Igbinary extends Api_Request_Input
+class ApiRequestIgbinary extends ApiRequestInput
 {
 	protected function convert($input) {
 

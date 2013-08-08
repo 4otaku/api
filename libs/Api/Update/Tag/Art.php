@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Update_Tag_Art extends Api_Update_Abstract
+class ApiUpdateTagArt extends ApiUpdateAbstract
 {
 	public function process()
 	{
@@ -16,7 +16,7 @@ class Api_Update_Tag_Art extends Api_Update_Abstract
 			$variant === null && empty($name));
 
 		if (empty($id) || $no_changes) {
-			throw new Error_Api(Error_Api::MISSING_INPUT);
+			throw new ErrorApi(ErrorApi::MISSING_INPUT);
 		}
 
 		if ($variant !== null) {
@@ -28,7 +28,7 @@ class Api_Update_Tag_Art extends Api_Update_Abstract
 					$this->db->get_count('art_tag', 'name = ?', $item) ||
 					$this->db->get_count('art_tag_variant', 'name = ?', $item)
 				) {
-					$this->add_error(Error_Api::TAG_EXISTS);
+					$this->add_error(ErrorApi::TAG_EXISTS);
 				} else {
 					$this->db->insert('art_tag_variant', array(
 						'id_tag' => $id,
@@ -46,12 +46,12 @@ class Api_Update_Tag_Art extends Api_Update_Abstract
 
 		if (!empty($name)) {
 			if ($this->db->get_count('art_tag_variant', 'name = ?', $name)) {
-				$this->add_error(Error_Api::TAG_EXISTS);
+				$this->add_error(ErrorApi::TAG_EXISTS);
 			} else {
 				$success =
 					$this->db->update('art_tag', array('name' => $name), $id);
 				if (!$success) {
-					$this->add_error(Error_Api::TAG_EXISTS);
+					$this->add_error(ErrorApi::TAG_EXISTS);
 				}
 			}
 		}
@@ -59,9 +59,9 @@ class Api_Update_Tag_Art extends Api_Update_Abstract
 		if (!empty($merge)) {
 			$tag = $this->db->get_full_row('art_tag', $merge);
 			if (!$tag) {
-				$this->add_error(Error_Api::INCORRECT_INPUT);
+				$this->add_error(ErrorApi::INCORRECT_INPUT);
 			} else if (!$this->is_moderator()) {
-				$this->add_error(Error_Api::INSUFFICIENT_RIGHTS);
+				$this->add_error(ErrorApi::INSUFFICIENT_RIGHTS);
 			} else {
 				$this->db->update('art_tag_variant', array('id_tag' => $id),
 					'id_tag = ?', $merge);
@@ -85,8 +85,8 @@ class Api_Update_Tag_Art extends Api_Update_Abstract
 					'item_type = ? and meta_type = ? and meta = ? and ' .
 						$this->db->array_in('id_item', $delete),
 					array_merge(array(Meta::ART, Meta::ART_TAG, $merge), $delete));
-				$this->db->update('meta', array('meta' => Database_Action::get(
-						Database_Action::DECREMENT)),
+				$this->db->update('meta', array('meta' => DatabaseAction::get(
+						DatabaseAction::DECREMENT)),
 					'item_type = ? and meta_type = ? and ' .
 						$this->db->array_in('id_item', $delete),
 					array_merge(array(Meta::ART, Meta::TAG_COUNT), $delete));

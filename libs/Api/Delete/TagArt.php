@@ -2,18 +2,18 @@
 
 namespace Otaku\Api;
 
-class Api_Delete_Tag_Art extends Api_Delete_Abstract
+class ApiDeleteTagArt extends ApiDeleteAbstract
 {
 	public function process()
 	{
 		$id = $this->get('id');
 
 		if (empty($id)) {
-			throw new Error_Api(Error_Api::MISSING_INPUT);
+			throw new ErrorApi(ErrorApi::MISSING_INPUT);
 		}
 
 		if (!$this->is_moderator()) {
-			throw new Error_Api(Error_Api::INSUFFICIENT_RIGHTS);
+			throw new ErrorApi(ErrorApi::INSUFFICIENT_RIGHTS);
 		}
 
 		$this->db->begin();
@@ -29,7 +29,7 @@ class Api_Delete_Tag_Art extends Api_Delete_Abstract
 
 			if (!empty($item_ids)) {
 				$this->db->update('meta',
-					array('meta' => Database_Action::get(Database_Action::DECREMENT)),
+					array('meta' => DatabaseAction::get(DatabaseAction::DECREMENT)),
 					'item_type = ? and meta_type = ? and ' .
 						$this->db->array_in('id_item', $item_ids),
 					array_merge(array($type, Meta::TAG_COUNT), $item_ids));

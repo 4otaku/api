@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Update_Art_Variation extends Api_Update_Abstract
+class ApiUpdateArtVariation extends ApiUpdateAbstract
 {
 	protected $next_variation_id = false;
 
@@ -14,11 +14,11 @@ class Api_Update_Art_Variation extends Api_Update_Abstract
 		$order = (array) $this->get('order');
 
 		if (!$this->is_moderator()) {
-			throw new Error_Api(Error_Api::INSUFFICIENT_RIGHTS);
+			throw new ErrorApi(ErrorApi::INSUFFICIENT_RIGHTS);
 		}
 
 		if (empty($id) || (empty($add) && empty($remove) && empty($order))) {
-			throw new Error_Api(Error_Api::MISSING_INPUT);
+			throw new ErrorApi(ErrorApi::MISSING_INPUT);
 		}
 
 		$id = $this->db->get_field('art', 'id_parent', $id);
@@ -51,7 +51,7 @@ class Api_Update_Art_Variation extends Api_Update_Abstract
 		foreach ($remove as $item) {
 			try {
 				$this->do_delete($id, $item);
-			} catch (Error_Api $e) {
+			} catch (ErrorApi $e) {
 				$this->add_error($e->getCode(), $e->getMessage());
 			}
 		}
@@ -71,7 +71,7 @@ class Api_Update_Art_Variation extends Api_Update_Abstract
 				foreach ($all as $art) {
 					$this->do_insert($id, $art);
 				}
-			} catch (Error_Api $e) {
+			} catch (ErrorApi $e) {
 				$this->add_error($e->getCode(), $e->getMessage());
 			}
 		}
@@ -83,7 +83,7 @@ class Api_Update_Art_Variation extends Api_Update_Abstract
 	protected function do_insert($id, $data)
 	{
 		if (!isset($data['id']) || !is_numeric($data['id'])) {
-			throw new Error_Api(Error_Api::INCORRECT_INPUT);
+			throw new ErrorApi(ErrorApi::INCORRECT_INPUT);
 		}
 
 		if (!$this->next_variation_id) {
@@ -105,7 +105,7 @@ class Api_Update_Art_Variation extends Api_Update_Abstract
 		$data = (int) $data;
 
 		if (empty($data)) {
-			throw new Error_Api(Error_Api::INCORRECT_INPUT);
+			throw new ErrorApi(ErrorApi::INCORRECT_INPUT);
 		}
 
 		$this->db->update('art', array(

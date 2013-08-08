@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-abstract class Api_Request_Input extends Api_Request_Abstract
+abstract class ApiRequestInput extends ApiRequestAbstract
 {
 	protected function get_input() {
 		return trim(file_get_contents('php

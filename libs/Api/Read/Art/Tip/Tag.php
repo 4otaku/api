@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Read_Art_Tip_Tag extends Api_Read_Abstract
+class ApiReadArtTipTag extends ApiReadAbstract
 {
 	public function process() {
 

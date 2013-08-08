@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Read_Tip_User extends Api_Read_Abstract
+class ApiReadTipUser extends ApiReadAbstract
 {
 	public function process() {
 		if (!$this->get('left')) {

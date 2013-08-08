@@ -2,33 +2,33 @@
 
 namespace Otaku\Api;
 
-class Api_Create_User extends Api_Create_Abstract
+class ApiCreateUser extends ApiCreateAbstract
 {
 	public function process()
 	{
 		$login = $this->get('login');
 
 		if (empty($login)) {
-			throw new Error_Api('Пропущено обязательное поле: login.',
-				Error_Api::MISSING_INPUT);
+			throw new ErrorApi('Пропущено обязательное поле: login.',
+				ErrorApi::MISSING_INPUT);
 		}
 
 		$password = $this->get('password');
 
 		if (empty($password)) {
-			throw new Error_Api('Пропущено обязательное поле: password.',
-				Error_Api::MISSING_INPUT);
+			throw new ErrorApi('Пропущено обязательное поле: password.',
+				ErrorApi::MISSING_INPUT);
 		}
 		if (strlen($password) < 6) {
-			throw new Error_Api('Пароль должен быть не короче 6 символов.',
-				Error_Api::INCORRECT_INPUT);
+			throw new ErrorApi('Пароль должен быть не короче 6 символов.',
+				ErrorApi::INCORRECT_INPUT);
 		}
 
 		$user = $this->db->get_full_row('user', 'login = ?', $login);
 
 		if (!empty($user)) {
-			throw new Error_Api('Пользователь "' . $login . '" уже существует.',
-				Error_Api::INCORRECT_INPUT);
+			throw new ErrorApi('Пользователь "' . $login . '" уже существует.',
+				ErrorApi::INCORRECT_INPUT);
 		}
 
 		$email = (string) $this->get('email');
@@ -37,8 +37,8 @@ class Api_Create_User extends Api_Create_Abstract
 			$user = $this->db->get_full_row('user', 'email = ?', $email);
 
 			if (!empty($user)) {
-				throw new Error_Api('Пользователь с таким е-мейлом уже существует.',
-					Error_Api::INCORRECT_INPUT);
+				throw new ErrorApi('Пользователь с таким е-мейлом уже существует.',
+					ErrorApi::INCORRECT_INPUT);
 			}
 		}
 

@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Update_Art_Image extends Api_Update_Abstract
+class ApiUpdateArtImage extends ApiUpdateAbstract
 {
 	public function process()
 	{
@@ -10,11 +10,11 @@ class Api_Update_Art_Image extends Api_Update_Abstract
 		$key = $this->get('upload_key');
 
 		if (!$this->is_moderator()) {
-			throw new Error_Api(Error_Api::INSUFFICIENT_RIGHTS);
+			throw new ErrorApi(ErrorApi::INSUFFICIENT_RIGHTS);
 		}
 
 		if (empty($id) || empty($key)) {
-			throw new Error_Api(Error_Api::MISSING_INPUT);
+			throw new ErrorApi(ErrorApi::MISSING_INPUT);
 		}
 
 		$update = $this->get_upload_data($key);

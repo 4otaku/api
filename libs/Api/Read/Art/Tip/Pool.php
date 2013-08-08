@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-abstract class Api_Read_Art_Tip_Pool extends Api_Read_Abstract
+abstract class ApiReadArtTipPool extends ApiReadAbstract
 {
 	protected $table;
 

@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Read_Multi extends Api_Read_Abstract
+class ApiReadMulti extends ApiReadAbstract
 {
 	public function process() {
 		foreach ($this->get() as $key => $request) {
@@ -11,8 +11,8 @@ class Api_Read_Multi extends Api_Read_Abstract
 			}
 
 			$class = array_map('ucfirst', explode('_', $request['api']));
-			$class = 'Api_Read_' . implode('_', $class);
-			$request = new Api_Request_Inner($request);
+			$class = 'ApiRead' . implode('', $class);
+			$request = new ApiRequestInner($request);
 
 			$worker = new $class($request);
 

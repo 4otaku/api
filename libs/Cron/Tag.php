@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Cron_Tag extends Cron_Abstract
+class CronTag extends CronAbstract
 {
 	protected function do_count()
 	{

@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-abstract class Api_Request_Abstract
+abstract class ApiRequestAbstract
 {
 	abstract protected function convert($input);
 	abstract protected function get_input();

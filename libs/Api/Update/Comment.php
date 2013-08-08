@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Update_Comment extends Api_Update_Abstract
+class ApiUpdateComment extends ApiUpdateAbstract
 {
 	public function process()
 	{
@@ -11,13 +11,13 @@ class Api_Update_Comment extends Api_Update_Abstract
 		$text = trim($text);
 
 		if (empty($text) || empty($id)) {
-			throw new Error_Api(Error_Api::MISSING_INPUT);
+			throw new ErrorApi(ErrorApi::MISSING_INPUT);
 		}
 
 		if (!$this->is_moderator()) {
 			$cookie = $this->db->get_field('comment', 'cookie', $id);
 			if ($cookie != $this->get_cookie()) {
-				throw new Error_Api(Error_Api::INSUFFICIENT_RIGHTS);
+				throw new ErrorApi(ErrorApi::INSUFFICIENT_RIGHTS);
 			}
 		}
 

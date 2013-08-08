@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Update_Art_Approve extends Api_Update_Abstract
+class ApiUpdateArtApprove extends ApiUpdateAbstract
 {
 	public function process()
 	{
@@ -10,17 +10,17 @@ class Api_Update_Art_Approve extends Api_Update_Abstract
 		$state = (string) $this->get('state');
 
 		if (!$this->is_moderator()) {
-			throw new Error_Api(Error_Api::INSUFFICIENT_RIGHTS);
+			throw new ErrorApi(ErrorApi::INSUFFICIENT_RIGHTS);
 		}
 
 		if (empty($id) || empty($state)) {
-			throw new Error_Api(Error_Api::MISSING_INPUT);
+			throw new ErrorApi(ErrorApi::MISSING_INPUT);
 		}
 
 		$state = Meta::parse($state);
 
 		if (empty($state)) {
-			throw new Error_Api(Error_Api::INCORRECT_INPUT);
+			throw new ErrorApi(ErrorApi::INCORRECT_INPUT);
 		}
 
 		$this->db->update('art', array('sortdate' =>

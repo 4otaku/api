@@ -2,9 +2,9 @@
 
 namespace Otaku\Api;
 
-class Api_Error extends Api_Abstract
+class ApiError extends ApiAbstract
 {
 	public function process() {
-		$this->add_error(Error_Api::INCORRECT_URL);
+		$this->add_error(ErrorApi::INCORRECT_URL);
 	}
 }

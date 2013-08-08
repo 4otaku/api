@@ -2,12 +2,12 @@
 
 namespace Otaku\Api;
 
-class Api_Create_Art_Group extends Api_Create_Art_Pool
+class ApiCreateArtGroup extends ApiCreateArtPool
 {
 	protected $table = 'art_group';
 
 	protected function get_tag_worker($request) {
-		return new Api_Update_Art_Group_Tag($request);
+		return new ApiUpdateArtGroupTag($request);
 	}
 
 	protected function get_meta_type() {

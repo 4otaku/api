@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Update_Art_Source extends Api_Update_Abstract
+class ApiUpdateArtSource extends ApiUpdateAbstract
 {
 	public function process()
 	{
@@ -10,7 +10,7 @@ class Api_Update_Art_Source extends Api_Update_Abstract
 		$source = (string) $this->get('source');
 
 		if (empty($id)) {
-			throw new Error_Api(Error_Api::MISSING_INPUT);
+			throw new ErrorApi(ErrorApi::MISSING_INPUT);
 		}
 
 		$this->db->update('art', array('source' => $source), $id);

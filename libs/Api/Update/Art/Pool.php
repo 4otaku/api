@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-abstract class Api_Update_Art_Pool extends Api_Update_Abstract
+abstract class ApiUpdateArtPool extends ApiUpdateAbstract
 {
 	protected $table;
 
@@ -11,15 +11,15 @@ abstract class Api_Update_Art_Pool extends Api_Update_Abstract
 		$id = $this->get('id');
 
 		if (!$this->is_moderator() && $this->get('remove')) {
-			throw new Error_Api(Error_Api::INSUFFICIENT_RIGHTS);
+			throw new ErrorApi(ErrorApi::INSUFFICIENT_RIGHTS);
 		}
 
 		if (empty($id) || !$this->have_changes()) {
-			throw new Error_Api(Error_Api::MISSING_INPUT);
+			throw new ErrorApi(ErrorApi::MISSING_INPUT);
 		}
 
 		if (!$this->check_pool($id)) {
-			throw new Error_Api(Error_Api::INCORRECT_INPUT);
+			throw new ErrorApi(ErrorApi::INCORRECT_INPUT);
 		}
 
 		$meta = Meta::parse($this->table);

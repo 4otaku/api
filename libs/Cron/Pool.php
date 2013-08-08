@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Cron_Pool extends Cron_Abstract
+class CronPool extends CronAbstract
 {
 	protected function delete_empty() {
 		$this->db->sql('delete from art_pack where id not in (SELECT id_pack FROM art_pack_item)');

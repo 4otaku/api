@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Response_Json extends Api_Response_Abstract
+class ApiResponseJson extends ApiResponseAbstract
 {
 	protected $headers = array(
 		'Content-type' => 'application/json; charset=UTF-8'

@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Request_Dummy extends Api_Request_Abstract
+class ApiRequestDummy extends ApiRequestAbstract
 {
 	protected function get_input() {
 		return false;

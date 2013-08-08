@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Read_Comment extends Api_Read_Abstract
+class ApiReadComment extends ApiReadAbstract
 {
 	protected $fields = array(
 		'id', 'rootparent', 'parent', 'id_item', 'area', 'username',

@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Update_Art_Translation extends Api_Update_Abstract
+class ApiUpdateArtTranslation extends ApiUpdateAbstract
 {
 	protected $next_translation_id = false;
 
@@ -14,13 +14,13 @@ class Api_Update_Art_Translation extends Api_Update_Abstract
 		$remove = (array) $this->get('remove');
 
 		if (empty($id) || (empty($add) && empty($change) && empty($remove))) {
-			throw new Error_Api(Error_Api::MISSING_INPUT);
+			throw new ErrorApi(ErrorApi::MISSING_INPUT);
 		}
 
 		foreach ($add as $item) {
 			try {
 				$this->do_insert($id, $item);
-			} catch (Error_Api $e) {
+			} catch (ErrorApi $e) {
 				$this->add_error($e->getCode(), $e->getMessage());
 			}
 		}
@@ -28,7 +28,7 @@ class Api_Update_Art_Translation extends Api_Update_Abstract
 		foreach ($change as $item) {
 			try {
 				$this->do_update($id, $item);
-			} catch (Error_Api $e) {
+			} catch (ErrorApi $e) {
 				$this->add_error($e->getCode(), $e->getMessage());
 			}
 		}
@@ -36,7 +36,7 @@ class Api_Update_Art_Translation extends Api_Update_Abstract
 		foreach ($remove as $item) {
 			try {
 				$this->do_delete($id, $item);
-			} catch (Error_Api $e) {
+			} catch (ErrorApi $e) {
 				$this->add_error($e->getCode(), $e->getMessage());
 			}
 		}
@@ -63,8 +63,8 @@ class Api_Update_Art_Translation extends Api_Update_Abstract
 		if (!isset($data['x1']) || !isset($data['x2']) || !isset($data['y1']) ||
 			!isset($data['y2']) || !isset($data['text'])) {
 
-			throw new Error_Api('Недостаточно данных для создания перевода',
-				Error_Api::INCORRECT_INPUT);
+			throw new ErrorApi('Недостаточно данных для создания перевода',
+				ErrorApi::INCORRECT_INPUT);
 		}
 
 		if (!$this->next_translation_id) {
@@ -90,8 +90,8 @@ class Api_Update_Art_Translation extends Api_Update_Abstract
 	protected function do_update($id, $data)
 	{
 		if (empty($data['id'])) {
-			throw new Error_Api('Для редактирования перевода нужно указать его id',
-				Error_Api::INCORRECT_INPUT);
+			throw new ErrorApi('Для редактирования перевода нужно указать его id',
+				ErrorApi::INCORRECT_INPUT);
 		}
 
 		$this->set_old($id, $data['id']);
@@ -100,8 +100,8 @@ class Api_Update_Art_Translation extends Api_Update_Abstract
 			'id_art = ? and id_translation = ?', array($id, $data['id']));
 
 		if (empty($last)) {
-			throw new Error_Api('Перевода с id ' . $data['id'] .
-				' не существует', Error_Api::INCORRECT_INPUT);
+			throw new ErrorApi('Перевода с id ' . $data['id'] .
+				' не существует', ErrorApi::INCORRECT_INPUT);
 		}
 
 		$this->db->insert('art_translation', array(
@@ -121,8 +121,8 @@ class Api_Update_Art_Translation extends Api_Update_Abstract
 		$data = (int) $data;
 
 		if (empty($data)) {
-			throw new Error_Api('Для удаления перевода необходимо указать его id',
-				Error_Api::INCORRECT_INPUT);
+			throw new ErrorApi('Для удаления перевода необходимо указать его id',
+				ErrorApi::INCORRECT_INPUT);
 		}
 
 		$this->set_old($id, $data);

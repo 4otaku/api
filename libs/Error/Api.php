@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Error_Api extends Error
+class ErrorApi extends Error
 {
 	const
 		INCORRECT_URL = 410,

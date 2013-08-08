@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-abstract class Api_Update_Art_Pool_Sortable extends Api_Update_Art_Pool
+abstract class ApiUpdateArtPoolSortable extends ApiUpdateArtPool
 {
 	public function process()
 	{
@@ -46,7 +46,7 @@ abstract class Api_Update_Art_Pool_Sortable extends Api_Update_Art_Pool
 		}
 
 		$this->db->update($this->table . '_item',
-			array('order' => Database_Action::get(Database_Action::ADD, $max)),
+			array('order' => DatabaseAction::get(DatabaseAction::ADD, $max)),
 			$id_field . ' = ?', $id);
 
 		foreach ($old_order as $key => $art_id) {

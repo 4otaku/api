@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Read_Art_Filter
+class ApiReadArtFilter
 {
 	public static $not_deleted = array(
 		'name' => 'state',

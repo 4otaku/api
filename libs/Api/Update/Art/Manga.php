@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Update_Art_Manga extends Api_Update_Art_Pool_Sortable
+class ApiUpdateArtManga extends ApiUpdateArtPoolSortable
 {
 	protected $table = 'art_manga';
 

@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Read_Art_Group extends Api_Read_Art_Pool
+class ApiReadArtGroup extends ApiReadArtPool
 {
 	protected $table = 'art_group';
 	protected $fields = array('id', 'title', 'text');

@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Read_Art_Sorter
+class ApiReadArtSorter
 {
 	protected $item = 0;
 	protected $value = false;
@@ -34,7 +34,7 @@ class Api_Read_Art_Sorter
 	protected function none($sql) {}
 
 	protected function random($sql) {
-		$sorter = new Database_Sorter('id');
+		$sorter = new DatabaseSorter('id');
 		$sorter->add_operation('random');
 		$sql->order($sorter);
 	}
@@ -60,7 +60,7 @@ class Api_Read_Art_Sorter
 	}
 
 	protected function size($sql) {
-		$sorter = new Database_Sorter('width', $this->direction);
+		$sorter = new DatabaseSorter('width', $this->direction);
 		$sorter->add_operation('multiply', 'height');
 		$sql->order($sorter);
 	}

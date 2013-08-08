@@ -2,5 +2,5 @@
 
 namespace Otaku\Api;
 
-class Error_Api_Request extends Error_Api
+class ErrorApiRequest extends ErrorApi
 {}

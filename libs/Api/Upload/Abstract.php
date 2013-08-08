@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-abstract class Api_Upload_Abstract extends Api_Abstract
+abstract class ApiUploadAbstract extends ApiAbstract
 {
 	protected $worker_name;
 	protected $have_successful = false;
@@ -53,7 +53,7 @@ abstract class Api_Upload_Abstract extends Api_Abstract
 				) {
 					$this->answers[] = array(
 						'error' => true,
-						'error_code' => Error_Upload::FILE_TOO_LARGE,
+						'error_code' => ErrorUpload::FILE_TOO_LARGE,
 						'error_text' => $link . ' is too large'
 					);
 				} else {
@@ -101,7 +101,7 @@ abstract class Api_Upload_Abstract extends Api_Abstract
 			$this->process_data($data);
 			$this->answers[] = $data;
 			$this->have_successful = true;
-		} catch (Error_Upload $e) {
+		} catch (ErrorUpload $e) {
 			$this->answers[] = array(
 				'error' => true,
 				'error_code' => $e->getCode(),

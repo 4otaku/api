@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Request_Php extends Api_Request_Input
+class ApiRequestPhp extends ApiRequestInput
 {
 	protected function convert($input) {
 		$result = unserialize($input);

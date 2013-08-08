@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Update_Art_Rating extends Api_Update_Abstract
+class ApiUpdateArtRating extends ApiUpdateAbstract
 {
 	public function process()
 	{
@@ -12,7 +12,7 @@ class Api_Update_Art_Rating extends Api_Update_Abstract
 		$ip = ip2long($this->get_ip(true));
 
 		if (empty($id) || $approve === null || empty($cookie) || empty($ip)) {
-			throw new Error_Api(Error_Api::MISSING_INPUT);
+			throw new ErrorApi(ErrorApi::MISSING_INPUT);
 		}
 
 		$test = $this->db->get_count('art_rating',
@@ -20,8 +20,8 @@ class Api_Update_Art_Rating extends Api_Update_Abstract
 			array($id, $cookie, $ip));
 
 		if ($test) {
-			throw new Error_Api('Вы уже голосовали за этот арт',
-				Error_Api::INCORRECT_INPUT);
+			throw new ErrorApi('Вы уже голосовали за этот арт',
+				ErrorApi::INCORRECT_INPUT);
 		}
 
 		$this->db->insert('art_rating', array(
@@ -32,8 +32,8 @@ class Api_Update_Art_Rating extends Api_Update_Abstract
 		));
 
 		$this->db->update('meta', array(
-			'meta' => Database_Action::get($approve ?
-				Database_Action::INCREMENT : Database_Action::DECREMENT),
+			'meta' => DatabaseAction::get($approve ?
+				DatabaseAction::INCREMENT : DatabaseAction::DECREMENT),
 		), 'item_type = ? and id_item = ? and meta_type = ?', array(
 			Meta::ART, $id, Meta::ART_RATING
 		));

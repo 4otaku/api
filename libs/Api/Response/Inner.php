@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class Api_Response_Inner extends Api_Response_Abstract
+class ApiResponseInner extends ApiResponseAbstract
 {
 	public function encode(Array $data) {
 		return $data;
