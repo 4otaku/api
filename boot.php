@@ -14,7 +14,7 @@ new Autoload(array(
 
 Config::getInstance()->parse('define.ini', true);
 
-$url = explode('/', preg_replace('/\?[^\/]+$/', '', $_SERVER['REQUEST_URI']));
+$url = explode('/', preg_replace('/\?.+$/', '', $_SERVER['REQUEST_URI']));
 array_shift($url);
 // Нас используют как субмодуль, съедаем еще одну секцию запроса
 if ($_SERVER['DOCUMENT_ROOT'] != ROOT_DIR) {

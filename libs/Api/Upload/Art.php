@@ -6,7 +6,7 @@ use Otaku\Framework\ErrorUpload;
 
 class ApiUploadArt extends ApiUploadAbstract
 {
-	protected $worker_name = 'TransformUploadArt';
+	protected $worker_name = 'Otaku\Api\TransformUploadArt';
 
 	protected function process_data(&$data)
 	{
