@@ -18,16 +18,20 @@ class ApiRequest
 
 	public function __construct($converter = false)
 	{
-		if (!empty($converter) && class_exists('ApiRequest_' . ucfirst($converter))) {
-			$converters = array('ApiRequest_' . ucfirst($converter));
-		} else {
-			$converters = $this->converters;
+		$prefix = __NAMESPACE__ . '\\';
+
+		$converters = $this->converters;
+		if (!empty($converter)) {
+			$converter = 'ApiRequest' . ucfirst($converter);
+			if (class_exists($prefix . $converter)) {
+				$converters = array($converter);
+			}
 		}
 
 		$data = array();
 
 		while (!$data && $converters) {
-			$converter = array_shift($converters);
+			$converter = $prefix . array_shift($converters);
 
 			try {
 				$converter = new $converter();

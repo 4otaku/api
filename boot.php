@@ -7,7 +7,10 @@ use Otaku\Framework\Config;
 
 include 'framework/init.php';
 
-Autoload::init(array(LIBS, EXTERNAL, FRAMEWORK_LIBS, FRAMEWORK_EXTERNAL), CACHE);
+new Autoload(array(
+	'Api' => LIBS,
+	'Framework' => FRAMEWORK_LIBS
+), FRAMEWORK_EXTERNAL);
 
 Config::getInstance()->parse('define.ini', true);
 
@@ -18,10 +21,10 @@ if ($_SERVER['DOCUMENT_ROOT'] != ROOT_DIR) {
 	array_shift($url);
 }
 
-$class = 'Api_' . implode('_', array_map('ucfirst', $url));
+$class = 'Otaku\Api\Api' . implode('', array_map('ucfirst', $url));
 
-if (!class_exists($class) || !is_subclass_of($class, 'Api_Abstract')) {
-	$class = 'Api_Error';
+if (!class_exists($class) || !is_subclass_of($class, 'Otaku\Api\ApiAbstract')) {
+	$class = 'Otaku\Api\ApiError';
 	$request = new ApiRequest('dummy');
 } else {
 	if (!empty($_GET['f']) && ctype_alpha($_GET['f'])) {
