@@ -18,6 +18,7 @@ abstract class ApiRequestHttp extends ApiRequestAbstract
 			if (is_array($v)) {
 				$input[$k] = $this->clean_globals($data[$k], array(), $iteration + 1);
 			} else {
+				$v = str_replace('\\', '&#92;', $v);
 				$v = stripslashes($v);
 
 				$v = str_replace(chr('0'),'',$v);
