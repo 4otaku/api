@@ -24,7 +24,7 @@ class ApiReadArtListManga extends ApiReadArtListAbstract
 
 		if (!empty($nocover)) {
 			$links = $this->db->order('order', 'asc')->group('id_manga')
-				->get_table('art_pack_item', array('id_manga', 'id_art'),
+				->get_table('art_manga_item', array('id_manga', 'id_art'),
 					$this->db->array_in('id_manga', $nocover), $nocover);
 
 			foreach ($data as &$item) {
