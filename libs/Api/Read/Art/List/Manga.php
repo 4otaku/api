@@ -6,7 +6,7 @@ class ApiReadArtListManga extends ApiReadArtListAbstract
 {
 	protected $item_type = 5;
 	protected $table = 'art_manga';
-	protected $fields = array('id', 'title', 'sortdate');
+	protected $fields = array('id', 'title', 'cover', 'sortdate');
 
 	protected function add_meta_data(&$data) {
 		parent::add_meta_data($data);
