@@ -96,6 +96,7 @@ CREATE TABLE IF NOT EXISTS `art_manga` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `filename` text NOT NULL,
   `weight` int(10) unsigned NOT NULL DEFAULT '0',
+  `cover` int(10) unsigned DEFAULT NULL,
   `title` text NOT NULL,
   `text` text NOT NULL,
   `sortdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
