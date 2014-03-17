@@ -31,6 +31,10 @@ class ApiUpdateArtApprove extends ApiUpdateAbstract
 		$this->remove_meta(Meta::ART, $id, Meta::STATE, Meta::STATE_DELETED);
 		$this->add_meta(Meta::ART, $id, Meta::STATE, $state);
 
+		$cache = new \Memcached("access_checker");
+		$cache->addServer("localhost", 11211);
+		$cache->delete('is_pic_safe_' . $this->db->get_field('art', 'md5', $id));
+
 		$this->set_success(true);
 	}
 }

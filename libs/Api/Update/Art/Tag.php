@@ -54,6 +54,10 @@ class ApiUpdateArtTag extends ApiUpdateArtAbstractTag
 			$this->db->update('art', array('sortdate' =>
 				$this->db->unix_to_date()), $id);
 		}
+
+		$cache = new \Memcached("access_checker");
+		$cache->addServer("localhost", 11211);
+		$cache->delete('is_pic_safe_' . $this->db->get_field('art', 'md5', $id));
 	}
 
 	protected function get_count_insert_data($tag, $id) {
