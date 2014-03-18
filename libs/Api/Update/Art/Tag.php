@@ -4,6 +4,7 @@ namespace Otaku\Api;
 
 class ApiUpdateArtTag extends ApiUpdateArtAbstractTag
 {
+	protected $restricted_tags = ['loli', 'nsfw'];
 	protected $count_table = 'art_tag_count';
 
 	protected function get_item_type()

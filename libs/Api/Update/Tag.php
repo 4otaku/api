@@ -4,6 +4,8 @@ namespace Otaku\Api;
 
 abstract class ApiUpdateTag extends ApiUpdateAbstract
 {
+	protected $restricted_tags = [];
+
 	abstract protected function get_item_type();
 	abstract protected function get_meta_type();
 	abstract protected function insert_tag($tag);
@@ -40,6 +42,10 @@ abstract class ApiUpdateTag extends ApiUpdateAbstract
 		foreach ($remove as $tag) {
 			$tag = strtolower(trim($tag));
 			if (!strlen($tag)) {
+				continue;
+			}
+
+			if (in_array($tag, $this->restricted_tags) && !$this->is_moderator()) {
 				continue;
 			}
 
