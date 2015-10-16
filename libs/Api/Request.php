@@ -85,7 +85,9 @@ class ApiRequest
 
 	public function get_ip($strict = false)
 	{
-		return $this->get('ip') && !$strict ? $this->get('ip') :
-			$_SERVER['REMOTE_ADDR'];
+		$headers = getallheaders();
+		$remote = isset($headers['X-Real-IP']) ? $headers['X-Real-IP'] : '127.0.0.1';
+
+		return $this->get('ip') && !$strict ? $this->get('ip') : $remote;
 	}
 }

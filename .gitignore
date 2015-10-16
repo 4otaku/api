@@ -5,6 +5,9 @@ files/manga/*
 !files/manga/.gitignore
 
 !images/.gitignore
+images/hash
+images/.htaccess
+images/static.php
 images/art/*
 !images/art/.gitignore
 
