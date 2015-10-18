@@ -32,7 +32,7 @@ class ApiSlack extends ApiAbstract
         }
 
         // Check for commands
-        if (preg_match('/^' . self::COMMAND_WORD . '\W\s*(.*)/i', $text, $command)) {
+        if (preg_match('/^' . self::COMMAND_WORD . '\s*(.*)/i', $text, $command)) {
             $this->add_answer('text', $this->process_command($command[1]));
         }
     }
@@ -48,12 +48,12 @@ class ApiSlack extends ApiAbstract
             return $this->do_info();
         }
 
-        if (!preg_match('/(\w+)\W\s*(.*)/i', $command, $match)) {
+        if (!preg_match('/(\w+)\W\s*(.*)/u', $command, $match)) {
             return '';
         }
 
         $type = $match[1];
-        $params = preg_split('\s+', $match[2]);
+        $params = preg_split('/\s+/', $match[2]);
 
         switch ($type) {
             case "инфо": return $this->do_info($params);
