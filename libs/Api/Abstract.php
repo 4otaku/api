@@ -3,6 +3,7 @@
 namespace Otaku\Api;
 
 use Otaku\Framework\Database;
+use Otaku\Framework\DatabaseInstance;
 use Otaku\Framework\ErrorUpload;
 
 abstract class ApiAbstract
@@ -13,7 +14,7 @@ abstract class ApiAbstract
 	protected $rights = null;
 
 	/**
-	 * @var {Otaku\Framework\DatabaseInstance}
+	 * @var DatabaseInstance
 	 */
 	protected $db;
 	protected $db_type = 'api';

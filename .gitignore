@@ -17,4 +17,5 @@ cache/*
 cache/tmp/*
 !cache/tmp/.gitignore
 
+.idea/
 define.ini

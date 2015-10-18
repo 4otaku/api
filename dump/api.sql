@@ -464,3 +464,33 @@ CREATE TABLE IF NOT EXISTS `art_pack_tag_count` (
   `count` int(10) unsigned NOT NULL DEFAULT '0',
   KEY `selector` (`id_tag`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `art_pack_tag_count`
+--
+
+CREATE TABLE IF NOT EXISTS `art_pack_tag_count` (
+  `id_tag` int(10) unsigned NOT NULL,
+  `count` int(10) unsigned NOT NULL DEFAULT '0',
+  KEY `selector` (`id_tag`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `slack_log`
+--
+
+CREATE TABLE IF NOT EXISTS `slack_log` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `user_name` text COLLATE utf8_unicode_ci NOT NULL,
+  `text` text COLLATE utf8_unicode_ci NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `is_link` tinyint(3) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `link_search` (`user_id`,`is_link`,`timestamp`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
