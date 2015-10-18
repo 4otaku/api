@@ -13,7 +13,13 @@ class SlackCommandSearch extends SlackCommandAbstract
         ));
         $worker = new ApiReadArtList($request);
         $worker->process_request();
-        return serialize($worker->get_response());
+        $data = $worker->get_response();
+        $result = "Всего по этому запросу есть $data[count] артов";
+        foreach ($data['data'] as $art) {
+            $result .= "\nАрт номер $art[id]" .
+                "http://images.4otaku.org/art/$art[md5]_thumb.jpg";
+        }
+        return $result;
     }
 
     protected function get_filters($params)
@@ -49,7 +55,7 @@ class SlackCommandSearch extends SlackCommandAbstract
             }
 
             $filters[] = array(
-                'name' => 'tag',
+                'name' => 'art_tag',
                 'type' => 'is',
                 'value' => $element
             );
