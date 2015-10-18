@@ -5,7 +5,6 @@ namespace Otaku\Api;
 class ApiSlack extends ApiAbstract
 {
     const BOT_ID = 'USLACKBOT';
-    const COMMAND_WORD = 'чотач';
 
     public function process()
     {
@@ -32,8 +31,8 @@ class ApiSlack extends ApiAbstract
         }
 
         // Check for commands
-        if (preg_match('/^' . self::COMMAND_WORD . '\s*(.*)/i', $text, $command)) {
-            $this->add_answer('text', $this->process_command($command[1]));
+        if (preg_match('/^чотач\s*(.*)/i', $text, $command)) {
+            $this->add_answer('text', (string) $this->process_command($command[1]));
         }
     }
 
@@ -45,7 +44,7 @@ class ApiSlack extends ApiAbstract
     protected function process_command($command)
     {
         if (empty($command)) {
-            return $this->do_info();
+            return new SlackCommandInfo();
         }
 
         if (!preg_match('/(\w+)\W\s*(.*)/u', $command, $match)) {
@@ -56,40 +55,10 @@ class ApiSlack extends ApiAbstract
         $params = preg_split('/\s+/', $match[2]);
 
         switch ($type) {
-            case "инфо": return $this->do_info($params);
-            case "найди": return $this->do_search($params);
-            case "добавь": return $this->do_add($params);
+            case "инфо": return new SlackCommandInfo($params);
+            case "найди": return new SlackCommandSearch($params);
+            case "добавь": return new SlackCommandAdd($params);
             default: return '';
         }
-    }
-
-    protected function do_info($params = array())
-    {
-        if (empty($params)) {
-            return "Вас приветствует бакабот. \n".
-            "Для получения справки по команде напишите " . self::COMMAND_WORD . " инфо {имя команды}. \n" .
-            "Доступные команды: найди, добавь";
-        }
-
-        $result = array();
-        foreach ($params as $param) {
-            switch ($param) {
-                case "найди": $result[] = "To be described"; break;
-                case "добавь": $result[] = "To be described"; break;
-                default: $result[] = "Неизвестная команда $param"; break;
-            }
-        }
-
-        return implode("\n", $result);
-    }
-
-    protected function do_search($params)
-    {
-        return serialize($params);
-    }
-
-    protected function do_add($params)
-    {
-        return serialize($params);
     }
 }
