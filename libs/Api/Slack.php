@@ -58,7 +58,11 @@ class ApiSlack extends ApiAbstract
             case "инфо": return new SlackCommandInfo($params);
             case "найди": return new SlackCommandSearch($params);
             case "добавь": return new SlackCommandAdd($params);
-            default: return '';
+            case "случайный": return new SlackCommandRandom($params);
+            case "покажи": return new SlackCommandShow($params);
+            default:
+                array_unshift($params, $type);
+                return new SlackCommandRandom($params);
         }
     }
 }
