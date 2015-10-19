@@ -43,16 +43,12 @@ class ApiSlack extends ApiAbstract
 
     protected function process_command($command)
     {
-        if (empty($command)) {
+        $params = array_filter(preg_split('/\s+/', $command));
+        $type = array_shift($params);
+
+        if (empty($type)) {
             return new SlackCommandInfo();
         }
-
-        if (!preg_match('/(\w+)\W\s*(.*)/u', $command, $match)) {
-            return '';
-        }
-
-        $type = $match[1];
-        $params = preg_split('/\s+/', $match[2]);
 
         switch ($type) {
             case "инфо": return new SlackCommandInfo($params);
