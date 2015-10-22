@@ -16,7 +16,7 @@ class SlackCommandShow extends SlackCommandAbstract
 
         $result = array();
         foreach ($params as $param) {
-            if (!is_int($param)) {
+            if (!is_numeric($param)) {
                 $result[] = "$param не является действующим номером арта. Номер может состоять только из цифр";
                 continue;
             }
@@ -35,7 +35,7 @@ class SlackCommandShow extends SlackCommandAbstract
                 continue;
             }
 
-            $data = $response['data'];
+            $data = $response['data'][0];
 
             $string = "Арт номер $data[id]";
             if ((int) $data['id'] != (int) $data['id_parent']) {
@@ -45,7 +45,8 @@ class SlackCommandShow extends SlackCommandAbstract
 
             $string .= "http://images.4otaku.org/art/$data[md5].$data[ext]\n";
 
-            $string .= "Загрузил $data[user], " . $this->format_date($data['created']) . ". ";
+            $string .= $this->format_date($data['created']) . ". ";
+            $string .= "Загрузил $data[user]. ";
             $string .= "Рейтинг $data[rating]. ";
             if (in_array("approved", $data['state'])) {
                 if (in_array("tagged", $data['state'])) {
