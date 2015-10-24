@@ -37,9 +37,9 @@ class SlackCommandShow extends SlackCommandAbstract
 
             $data = $response['data'][0];
 
-            $string = "Арт номер $data[id]";
+            $string = "Арт http://art.4otaku.org/$data[id]/";
             if ((int) $data['id'] != (int) $data['id_parent']) {
-                $string .= ", являющийся вариацией арта номер $data[id_parent]";
+                $string .= " являющийся вариацией арта http://art.4otaku.org/$data[id_parent]/";
             }
             $string .= ".\n";
 
