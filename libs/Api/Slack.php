@@ -53,7 +53,7 @@ class ApiSlack extends ApiAbstract
         switch ($type) {
             case "инфо": return new SlackCommandInfo($params);
             case "найди": return new SlackCommandSearch($params);
-            case "добавь": return new SlackCommandAdd($params);
+            case "добавь": return new SlackCommandAdd($params, $this->db);
             case "случайный": return new SlackCommandRandom($params);
             case "покажи": return new SlackCommandShow($params);
             default:
