@@ -72,7 +72,7 @@ class SlackCommandAdd extends SlackCommandAbstract
     protected function fetchUrlFromParams($params)
     {
         foreach ($params as $param) {
-            if (preg_match('/<(https?:\/\/[^>]*))/', $param, $match)) {
+            if (preg_match('/<(https?:\/\/[^>]*)/', $param, $match)) {
                 return $match[1];
             }
         }
