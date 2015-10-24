@@ -58,8 +58,7 @@ class SlackCommandAdd extends SlackCommandAbstract
             }
         }
 
-        $id = $data['data'][0]['id'];
-        return "Успешно добавлено под номером $id";
+        return "Успешно добавлено под номером $data[id]";
     }
 
     protected function fetchUrlFromDB()
@@ -73,7 +72,7 @@ class SlackCommandAdd extends SlackCommandAbstract
     protected function fetchUrlFromParams($params)
     {
         foreach ($params as $param) {
-            if (preg_match('/<(https?://.*)(?:>|\|)/', $param, $match)) {
+            if (preg_match('/<(https?:\/\/[^>]*))/', $param, $match)) {
                 return $match[1];
             }
         }
