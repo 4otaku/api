@@ -31,7 +31,7 @@ class ApiSlack extends ApiAbstract
         }
 
         // Check for commands
-        if (preg_match('/^чотач\s*(.*)/i', $text, $command)) {
+        if (preg_match('/^пачи\s*(.*)/i', $text, $command)) {
             $this->add_answer('text', (string) $this->process_command($command[1]));
         }
     }

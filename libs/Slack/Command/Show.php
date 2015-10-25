@@ -11,7 +11,7 @@ class SlackCommandShow extends SlackCommandAbstract
     protected function process($params)
     {
         if (empty($params)) {
-            return "Для использования команды 'чотач покажи' необходимо указать номер арта. Например 'чотач покажи 124799'";
+            return "Для использования команды 'пачи покажи' необходимо указать номер арта. Например 'пачи покажи 124799'";
         }
 
         $result = array();
