@@ -32,7 +32,7 @@ class ApiSlack extends ApiAbstract
 
         // Check for commands
         if (preg_match('/^(пачи|pachi)\s*(.*)/ui', $text, $command)) {
-            $this->add_answer('text', (string) $this->process_command($command[2]));
+            $this->add_answer('text', (string) $this->process_command($command));
         }
     }
 
@@ -43,11 +43,13 @@ class ApiSlack extends ApiAbstract
 
     protected function process_command($command)
     {
-        $params = array_filter(preg_split('/\s+/', $command));
+        $params = array_filter(preg_split('/\s+/', $command[2]));
         $type = array_shift($params);
 
         if (empty($type)) {
-            return new SlackCommandInfo();
+            return $command[1] == 'pachi' ?
+                new SlackCommandEnginfo() :
+                new SlackCommandInfo();
         }
 
         switch ($type) {
