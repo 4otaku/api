@@ -36,10 +36,16 @@ class SlackCommandSearch extends SlackCommandList
                 }
                 return false;
             case 'случайное':
+            case 'случайных':
+            case 'случайный':
+            case 'случайную':
             case 'random':
                 $this->sort = 'random';
                 return true;
             case 'лучшее':
+            case 'лучших':
+            case 'лучшую':
+            case 'лучшего':
             case 'best':
                 $this->sort = 'rating';
                 return true;
