@@ -58,7 +58,7 @@ class SlackCommandAdd extends SlackCommandAbstract
             }
         }
 
-        return "Успешно добавлено http://art.4otaku.org/$data[id]/";
+        return "Успешно добавлено как <http://art.4otaku.org/$data[id]/|$data[id]>";
     }
 
     protected function fetchUrlFromDB()
