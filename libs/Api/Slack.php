@@ -31,8 +31,8 @@ class ApiSlack extends ApiAbstract
         }
 
         // Check for commands
-        if (preg_match('/^пачи\s*(.*)/i', $text, $command)) {
-            $this->add_answer('text', (string) $this->process_command($command[1]));
+        if (preg_match('/^(пачи|pachi)\s*(.*)/ui', $text, $command)) {
+            $this->add_answer('text', (string) $this->process_command($command[2]));
         }
     }
 
@@ -52,10 +52,19 @@ class ApiSlack extends ApiAbstract
 
         switch ($type) {
             case "инфо": return new SlackCommandInfo($params);
-            case "найди": return new SlackCommandSearch($params);
-            case "добавь": return new SlackCommandAdd($params, $this->db);
-            case "случайный": return new SlackCommandRandom($params);
-            case "покажи": return new SlackCommandShow($params);
+            case "info": return new SlackCommandEnginfo($params);
+            case "найди":
+            case "find":
+                return new SlackCommandSearch($params);
+            case "добавь":
+            case "add":
+                return new SlackCommandAdd($params, $this->db);
+            case "случайный":
+            case "random":
+                return new SlackCommandRandom($params);
+            case "покажи":
+            case "show":
+                return new SlackCommandShow($params);
             default:
                 array_unshift($params, $type);
                 return new SlackCommandRandom($params);
