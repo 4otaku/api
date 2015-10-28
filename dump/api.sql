@@ -494,3 +494,14 @@ CREATE TABLE IF NOT EXISTS `slack_log` (
   PRIMARY KEY (`id`),
   KEY `link_search` (`user_id`,`is_link`,`timestamp`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+
+--
+-- Table structure for table `slack_user`
+--
+
+CREATE TABLE IF NOT EXISTS `slack_user` (
+  `user_id` int(10) unsigned NOT NULL,
+  `slack_id` varchar(32) NOT NULL,
+  PRIMARY KEY (`slack_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
