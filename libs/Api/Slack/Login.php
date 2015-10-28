@@ -30,7 +30,7 @@ class ApiSlackLogin extends ApiAbstract
 
         $user = $this->db->get_field('user', 'id', 'cookie = ?', $data['cookie']);
 
-        if (!empty($user)) {
+        if (empty($user)) {
             $this->add_answer('text', 'Извините, неизвестная ошибка. Напишите разработчику.');
             return;
         }
