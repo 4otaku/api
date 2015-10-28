@@ -4,8 +4,6 @@ namespace Otaku\Api;
 
 class ApiSlackLogin extends ApiAbstract
 {
-    protected $default_response_format = 'text';
-
     public function process()
     {
         $params = array_filter(preg_split('/\s+/', $this->get('text')));
