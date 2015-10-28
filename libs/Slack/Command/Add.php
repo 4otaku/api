@@ -41,7 +41,7 @@ class SlackCommandAdd extends SlackCommandAbstract
 
         if (!empty($file['error_code'])) {
             if ($file['error_code'] == 30) {
-                return "Арт уже есть под номером $file[error_text]";
+                return "Арт уже есть под номером <http://art.4otaku.org/$file[error_text]/|$file[error_text]>";
             } else {
                 return "Не удалось скачать файл $url";
             }
@@ -88,7 +88,7 @@ class SlackCommandAdd extends SlackCommandAbstract
     protected function addCookie($request)
     {
         $cookie = $this->db->join('slack_user', 'u.id = su.user_id')->get_field('user',
-            'cookie', 'su.slack_id', $this->user);
+            'cookie', 'su.slack_id = ?', $this->user);
 
         if ($cookie) {
             $request['cookie'] = $cookie;
