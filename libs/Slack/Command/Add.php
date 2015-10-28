@@ -11,9 +11,12 @@ class SlackCommandAdd extends SlackCommandAbstract
      */
     protected $db;
 
-    public function __construct($params, $db)
+    protected $user;
+
+    public function __construct($params, $db, $user)
     {
         $this->db = $db;
+        $this->user = $user;
         parent::__construct($params);
     }
 
@@ -43,6 +46,8 @@ class SlackCommandAdd extends SlackCommandAbstract
                 return "Не удалось скачать файл $url";
             }
         }
+
+        $file = $this->addCookie($file);
 
         $request = new ApiRequestInner($file);
         $worker = new ApiCreateArt($request);
@@ -78,5 +83,17 @@ class SlackCommandAdd extends SlackCommandAbstract
         }
 
         return false;
+    }
+
+    protected function addCookie($request)
+    {
+        $cookie = $this->db->join('slack_user', 'u.id = su.user_id')->get_field('user',
+            'cookie', 'su.slack_id', $this->user);
+
+        if ($cookie) {
+            $request['cookie'] = $cookie;
+        }
+
+        return $request;
     }
 }

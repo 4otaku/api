@@ -60,7 +60,7 @@ class ApiSlack extends ApiAbstract
                 return new SlackCommandSearch($params);
             case "добавь":
             case "add":
-                return new SlackCommandAdd($params, $this->db);
+                return new SlackCommandAdd($params, $this->db, $this->get('user_id'));
             case "случайный":
             case "random":
                 return new SlackCommandRandom($params);
