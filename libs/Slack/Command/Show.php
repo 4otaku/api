@@ -39,7 +39,7 @@ class SlackCommandShow extends SlackCommandAbstract
 
             $string = "Арт <http://art.4otaku.org/$data[id]/|$data[id]>";
             if ((int) $data['id'] != (int) $data['id_parent']) {
-                $string .= " являющийся вариацией арта http://art.4otaku.org/$data[id_parent]/";
+                $string .= " являющийся вариацией арта <http://art.4otaku.org/$data[id_parent]/|$data[id_parent]>";
             }
             $string .= ".\n";
 
