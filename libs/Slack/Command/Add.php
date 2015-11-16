@@ -62,8 +62,11 @@ class SlackCommandAdd extends SlackCommandAbstract
                 return "Произошла неизвестная ошибка, приносим свои извинения";
             }
         }
+        
+        $key = substr($file["upload_key"], 0, 32);
 
-        return "Успешно добавлено как <http://art.4otaku.org/$data[id]/|$data[id]>";
+        return "Успешно добавлено как <http://art.4otaku.org/$data[id]/|$data[id]>\n"
+            . "http://images.4otaku.org/art/" . $key . "_largethumb.jpg";
     }
 
     protected function fetchUrlFromDB()
