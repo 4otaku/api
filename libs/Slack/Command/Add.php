@@ -2,24 +2,8 @@
 
 namespace Otaku\Api;
 
-use Otaku\Framework\DatabaseInstance;
-
-class SlackCommandAdd extends SlackCommandAbstract
+class SlackCommandAdd extends SlackCommandAbstractNamed
 {
-    /**
-     * @var DatabaseInstance
-     */
-    protected $db;
-
-    protected $user;
-
-    public function __construct($params, $db, $user)
-    {
-        $this->db = $db;
-        $this->user = $user;
-        parent::__construct($params);
-    }
-
     protected function process($params)
     {
         $url = empty($params) ?
@@ -62,7 +46,7 @@ class SlackCommandAdd extends SlackCommandAbstract
                 return "Произошла неизвестная ошибка, приносим свои извинения";
             }
         }
-        
+
         $key = substr($file["upload_key"], 0, 32);
 
         return "Успешно добавлено как <http://art.4otaku.org/$data[id]/|$data[id]>\n"
@@ -86,17 +70,5 @@ class SlackCommandAdd extends SlackCommandAbstract
         }
 
         return false;
-    }
-
-    protected function addCookie($request)
-    {
-        $cookie = $this->db->join('slack_user', 'u.id = su.user_id')->get_field('user',
-            'cookie', 'su.slack_id = ?', $this->user);
-
-        if ($cookie) {
-            $request['cookie'] = $cookie;
-        }
-
-        return $request;
     }
 }

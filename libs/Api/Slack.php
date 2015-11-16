@@ -48,13 +48,13 @@ class ApiSlack extends ApiAbstract
 
         if (empty($type)) {
             return $command[1] == 'pachi' ?
-                new SlackCommandEnginfo() :
+                new SlackCommandInfo(array(), true) :
                 new SlackCommandInfo();
         }
 
         switch ($type) {
             case "инфо": return new SlackCommandInfo($params);
-            case "info": return new SlackCommandEnginfo($params);
+            case "info": return new SlackCommandInfo($params, true);
             case "найди":
             case "find":
                 return new SlackCommandSearch($params);
@@ -67,6 +67,9 @@ class ApiSlack extends ApiAbstract
             case "покажи":
             case "show":
                 return new SlackCommandShow($params);
+            case "теги":
+            case "tag":
+                return new SlackCommandTag($params, $this->db, $this->get('user_id'));
             default:
                 array_unshift($params, $type);
                 return new SlackCommandRandom($params);

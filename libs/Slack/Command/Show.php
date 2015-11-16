@@ -4,7 +4,7 @@ namespace Otaku\Api;
 
 use Otaku\Framework\TraitDate;
 
-class SlackCommandShow extends SlackCommandAbstract
+class SlackCommandShow extends SlackCommandAbstractBase
 {
     use TraitDate;
 

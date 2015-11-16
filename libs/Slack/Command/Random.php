@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class SlackCommandRandom extends SlackCommandList
+class SlackCommandRandom extends SlackCommandAbstractList
 {
     protected $sort = 'random';
 

@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-abstract class SlackCommandList extends SlackCommandAbstract
+abstract class SlackCommandAbstractList extends SlackCommandAbstractBase
 {
     protected $per_page = 1;
     protected $sort = 'date';

@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-abstract class SlackCommandAbstract
+abstract class SlackCommandAbstractBase
 {
     protected $response = '';
 

@@ -2,7 +2,7 @@
 
 namespace Otaku\Api;
 
-class SlackCommandSearch extends SlackCommandList
+class SlackCommandSearch extends SlackCommandAbstractList
 {
     protected $per_page = 3;
 

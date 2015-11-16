@@ -2,14 +2,25 @@
 
 namespace Otaku\Api;
 
-class SlackCommandInfo extends SlackCommandAbstract
+class SlackCommandInfo extends SlackCommandAbstractBase
 {
+    /**
+     * @var bool
+     */
+    protected $english;
+
+    public function __construct($params = array(), $english = false)
+    {
+        $this->english = $english;
+        parent::__construct($params);
+    }
+
     protected function process($params)
     {
         if (empty($params)) {
             return "Вас приветствует библиотекарь. Моя основная задача это связь между этой конференцией и http://art.4otaku.org \n".
             "Для получения справки по команде напишите пачи инфо {имя команды}. \n" .
-            "Доступные команды: найди, добавь, случайный, покажи. \n" .
+            "Доступные команды: найди, добавь, случайный, покажи, теги. \n" .
             "Также можно просто перечислить теги, в этом случае будет тот же эффект как и от команды случайный. \n" .
                 "Например 'пачи yuri' даст тот же эффект, что и 'пачи случайный yuri'";
         }
@@ -62,12 +73,38 @@ class SlackCommandInfo extends SlackCommandAbstract
                         . "пачи покажи 124799 \n"
                         . "пачи покажи 120893 120894 120890";
                     break;
+                case "теги":
+                case "tag":
+                    $result[] = "Добавляет теги к арту. В качестве первого аргумента принимает номер арта, дальше идет либо список тегов либо указание попробовать найти их на Данбору. \n"
+                        . "Отсутствие тегов считается указанием попробовать Данбору \n"
+                        . "Примеры использования: \n"
+                        . "пачи теги к 124799 red_hair yuri swimsuit \n"
+                        . "пачи теги к 124799 \n"
+                        . "пачи теги к 120893 данбору";
+                    break;
                 default:
                     $result[] = "Неизвестная команда $param";
                     break;
             }
         }
 
-        return implode("\n", $result);
+        $result = implode("\n", $result);
+
+        if ($this->english) {
+            $result = str_replace(
+                array(
+                    'пачи', 'инфо', 'найди', 'добавь', 'случайный',
+                    'покажи', 'случайное', 'лучшее', 'юри', 'теги к',
+                    'теги', 'данбору'
+                ),
+                array(
+                    'pachi', 'info', 'find', 'add', 'random',
+                    'show', 'random', 'best', 'yuri', 'tag',
+                    'tag', 'danbooru'
+                ),
+                $result);
+        }
+
+        return $result;
     }
 }
