@@ -70,6 +70,15 @@ class ApiSlack extends ApiAbstract
             case "теги":
             case "tag":
                 return new SlackCommandTag($params, $this->db, $this->get('user_id'));
+            case "одобри":
+            case "approve":
+                return new SlackCommandStatusApproved($params, $this->db, $this->get('user_id'));
+            case "проверь":
+            case "verify":
+                return new SlackCommandStatusUndecided($params, $this->db, $this->get('user_id'));
+            case "забракуй":
+            case "decline":
+                return new SlackCommandStatusDeclined($params, $this->db, $this->get('user_id'));
             default:
                 array_unshift($params, $type);
                 return new SlackCommandRandom($params);

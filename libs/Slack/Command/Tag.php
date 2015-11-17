@@ -38,7 +38,7 @@ class SlackCommandTag extends SlackCommandAbstractNamed
 
         if (empty($params) || in_array($params[0], array('danbooru', 'данбору'))) {
             try {
-                $tags = $this->fetch_from_danbooru($data["md5"]);
+                $tags = $this->fetchFromDanbooru($data["md5"]);
             } catch (Error $e) {
                 return $e->getMessage();
             }
@@ -61,7 +61,7 @@ class SlackCommandTag extends SlackCommandAbstractNamed
         return "Успешно добавлены теги: " . implode(" ", $tags);
     }
 
-    protected function fetch_from_danbooru($md5)
+    protected function fetchFromDanbooru($md5)
     {
         $response = Http::download("http://danbooru.donmai.us/posts.json?limit=1&tags=md5:$md5");
         $response = json_decode($response, true);
