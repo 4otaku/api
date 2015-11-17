@@ -11,6 +11,6 @@ class SlackCommandStatusApproved extends SlackCommandStatusAbstract
 
     function getMessage($id)
     {
-         return "Арт номер $id успешно отправлен на главную.";
+         return "Арт номер $id успешно одобрен. Заметьте, что для попадания на главную он также должен быть протеган.";
     }
 }
