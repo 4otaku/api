@@ -18,7 +18,7 @@ abstract class SlackCommandStatusAbstract extends SlackCommandAbstractNamed
 
         $request = new ApiRequestInner($this->addCookie(array(
             'id' => $id,
-            'state' => $this->getState()
+            'state' => 'state_' . $this->getState()
         )));
         $worker = new ApiUpdateArtApprove($request);
         $worker->process_request();
