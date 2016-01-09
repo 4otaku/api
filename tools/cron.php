@@ -18,6 +18,7 @@ new Autoload(array(
 
 Config::getInstance()->parse('define.ini', true);
 Cache::$base_prefix = Config::getInstance()->get('cache', 'prefix');
+Cron::set_name('Api');
 
 define('LOCK_FILE', '/tmp/cron_api_lock');
 
