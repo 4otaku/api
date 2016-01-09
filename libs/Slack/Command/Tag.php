@@ -77,7 +77,8 @@ class SlackCommandTag extends SlackCommandAbstractBase
         $this->setTags($id, $tags);
 
         $request = new ApiRequestInner(array(
-            'id' => $id
+            'id' => $id,
+            'add_tags' => 1
         ));
         $worker = new ApiReadArt($request);
         $worker->process_request();
@@ -86,9 +87,14 @@ class SlackCommandTag extends SlackCommandAbstractBase
         $existing = $response['data'][0];
 
         if (!$existing['source']) {
-            $source = (!empty($art['source']) ? $art['source'] . ' ' : '') .
-                'https://danbooru.donmai.us/posts/' . $art['id'];
-            $this->setSource($id, $source);
+            $source = array();
+            if (!empty($art['pixiv_id'])) {
+                $source[] = 'http://www.pixiv.net/member_illust.php?mode=medium&illust_id=' . $art['pixiv_id'];
+            } elseif (!empty($art['source'])) {
+                $source[] = $art['source'];
+            }
+            $source[] = 'https://danbooru.donmai.us/posts/' . $art['id'];
+            $this->setSource($id, implode(" ", $source));
         }
 
         $uncolored_tags = array_map(function($tag){
