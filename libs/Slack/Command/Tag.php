@@ -5,8 +5,10 @@ namespace Otaku\Api;
 use Otaku\Framework\Error;
 use Otaku\Framework\Http;
 
-class SlackCommandTag extends SlackCommandAbstractNamed
+class SlackCommandTag extends SlackCommandAbstractBase
 {
+    use SlackTraitTagger, SlackTraitSourcer, SlackTraitMarker;
+
     protected function process($params)
     {
         if (empty($params)) {
@@ -38,7 +40,8 @@ class SlackCommandTag extends SlackCommandAbstractNamed
 
         if (empty($params) || in_array($params[0], array('danbooru', 'данбору'))) {
             try {
-                $tags = $this->fetchFromDanbooru($data["md5"]);
+                $this->doDanbooru($id, $data["md5"]);
+                return "";
             } catch (Error $e) {
                 return $e->getMessage();
             }
@@ -46,22 +49,15 @@ class SlackCommandTag extends SlackCommandAbstractNamed
             $tags = $params;
         }
 
-        $request = new ApiRequestInner($this->addCookie(array(
-            'id' => $id,
-            'add' => $tags
-        )));
-        $worker = new ApiUpdateArtTag($request);
-        $worker->process_request();
-        $data = $worker->get_response();
-
-        if (!$data["success"]) {
-            return "Не удалось добавить теги";
+        try {
+            $this->setTags($id, $tags);
+            return "Успешно добавлены теги: " . implode(" ", $tags);
+        } catch (Error $e) {
+            return $e->getMessage();
         }
-
-        return "Успешно добавлены теги: " . implode(" ", $tags);
     }
 
-    protected function fetchFromDanbooru($md5)
+    protected function doDanbooru($id, $md5)
     {
         $response = Http::download("http://danbooru.donmai.us/posts.json?limit=1&tags=md5:$md5");
         $response = json_decode($response, true);
@@ -78,6 +74,45 @@ class SlackCommandTag extends SlackCommandAbstractNamed
             $tags[] = "nsfw";
         }
 
-        return $tags;
+        $this->setTags($id, $tags);
+
+        $request = new ApiRequestInner(array(
+            'id' => $id
+        ));
+        $worker = new ApiReadArt($request);
+        $worker->process_request();
+        $response = $worker->get_response();
+
+        $existing = $response['data'][0];
+
+        if (!$existing['source']) {
+            $source = (!empty($art['source']) ? $art['source'] . ' ' : '') .
+                'https://danbooru.donmai.us/posts/' . $art['id'];
+            $this->setSource($id, $source);
+        }
+
+        $uncolored_tags = array_map(function($tag){
+            return $tag['name'];
+        }, array_filter($existing['tag'], function($tag){
+            return empty($tag['color']);
+        }));
+
+        $markers = array(
+            'tag_string_artist' => 'AA0000',
+            'tag_string_character' => '00AA00',
+            'tag_string_copyright' => 'AA00AA'
+        );
+
+        foreach ($markers as $key => $color) {
+            if (empty($art[$key])) continue;
+
+            $tags = array_filter(preg_split('/\s+/', $art[$key]));
+
+            foreach ($tags as $tag) {
+                if (!in_array($tag, $uncolored_tags)) continue;
+
+                $this->setTagColor($tag, $color);
+            }
+        }
     }
 }
