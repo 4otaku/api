@@ -13,14 +13,14 @@ trait SlackTraitMarker
         ));
         $worker = new ApiReadTagArt($request);
         $worker->process_request();
-        $data = $worker->get_response();
+        $tag = $worker->get_response();
 
-        if (empty($data[0]["id"])) {
+        if (empty($tag['data'][0]["id"])) {
             throw new Error("Не удалось найти тег $name для покраски");
         }
 
         $request = new ApiRequestInner(array(
-            'id' => $data[0]["id"],
+            'id' => $tag['data'][0]["id"],
             'color' => $color
         ));
         $worker = new ApiUpdateTagArt($request);
