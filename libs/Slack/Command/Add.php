@@ -2,10 +2,20 @@
 
 namespace Otaku\Api;
 
+use Otaku\Framework\Error;
+
 class SlackCommandAdd extends SlackCommandAbstractNamed
 {
+    use SlackTraitFetcher;
+
     protected function process($params)
     {
+        $fetchMeta = false;
+        if (reset($params) == 'протегай') {
+            array_shift($params);
+            $fetchMeta = true;
+        }
+
         $url = empty($params) ?
             $this->fetchUrlFromDB() :
             $this->fetchUrlFromParams($params);
@@ -49,8 +59,18 @@ class SlackCommandAdd extends SlackCommandAbstractNamed
 
         $key = substr($file["upload_key"], 0, 32);
 
+        if ($fetchMeta) {
+            try {
+                $this->fetchMeta($data['id'], $key);
+                $error = "";
+            } catch (Error $e) {
+                $error = "\n" . $e->getMessage();
+            }
+        }
+
         return "Успешно добавлено как <http://art.4otaku.org/$data[id]/|$data[id]>\n"
-            . "http://images.4otaku.org/art/" . $key . "_largethumb.jpg";
+            . "http://images.4otaku.org/art/" . $key . "_largethumb.jpg"
+            . $error;
     }
 
     protected function fetchUrlFromDB()
