@@ -40,6 +40,10 @@ class ApiReadTagArt extends ApiReadTag
 		$sql->join('art_tag_variant', 'atv.id_tag = at.id');
 		$sql->group('at.id');
 
+		if ('count' == $this->get_sort_by()) {
+			$sql->join('art_tag_count', 'atc.id_tag = at.id');
+		}
+
 		return $sql->get_table($this->table, $this->fields,
 			$condition, $params);
 	}
