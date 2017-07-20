@@ -360,6 +360,20 @@ CREATE TABLE IF NOT EXISTS `head_menu` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 ALTER TABLE  `head_menu` ADD  `separator` TINYINT UNSIGNED NOT NULL DEFAULT  '0';
 
+INSERT INTO `head_menu` (`id`, `name`, `url`, `parent`, `order`, `separator`) VALUES
+(5, 'Арт', '/', 0, 4, 0),
+(15, 'Арты', '/', 5, 14, 1),
+(16, 'Ожидает проверки', '/?approved=waiting&amp;tagged=all', 5, 15, 0),
+(17, 'Барахолка', '/?approved=no&amp;tagged=all', 5, 17, 1),
+(18, 'Непротеганное', '/?tagged=no&amp;approved=yes_or_waiting', 5, 16, 0),
+(19, 'Группы', '/?mode=group', 5, 18, 0),
+(20, 'Манга', '/?mode=manga', 5, 19, 0),
+(59, 'Комментарии', '/?mode=comment', 5, 64, 0),
+(67, 'CG-паки', '/?mode=pack', 5, 62, 0),
+(68, 'Галереи художников', '/?mode=artist', 5, 63, 1),
+(69, 'Переводы', '/?mode=translation', 5, 65, 1),
+(70, 'Загрузить арт', '/add/', 5, 66, 0);
+
 -- --------------------------------------------------------
 
 --
