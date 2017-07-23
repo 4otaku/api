@@ -41,7 +41,7 @@ trait SlackTraitFetcher
         if (!$existing['source']) {
             $source = array();
             if (!empty($art['pixiv_id'])) {
-                $source[] = 'http://www.pixiv.net/member_illust.php?mode=medium&illust_id=' . $art['pixiv_id'];
+                $source[] = 'https://www.pixiv.net/member_illust.php?mode=medium&illust_id=' . $art['pixiv_id'];
             } elseif (!empty($art['source'])) {
                 $source[] = $art['source'];
             }

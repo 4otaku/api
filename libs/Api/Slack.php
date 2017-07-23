@@ -80,9 +80,9 @@ class ApiSlack extends ApiAbstract
             case "decline":
                 return new SlackCommandStatusDeclined($params, $this->db, $this->get('user_id'));
             case "молодец":
-                return "http://images.4otaku.org/art/9a363e2acf728cf9f283d188ce77aac8_resize.jpg?" . substr(md5(microtime(true)), 0, 6);
+                return "https://images.4otaku.org/art/9a363e2acf728cf9f283d188ce77aac8_resize.jpg?" . substr(md5(microtime(true)), 0, 6);
             case "бака":
-                return "http://images.4otaku.org/art/93659c411495b089e3aabb9aaa17856f_resize.jpg?" . substr(md5(microtime(true)), 0, 6);
+                return "https://images.4otaku.org/art/93659c411495b089e3aabb9aaa17856f_resize.jpg?" . substr(md5(microtime(true)), 0, 6);
             default:
                 array_unshift($params, $type);
                 return new SlackCommandRandom($params);

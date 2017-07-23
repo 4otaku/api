@@ -10,8 +10,8 @@ class SlackCommandRandom extends SlackCommandAbstractList
     {
         $art = reset($data['data']);
 
-        $result = "Арт <http://art.4otaku.org/$art[id]/|$art[id]>\n";
-        $result .= "http://images.4otaku.org/art/$art[md5].$art[ext]";
+        $result = "Арт <https://art.4otaku.org/$art[id]/|$art[id]>\n";
+        $result .= "https://images.4otaku.org/art/$art[md5].$art[ext]";
         return $result;
     }
 }

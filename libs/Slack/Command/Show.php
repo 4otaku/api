@@ -37,13 +37,13 @@ class SlackCommandShow extends SlackCommandAbstractBase
 
             $data = $response['data'][0];
 
-            $string = "Арт <http://art.4otaku.org/$data[id]/|$data[id]>";
+            $string = "Арт <https://art.4otaku.org/$data[id]/|$data[id]>";
             if ((int) $data['id'] != (int) $data['id_parent']) {
-                $string .= " являющийся вариацией арта <http://art.4otaku.org/$data[id_parent]/|$data[id_parent]>";
+                $string .= " являющийся вариацией арта <https://art.4otaku.org/$data[id_parent]/|$data[id_parent]>";
             }
             $string .= ".\n";
 
-            $string .= "http://images.4otaku.org/art/$data[md5].$data[ext]\n";
+            $string .= "https://images.4otaku.org/art/$data[md5].$data[ext]\n";
 
             $string .= $this->format_date($data['created']) . ". ";
             $string .= "Загрузил $data[user]. ";
