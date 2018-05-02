@@ -11,7 +11,7 @@ trait SlackTraitFetcher
 
     protected function fetchMeta($id, $md5)
     {
-        $response = Http::download("http://danbooru.donmai.us/posts.json?limit=1&tags=md5:$md5");
+        $response = Http::download("https://danbooru.donmai.us/posts.json?limit=1&tags=md5:$md5");
         $response = json_decode($response, true);
 
         if (empty($response)) {
