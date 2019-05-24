@@ -36,6 +36,14 @@ class TransformUploadArt extends TransformUploadAbstractImage
 		$extension = strtolower($pathinfo['extension']);
 		$base = $this->get_base_path();
 
+		/**
+		 * При передаче картинки по ссылке, например, из твиттера, в расширении файла может быть суффикс:
+		 * https://pbs.twimg.com/media/D2gMVwtVAAAjRzv.jpg:orig
+		 */
+		if (preg_match('/(png|jpe?g|gif)/', $extension, $matches)) {
+			$extension = $matches[0];
+		}
+
 		$file = $base.SL.'art'.SL.$this->md5.'.'.$extension;
 		$resized = $base.SL.'art'.SL.$this->md5.'_resize.jpg';
 		$thumb = $base.SL.'art'.SL.$this->md5.'_thumb.jpg';
