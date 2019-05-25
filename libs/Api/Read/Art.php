@@ -94,12 +94,16 @@ class ApiReadArt extends ApiReadAbstract
 
 		if ($this->get('add_similar')) {
 			$similar = $this->db->order('id_parent_order', 'asc')->get_table('art',
-				array('id', 'id_parent'), $this->db->array_in('id_parent', $parents), $parents);
+				array('id', 'id_parent', 'md5'), $this->db->array_in('id_parent', $parents), $parents);
 			foreach ($data as &$item) {
 				$item['similar'] = array();
 				foreach ($similar as $art) {
 					if ($item['id_parent'] == $art['id_parent']) {
 						$item['similar'][] = $art['id'];
+						$item['similar_ext'][] = [
+							'id' => $art['id'],
+							'md5' => $art['md5'],
+						];
 					}
 				}
 			}
