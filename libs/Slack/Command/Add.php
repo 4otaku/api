@@ -35,7 +35,7 @@ class SlackCommandAdd extends SlackCommandAbstractNamed
 
         if (!empty($file['error_code'])) {
             if ($file['error_code'] == 30) {
-                return "Арт уже есть под номером <https://art.4otaku.org/$file[error_text]/|$file[error_text]>";
+                return "Арт уже есть под номером <https://art.4otaku.org/$file[error_text]/>";
             } else {
                 return "Не удалось скачать файл $url";
             }
@@ -68,8 +68,8 @@ class SlackCommandAdd extends SlackCommandAbstractNamed
             }
         }
 
-        return "Успешно добавлено как <https://art.4otaku.org/$data[id]/|$data[id]>\n"
-            . "https://images.4otaku.org/art/" . $key . "_largethumb.jpg"
+        return "Успешно добавлено как <https://art.4otaku.org/$data[id]/>\n"
+            . "<https://images.4otaku.org/art/" . $key . "_largethumb.jpg>"
             . $error;
     }
 
@@ -84,7 +84,7 @@ class SlackCommandAdd extends SlackCommandAbstractNamed
     protected function fetchUrlFromParams($params)
     {
         foreach ($params as $param) {
-            if (preg_match('/<(https?:\/\/[^>]*)/', $param, $match)) {
+            if (preg_match('#(?:<|\s)(https?://[^\s]*)#', $param, $match)) {
                 return $match[1];
             }
         }

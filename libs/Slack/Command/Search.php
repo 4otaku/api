@@ -19,7 +19,7 @@ class SlackCommandSearch extends SlackCommandAbstractList
     {
         $result = "Всего по этому запросу есть $data[count] артов";
         foreach ($data['data'] as $art) {
-            $result .= "\nАрт <https://art.4otaku.org/$art[id]/|$art[id]>\n" .
+            $result .= "\nАрт <https://art.4otaku.org/$art[id]/>\n" .
                 "https://images.4otaku.org/art/$art[md5]_largethumb.jpg";
         }
         return $result;

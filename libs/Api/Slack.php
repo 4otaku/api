@@ -38,7 +38,7 @@ class ApiSlack extends ApiAbstract
 
     protected function is_link($text)
     {
-        return strpos($text, '<') !== false;
+        return strpos($text, 'http') !== false;
     }
 
     protected function process_command($command)
