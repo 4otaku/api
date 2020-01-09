@@ -37,7 +37,7 @@ class SlackCommandAdd extends SlackCommandAbstractNamed
             if ($file['error_code'] == 30) {
                 return "Арт уже есть под номером <https://art.4otaku.org/$file[error_text]/>";
             } else {
-                return "Не удалось скачать файл $url";
+                return "Не удалось скачать файл <$url>";
             }
         }
 
@@ -69,7 +69,7 @@ class SlackCommandAdd extends SlackCommandAbstractNamed
         }
 
         return "Успешно добавлено как <https://art.4otaku.org/$data[id]/>\n"
-            . "<https://images.4otaku.org/art/" . $key . "_largethumb.jpg>"
+//            . "<https://images.4otaku.org/art/" . $key . "_largethumb.jpg>"
             . $error;
     }
 
